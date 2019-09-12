@@ -8,6 +8,7 @@ namespace iWasHere.Domain.Model
     {
         public DatabaseContext()
         {
+            
         }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
