@@ -70,7 +70,7 @@ namespace iWasHere.Web
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-
+            //Alberto
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
