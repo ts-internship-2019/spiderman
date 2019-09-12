@@ -24,7 +24,6 @@ namespace iWasHere.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            //comentariuuuuuuuuuuuuuu
         }
 
         public IConfiguration Configuration { get; }
