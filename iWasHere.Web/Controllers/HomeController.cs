@@ -9,7 +9,7 @@ using iWasHere.Web.Models;
 namespace iWasHere.Web.Controllers
 {
     public class HomeController : Controller
-    {//aici am schimbat
+    {//schimbareiri
         public IActionResult Index()
         {
             return View();
