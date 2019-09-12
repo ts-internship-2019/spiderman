@@ -13,6 +13,7 @@ namespace iWasHere.Web
     public class Program
     {
         //This is a test by AdrianR
+        //This is a second test by AdrianR
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
