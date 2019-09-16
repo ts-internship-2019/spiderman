@@ -23,5 +23,10 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+
+        public IActionResult County()
+        {
+            return View();
+        }
     }
 }
