@@ -1,5 +1,6 @@
 ﻿using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
+using iWasHere.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,18 @@ namespace iWasHere.Domain.Service
             }).ToList();
 
             return dictionaryLandmarkTypeModels;
+        }
+        public List<DictionaryCityModel> GetDictionaryCityModels()
+        {
+            List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
+            {
+                  Id=a.DictionaryCityId,
+                  CityName=a.DictionaryCityName,
+                  CountryName=a.DictionaryCountry.DictionaryCountyName
+
+
+            }).ToList();
+            return dictionaryCityModels;
         }
     }
 }

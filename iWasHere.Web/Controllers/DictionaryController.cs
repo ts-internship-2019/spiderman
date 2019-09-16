@@ -28,5 +28,10 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+        public IActionResult City()
+        {   List<DictionaryCityModel> dictionaryCities = _dictionaryService.GetDictionaryCityModels();
+            return View(dictionaryCities);
+
+        }
     }
 }
