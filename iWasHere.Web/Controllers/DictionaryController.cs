@@ -23,6 +23,12 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+        public IActionResult Currency()
+        {
+            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
+
+            return View(dictionaryLandmarkTypeModels);
+        }
 
         public IActionResult County()
         {
