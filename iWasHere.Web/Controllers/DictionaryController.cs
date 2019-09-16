@@ -23,5 +23,11 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+        public IActionResult Schedule()
+        {
+            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
+
+            return View(dictionaryLandmarkTypeModels);
+        }
     }
 }
