@@ -132,7 +132,11 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLCountries;
         }
-        
-       
+        public int TotalCity()
+        {
+            int i = _dbContext.DictionaryCity.Count();
+            return i;
+        }
+
     }
 }

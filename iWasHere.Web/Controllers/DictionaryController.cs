@@ -63,10 +63,14 @@ namespace iWasHere.Web.Controllers
         }
         public ActionResult CityData([DataSourceRequest]DataSourceRequest request)
         {
-            var jsonVariable = _dictionaryService.GetDictionaryCityModels(request.Page, request.PageSize).ToDataSourceResult(request);
-            jsonVariable.Total = 2097152;
-            return Json(jsonVariable);
-           
+            var jsonVariable = _dictionaryService.GetDictionaryCityModels(request.Page, request.PageSize);
+            DataSourceResult result = new DataSourceResult()
+            {
+                Data = jsonVariable,
+                Total = _dictionaryService.TotalCity()
+            };
+            return Json(result);
+
         }
       
         public IActionResult GetCountyData([DataSourceRequest]DataSourceRequest request)
