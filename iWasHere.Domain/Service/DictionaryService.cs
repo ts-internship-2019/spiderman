@@ -53,7 +53,22 @@ namespace iWasHere.Domain.Service
 
         }
 
-       
+        public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModelsFilter(int page, int pageSize, string name)
+        {
+            //pageSize = 10;
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = 
+                _dbContext.DictionaryCounty
+                .Where(a=>a.DictionaryCountyName==name)
+                .Select(a => new DictionaryCountyTypeModel()
+            {
+                Id = a.DictionaryCountyId,
+                Name = a.DictionaryCountyName,
+                CountryName = a.DictionaryCountry.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryCountyTypeModel;
+        }
 
 
 

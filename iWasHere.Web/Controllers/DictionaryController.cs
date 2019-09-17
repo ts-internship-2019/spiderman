@@ -53,5 +53,18 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_dictionaryService.GetAllCountries());
         }
+
+        public IActionResult SearchCountyName()
+        {
+            return View();
+        }
+
+        public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
+        {
+            return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
+        }
+
+
+
     }
 }
