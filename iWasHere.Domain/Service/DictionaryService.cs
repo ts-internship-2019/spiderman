@@ -67,6 +67,8 @@ namespace iWasHere.Domain.Service
                 CountryName = a.DictionaryCountry.DictionaryCountryName
             }).Skip(skip).Take(pageSize).ToList();
 
+
+            //comentariu
             return dictionaryCountyTypeModel;
         }
 
