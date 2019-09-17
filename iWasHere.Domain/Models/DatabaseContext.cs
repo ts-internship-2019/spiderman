@@ -203,9 +203,9 @@ namespace iWasHere.Domain.Model
                     .HasMaxLength(22)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.DictionaryCountry)
+                entity.HasOne(d => d.DictionaryCounty)
                     .WithMany(p => p.DictionaryCity)
-                    .HasForeignKey(d => d.DictionaryCountryId)
+                    .HasForeignKey(d => d.DictionaryCountyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Dictionar__Dicti__0EF836A4");
             });
