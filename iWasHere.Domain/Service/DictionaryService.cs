@@ -26,17 +26,46 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkTypeModels;
         }
-        public List<DictionaryCityModel> GetDictionaryCityModels()
+        public List<DictionaryCityModel> GetDictionaryCityModels(int page,int pageSize)
         {
-            List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
-            {
-                  Id=a.DictionaryCityId,
-                  CityName=a.DictionaryCityName,
-                  CountryName=a.DictionaryCountry.DictionaryCountyName
+          
+         
+        int skip = (page - 1) * pageSize;
+        List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
+        {
+            Id = a.DictionaryCityId,
+            CityName = a.DictionaryCityName,
+            CountyName = a.DictionaryCounty.DictionaryCountyName,
+            CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
+        }).Skip(skip).Take(pageSize).ToList();
 
+            return dictionaryCityModels;
+
+
+        }
+        public List<DictionaryCountyModel> GetDictionaryCountiesCB()
+        {
+            List<DictionaryCountyModel> dictionaryLCounties = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
+            {
+             CountyId=a.DictionaryCountyId,
+            CountyName=a.DictionaryCountyName
 
             }).ToList();
-            return dictionaryCityModels;
+
+            return dictionaryLCounties;
         }
+        public List<DictionaryCountryModel> GetDictionaryCountriesCB()
+        {
+            List<DictionaryCountryModel> dictionaryLCountries = _dbContext.DictionaryCountry.Select(a => new DictionaryCountryModel()
+            {
+                CountryId = a.DictionaryCountryId,
+                CountryName = a.DictionaryCountryName
+
+            }).ToList();
+
+            return dictionaryLCountries;
+        }
+        
+       
     }
 }

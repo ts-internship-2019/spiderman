@@ -11,10 +11,10 @@ namespace iWasHere.Domain.Models
         }
 
         public int DictionaryCityId { get; set; }
-        public int DictionaryCountryId { get; set; }
+        public int DictionaryCountyId { get; set; }
         public string DictionaryCityName { get; set; }
 
-        public virtual DictionaryCounty DictionaryCountry { get; set; }
+        public virtual DictionaryCounty DictionaryCounty { get; set; }
         public virtual ICollection<TouristAttraction> TouristAttraction { get; set; }
     }
 }
