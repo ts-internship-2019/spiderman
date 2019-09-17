@@ -69,7 +69,7 @@ namespace iWasHere.Web.Controllers
            
         }
       
-        public IActionResult CountyData([DataSourceRequest]DataSourceRequest request)
+        public IActionResult GetCountyData([DataSourceRequest]DataSourceRequest request)
         {
             //_dictionaryService.GetDictionaryCountyTypeModels();
             var jsonVariable = _dictionaryService.GetDictionaryCountyTypeModels(request.Page, request.PageSize).ToDataSourceResult(request);

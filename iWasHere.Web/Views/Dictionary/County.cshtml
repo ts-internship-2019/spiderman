@@ -75,7 +75,7 @@
             .ButtonCount(5))
         .DataSource(dataSource => dataSource
             .Ajax()
-            .Read(read => read.Action("CountyData", "Dictionary"))
+            .Read(read => read.Action("GetCountyData", "Dictionary"))
             .PageSize(20)
         )
     )
