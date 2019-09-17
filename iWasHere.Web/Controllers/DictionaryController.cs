@@ -57,6 +57,7 @@ namespace iWasHere.Web.Controllers
         public IActionResult SearchCountyName()
         {
             return View();
+            
         }
 
         public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
