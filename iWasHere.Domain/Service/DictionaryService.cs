@@ -70,7 +70,25 @@ namespace iWasHere.Domain.Service
             return dictionaryCountyTypeModel;
         }
 
+        public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeModel(int page, int pageSize)
+        {
+            int skip = (page - 1) * pageSize;
+
+            List<DictionaryCategoryTypeModel> dictionaryCategoryTypeModels = _dbContext.DictionaryCategory.Select(a => new DictionaryCategoryTypeModel()
+            {
+                Id = a.DictionaryCategoryId,
+                Name = a.DictionaryCategoryName,
+
+            }).Skip(skip).Take(pageSize).ToList();
 
 
+            return dictionaryCategoryTypeModels;
+        }
+
+        public int Total()
+        {
+            int i = _dbContext.DictionaryCategory.Count();
+            return i;
+        }
     }
 }
