@@ -4,5 +4,99 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>County</h1>
+<h1 class="text-center">Lista  judete</h1>
+<div class="text-right">
+    <p>
+        @(Html.Kendo().Button()
+            .Name("primaryTextButton")
+            .HtmlAttributes(new { type = "button", @class = "k-primary" })
+            .Content("Adauga Judet"))
+    </p>
+
+</div>
+
+<label for="countries">Countries:</label>
+<div>
+    @(Html.Kendo().ComboBox()
+          .Name("countries")
+          .HtmlAttributes(new { style = "width:30%;" })
+          .Placeholder("Select country...")
+          .DataTextField("Name")
+          .DataValueField("Id")
+          .Filter(FilterType.Contains)
+          .DataSource(source =>
+                  {
+                      source.Read(read =>
+                      {
+                          read.Action("GetJsonCountryData", "Dictionary");
+              });
+          })
+
+    )
+
+    @(Html.Kendo().Button()
+            .Name("primaryTextButton")
+            .HtmlAttributes(new { type = "button", @class = "k-primary" })
+            .Content("Filtreaza"))
+
+
+</div>
+
+<p><label for="counties">
+    County:@(Html.Kendo().TextBox()
+            .Name("kTextBox")
+            .HtmlAttributes(new { @class = "form-control" })
+            )
+</label></p>
+
+
+
+<div class="text-center">
+
+
+    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCountyTypeModel>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.Id).Width(70);
+            columns.Bound(c => c.Name).Width(140);
+            columns.Bound(c => c.CountryName).Width(140);
+            columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' /> ").Width(70);
+            columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' /> ").Width(70);
+
+        })
+        .HtmlAttributes(new { style = "height: 550px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("CountyData", "Dictionary"))
+            .PageSize(20)
+        )
+    )
+</div>
+
+
+
+<style>
+
+    .k-primary {
+        bottom: 10%;
+        right: 5px;
+        margin: 0;
+        padding: 5px 3px;
+        float: initial;
+    }
+
+    .form-control{
+        width:90%;
+        word-wrap:break-word;
+    }
+</style>
+
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Service;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iWasHere.Web.Controllers
@@ -33,6 +35,23 @@ namespace iWasHere.Web.Controllers
         public IActionResult County()
         {
             return View();
+        }
+        public IActionResult CountyData([DataSourceRequest]DataSourceRequest request)
+        {
+            //_dictionaryService.GetDictionaryCountyTypeModels();
+            var jsonVariable = _dictionaryService.GetDictionaryCountyTypeModels(request.Page, request.PageSize).ToDataSourceResult(request);
+            jsonVariable.Total = 2097152;
+             return Json(jsonVariable);
+        }
+
+        public IActionResult GetCountry()
+        {
+            return View();
+        }
+
+        public JsonResult GetJsonCountryData()
+        {
+            return Json(_dictionaryService.GetAllCountries());
         }
     }
 }
