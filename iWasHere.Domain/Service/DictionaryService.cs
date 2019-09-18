@@ -86,8 +86,39 @@ namespace iWasHere.Domain.Service
 
             }).Skip(skip).Take(pageSize).ToList();
 
-
             return dictionaryCategoryTypeModels;
+        }
+
+        public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeFilter(int page, int pageSize, string name)
+        {
+            //pageSize = 10;
+            int skip = (page - 1) * pageSize;
+            
+            List<DictionaryCategoryTypeModel> dictionaryCityyTypeModel =
+                _dbContext.DictionaryCategory
+                .Where(a => a.DictionaryCategoryName.StartsWith(name))
+                .Select(a => new DictionaryCategoryTypeModel()
+                {
+                    Id = a.DictionaryCategoryId,
+                    Name = a.DictionaryCategoryName
+                }).Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryCityyTypeModel;
+        }
+   
+        public void InsertCategoryType(string name)
+        {
+            DictionaryCategory dictionary = new DictionaryCategory();
+            dictionary.DictionaryCategoryName = name;
+
+            _dbContext.DictionaryCategory.Add(dictionary);
+            _dbContext.SaveChanges();
+
+        }
+        public int FilterTotalCategory(string name)
+        {
+            int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName == name).Count();
+            return i;
         }
 
         public int Total()
@@ -97,8 +128,6 @@ namespace iWasHere.Domain.Service
         }
         public List<DictionaryCityModel> GetDictionaryCityModels(int page, int pageSize)
         {
-
-
             int skip = (page - 1) * pageSize;
             List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
@@ -166,11 +195,11 @@ namespace iWasHere.Domain.Service
                 Select(a => new ScheduleTouristAttractionModel()
                 {
 
-                    Day = a.Day,
-                    StartHour = a.StartHour,
-                    EndHour = a.EndHour,
-                    Season = a.Season.DictionarySeasonName,
-                    TouristAttractionName = a.TouristAttraction.Name
+                Day = a.Day,
+                StartHour = a.StartHour,
+                EndHour = a.EndHour,
+                Season = a.Season.DictionarySeasonName,
+                TouristAttractionName = a.TouristAttraction.Name
 
 
 
@@ -309,9 +338,69 @@ namespace iWasHere.Domain.Service
             return schedulefiltered;
         }
 
+        public int TotalCountries()
+        {
+            int i = _dbContext.DictionaryCountry.Count();
+            return i;
+        }
 
 
+        public IEnumerable<DictionaryCountryModel> GetCountryModel(int page, int pageSize, out int rows, string abc)
+        {
+            rows = 0;
+            rows = _dbContext.DictionaryCountry.Count();
+            if (abc == null)
+                return _dbContext.DictionaryCountry.Skip((page - 1) * pageSize).Take(pageSize).Select(Country => new DictionaryCountryModel
+                {
+                    CountryId = Country.DictionaryCountryId,
+                    CountryName = Country.DictionaryCountryName
+                });
+            else
+            {
+                rows = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName.StartsWith(abc)).Count();
+                return _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName.StartsWith(abc)).Skip((page - 1) * pageSize).Take(pageSize).Select(Country => new DictionaryCountryModel
+                {
+                    CountryId = Country.DictionaryCountryId,
+                    CountryName = Country.DictionaryCountryName
+                });
+            }
+        }
 
+        /*
+        public List<DictionaryCountryModel> GetDictionaryCountryFilter(int page, int pageSize, string name)
+        {
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountryModel> countryFilter =
+                _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryName == name || a.DictionaryCountryName.StartsWith(name))
+                .Select(a => new DictionaryCountryModel()
+                {
+                    CountryId = a.DictionaryCountryId,
+                    CountryName = a.DictionaryCountryName
+                }).Skip(skip).Take(pageSize).ToList();
+
+            return countryFilter;
+        }
+        */
+
+        public int FilterTotalCountries(string name)
+        {
+            int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
+            return i;
+        }
+        public string DeleteCountry(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCountry.Single(a => a.DictionaryCountryId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Ghinion frate! Exista un judet in aceasta tara.";
+            }
+        }
 
 
 

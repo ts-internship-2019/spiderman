@@ -9,10 +9,6 @@ using iWasHere.Domain.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using iWasHere.Web.Models;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iWasHere.Web.Controllers
@@ -121,22 +117,42 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request)
+        public ActionResult AddCategory()
         {
-            var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
-            DataSourceResult result = new DataSourceResult()
+            return View();
+        }
+
+        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
             {
-                Data = jsonVariable,
-                Total = _dictionaryService.Total()
-            };
-            return Json(result);
+                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
+
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = _dictionaryService.Total()
+                };
+                
+                return Json(result);
+            }
+            else
+            {
+                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
+
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = _dictionaryService.FilterTotalCategory(categoryName)
+                };
+
+                return Json(result);
+            }
         }
 
         public IActionResult SearchCountyName()
         {
             return View();
-
-            
         }
 
         public IActionResult AddSchedule()
@@ -172,8 +188,16 @@ namespace iWasHere.Web.Controllers
 
      }
 
-
-
+        public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
+        {
+            int rows = 0;
+            var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
+            DataSourceResult dataSource = new DataSourceResult();
+            dataSource.Data = x;
+            dataSource.Total = rows;
+            return Json(dataSource);
+            
+        }
 
         public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
         {
@@ -200,5 +224,7 @@ namespace iWasHere.Web.Controllers
         }
 
 
+            return Json(ModelState.ToDataSourceResult());
+        }
     }
 }
