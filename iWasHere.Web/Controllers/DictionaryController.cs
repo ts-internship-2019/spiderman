@@ -96,15 +96,35 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request)
+        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
         {
-            var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
-            DataSourceResult result = new DataSourceResult()
+            if (string.IsNullOrEmpty(categoryName))
             {
-                Data = jsonVariable,
-                Total = _dictionaryService.Total()
-            };
-            return Json(result);
+                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
+
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = _dictionaryService.Total()
+                };
+
+
+                return Json(result);
+            }
+            else
+            {
+                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
+
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = _dictionaryService.Total()
+                };
+
+
+                return Json(result);
+            }
+           
         }
 
         public IActionResult SearchCountyName()

@@ -4,10 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h1>Category</h1>
+<input id='categoryInput' type="text"/>
+<button onclick="resetGrid()">Filter</button>
 
 @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCategoryTypeModel>()
     .Name("Grid")
+    .HtmlAttributes(new { style = "id=Grid" })
     .Columns(columns =>
     {
         columns.Bound(o => o.Name);
@@ -26,7 +30,19 @@
         .Ajax()
         //.PageSize(10)
         .PageSize(20)
-        .Read(read => read.Action("CategoryBinding_Read", "Dictionary"))
-
+        .Read(read => read.Action("CategoryBinding_Read", "Dictionary").Data("filter")))
     )
 )
+
+<script>
+    function filter() {
+        var categoryObj = {}
+        categoryObj['categoryName'] = $('#categoryInput').val();
+        return categoryObj;
+    }
+
+    function resetGrid() {
+        $('#Grid').data('kendoGrid').dataSource.read();
+        $('#Grid').data('kendoGrid').dataSource.page(1);
+    }
+</script>

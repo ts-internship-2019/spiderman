@@ -88,6 +88,22 @@ namespace iWasHere.Domain.Service
             return dictionaryCategoryTypeModels;
         }
 
+        public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeFilter(int page, int pageSize, string name)
+        {
+            //pageSize = 10;
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCategoryTypeModel> dictionaryCityyTypeModel =
+                _dbContext.DictionaryCategory
+                .Where(a => a.DictionaryCategoryName == name)
+                .Select(a => new DictionaryCategoryTypeModel()
+                {
+                    Id = a.DictionaryCategoryId,
+                    Name = a.DictionaryCategoryName
+                }).Skip(skip).Take(pageSize).ToList();
+       
+            return dictionaryCityyTypeModel;
+        }
+
         public int Total()
         {
             int i = _dbContext.DictionaryCategory.Count();
@@ -137,6 +153,5 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCity.Count();
             return i;
         }
-
     }
 }
