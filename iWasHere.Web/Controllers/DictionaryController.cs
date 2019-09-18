@@ -224,7 +224,7 @@ namespace iWasHere.Web.Controllers
         }
 
 
-            return Json(ModelState.ToDataSourceResult());
+            //return Json(ModelState.ToDataSourceResult());
         }
     }
-}
+//}
