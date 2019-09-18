@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewData["Title"] = "AddSchedule";
+}
+
+<h1>Adaugare program obiectiv turistic</h1>
+
+<h6>Code valuta</h6>
+
+@(Html.Kendo().ComboBox()
+                          .Name("Judete")
+                          .HtmlAttributes(new { style = "width:30%;" })
+                          .Placeholder("Selecteaza obiectiv turistic")
+                          .DataTextField("TouristAttractionName")
+                          .DataValueField("TouristAttractionId")
+                          .Filter(FilterType.Contains)
+                          .DataSource(source =>
+                {
+                     source.Read(read =>
+               {
+                  read.Action("GetTouristAttraction", "Dictionary");
+                              });
+                          })
+)
+@(Html.Kendo().MaskedTextBox()
+      .Name("txtCode")
+      .Events(events => events.Change("changeTextBox"))
+      .HtmlAttributes(new { style = "width: 22%" })
+)<h6>Nume valuta</h6>
+@(Html.Kendo().MaskedTextBox()
+      .Name("TxtName")
+      .Events(events => events.Change("changeTextBox"))
+      .HtmlAttributes(new { style = "width: 22%" })
+)
+<button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Salveaza</button>
+<button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Salveaza si nou</button>
+<button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Anuleaza</button>
+    </div>

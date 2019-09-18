@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
+
 namespace iWasHere.Domain.Service
 {
     public class DictionaryService
@@ -37,9 +38,9 @@ namespace iWasHere.Domain.Service
             {
                 Id = a.DictionaryCountyId,
                 Name = a.DictionaryCountyName,
-                CountryName=a.DictionaryCountry.DictionaryCountryName
+                CountryName = a.DictionaryCountry.DictionaryCountryName
             }).Skip(skip).Take(pageSize).ToList();
-               
+
             return dictionaryCountyTypeModel;
         }
 
@@ -59,15 +60,15 @@ namespace iWasHere.Domain.Service
         {
             //pageSize = 10;
             int skip = (page - 1) * pageSize;
-            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = 
+            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel =
                 _dbContext.DictionaryCounty
-                .Where(a=>a.DictionaryCountyName==name)
+                .Where(a => a.DictionaryCountyName == name)
                 .Select(a => new DictionaryCountyTypeModel()
-            {
-                Id = a.DictionaryCountyId,
-                Name = a.DictionaryCountyName,
-                CountryName = a.DictionaryCountry.DictionaryCountryName
-            }).Skip(skip).Take(pageSize).ToList();
+                {
+                    Id = a.DictionaryCountyId,
+                    Name = a.DictionaryCountyName,
+                    CountryName = a.DictionaryCountry.DictionaryCountryName
+                }).Skip(skip).Take(pageSize).ToList();
 
 
             //comentariu
@@ -94,18 +95,18 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCategory.Count();
             return i;
         }
-        public List<DictionaryCityModel> GetDictionaryCityModels(int page,int pageSize)
+        public List<DictionaryCityModel> GetDictionaryCityModels(int page, int pageSize)
         {
-          
-         
-        int skip = (page - 1) * pageSize;
-        List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
-        {
-            Id = a.DictionaryCityId,
-            CityName = a.DictionaryCityName,
-            CountyName = a.DictionaryCounty.DictionaryCountyName,
-            CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
-        }).Skip(skip).Take(pageSize).ToList();
+
+
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
+            {
+                Id = a.DictionaryCityId,
+                CityName = a.DictionaryCityName,
+                CountyName = a.DictionaryCounty.DictionaryCountyName,
+                CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
 
             return dictionaryCityModels;
 
@@ -115,8 +116,8 @@ namespace iWasHere.Domain.Service
         {
             List<DictionaryCountyModel> dictionaryLCounties = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
             {
-             CountyId=a.DictionaryCountyId,
-            CountyName=a.DictionaryCountyName
+                CountyId = a.DictionaryCountyId,
+                CountyName = a.DictionaryCountyName
 
             }).ToList();
 
@@ -133,6 +134,20 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLCountries;
         }
+
+        public List<TouristAttractionScheduleModel> GetTouristAttractionsSchedule()
+        {
+            List<TouristAttractionScheduleModel> touristAttractionScheduleModels = _dbContext.TouristAttraction.Select(a => new TouristAttractionScheduleModel()
+            {
+                TouristAttractionId = a.TouristAttractionId,
+                TouristAttractionName = a.Name
+
+            }).ToList();
+
+            return touristAttractionScheduleModels;
+        }
+
+
         public int TotalCity()
         {
             int i = _dbContext.DictionaryCity.Count();
@@ -142,11 +157,12 @@ namespace iWasHere.Domain.Service
 
 
 
-        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page,int pageSize)
+        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize)
         {
-          
-                int pageSkip = (page - 1) * pageSize;
-                List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule.
+            int pageSkip = (page - 1) * pageSize;
+            List<ScheduleTouristAttractionModel> scheduleTouristAttractions = new List<ScheduleTouristAttractionModel>();
+        
+            scheduleTouristAttractions = _dbContext.Schedule.
                 Select(a => new ScheduleTouristAttractionModel()
                 {
 
@@ -159,27 +175,151 @@ namespace iWasHere.Domain.Service
 
 
                 }).Skip(pageSkip).Take(pageSize).ToList();
-              
-               return scheduleTouristAttractions;
 
-         }
+            return scheduleTouristAttractions;
+
+        }
 
 
-        public IQueryable<ScheduleFilteredModel> GetDictionaryScheduleFiltred(string searchString)
+
+        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize, string searchString)
         {
-           IQueryable<ScheduleFilteredModel> schedulefiltered = _dbContext.Schedule.Where(s => s.TouristAttraction.Name.Contains(searchString)).Select(a => new ScheduleFilteredModel());
+           
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                int pageSkip = (page - 1) * pageSize;
+                List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule
+                     .Where(a => a.TouristAttraction.Name.Contains(searchString)).
+                     Select(a => new ScheduleTouristAttractionModel()
+                     {
+                         ScheduleId = a.ScheduleId,
+                         Day = a.Day,
+                         StartHour = a.StartHour,
+                         EndHour = a.EndHour,
+                         Season = a.Season.DictionarySeasonName,
+                         TouristAttractionName = a.TouristAttraction.Name
+
+                     }).Skip(pageSkip).Take(pageSize).ToList();
+                return scheduleTouristAttractions;
+            }
+            else
+            {
+                int pageSkip1 = (page - 1) * pageSize;
+                List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule.
+                Select(a => new ScheduleTouristAttractionModel()
+                {
+                    ScheduleId = a.ScheduleId,
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
+
+                }).Skip(pageSkip1).Take(pageSize).ToList();
+                return scheduleTouristAttractions;
+
+            }
 
 
-            return schedulefiltered;
+            //IQueryable<ScheduleTouristAttractionModel> query = _dbContext.Schedule;
+            //int skip = (page - 1) * pageSize;
+            //if (!string.IsNullOrWhiteSpace(searchString))
+            //{
+            //    query = query.Where(a => a.DictionaryCountyName.StartsWith(searchString));
+            //}
+            //if (countryId != 0)
+            //{
+            //    query = query.Where(a => a.DictionaryCountryId == countryId);
+            //}
 
+
+
+            //totalrows = query.Count();
+            //List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = query.Select(a => new DictionaryCountyTypeModel()
+            //{
+            //    Id = a.DictionaryCountyId,
+            //    Name = a.DictionaryCountyName,
+            //    CountryName = a.DictionaryCountry.DictionaryCountryName
+            //}).Skip(skip).Take(pageSize).ToList();
+
+
+
+            //return dictionaryCountyTypeModel;
 
 
         }
+
+
+
+
+        public string DeleteSchedule(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.Schedule.Single(a => a.ScheduleId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Acest program nu poate fi sters pentru ca are asociat un muzeu.";
+
+            }
+        }
+
 
         public int GetItemsOfSchedule()
         {
             return _dbContext.Schedule.Count();
         }
+        public int GetItemsOfSchedule(string searchText)
+        {
+
+            if (!string.IsNullOrEmpty(searchText) )
+
+                 return _dbContext.Schedule.Where(a => a.TouristAttraction.Name == searchText).Count();
+            else
+                return _dbContext.Schedule.Count();
+        }
+
+        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleFiltred(int page, int pageSize, string searchString)
+        {
+
+            int pageSkip = (page - 1) * pageSize;
+            List<ScheduleTouristAttractionModel> schedulefiltered = _dbContext.Schedule
+                .Where(a => a.TouristAttraction.Name == searchString || a.TouristAttraction.Name.StartsWith(searchString)).
+                Select(a => new ScheduleTouristAttractionModel()
+                {
+                    ScheduleId=a.ScheduleId,
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
+
+
+
+                }).Skip(pageSkip).Take(pageSize).ToList();
+
+
+
+
+
+            return schedulefiltered;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
