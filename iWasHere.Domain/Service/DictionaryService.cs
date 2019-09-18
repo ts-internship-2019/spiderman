@@ -25,5 +25,32 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkTypeModels;
         }
+        public List<DictionaryCurrencyModel> GetDictionaryCurrencyModel()
+        {
+            List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.
+                Select(a => new DictionaryCurrencyModel()
+            {
+                
+                DictionaryItemId = a.DictionaryCurrencyId,
+                DictionaryItemCode = a.DictionaryCurrencyCode,
+                DictionaryItemName = a.DictionaryCurrencyName
+                }).ToList();
+
+            return dictionaryCurrencyModel;
+        }
+        public List<DictionaryCurrencyModel> GetDictionaryCurrencyModel(int page, int pageSize)
+        {
+            List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.Select(a => new DictionaryCurrencyModel()
+            {
+                DictionaryItemId = a.DictionaryCurrencyId,
+                DictionaryItemCode = a.DictionaryCurrencyCode,
+                DictionaryItemName = a.DictionaryCurrencyName
+            }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            return dictionaryCurrencyModel;
+        }
+        public int GetCountDictionaryCurrency()
+        {
+            return _dbContext.DictionaryCurrency.Count();
+        }
     }
 }

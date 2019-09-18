@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Service;
 using Microsoft.AspNetCore.Mvc;
+using iWasHere.Domain.Service;
 
 namespace iWasHere.Web.Controllers
 {
@@ -15,6 +16,7 @@ namespace iWasHere.Web.Controllers
         public DictionaryController(DictionaryService dictionaryService)
         {
             _dictionaryService = dictionaryService;
+
         }
 
         public IActionResult Index()
@@ -23,12 +25,14 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+
         public IActionResult Currency()
         {
-            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
+            List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dictionaryService.GetDictionaryCurrencyModel();
 
-            return View(dictionaryLandmarkTypeModels);
+            return View(dictionaryCurrencyModel);
         }
+
 
         public IActionResult County()
         {
