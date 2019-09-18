@@ -50,6 +50,7 @@ namespace iWasHere.Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); ;
             services.AddKendo();
+          
             services.AddScoped<DictionaryService>();
         }
 
@@ -78,7 +79,7 @@ namespace iWasHere.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Dictionary}/{action=Schedule}/{id?}");
             });
         }
     }

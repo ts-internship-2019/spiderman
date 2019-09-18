@@ -9,8 +9,6 @@ using iWasHere.Domain.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using iWasHere.Web.Models;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iWasHere.Web.Controllers
@@ -31,10 +29,32 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+
+
+
+        public IActionResult Schedule()
+        {
+            return View();
+        }
+
+
+        public IActionResult ScheduleData([DataSourceRequest]DataSourceRequest request, string txtFilterName)
+        {
+            List<ScheduleTouristAttractionModel> jsonVariable = _dictionaryService.GetDictionaryScheduleModels(request.Page, request.PageSize,txtFilterName);
+          
+            Kendo.Mvc.UI.DataSourceResult v3 = new DataSourceResult();
+            v3.Data = jsonVariable;
+            v3.Total = _dictionaryService.GetItemsOfSchedule(txtFilterName);
+            return Json(v3);
+
+        }
         public IActionResult Currency()
         {
             List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
 
+
+
+       
             return View(dictionaryLandmarkTypeModels);
         }
 
@@ -64,10 +84,14 @@ namespace iWasHere.Web.Controllers
         }
         public ActionResult CityData([DataSourceRequest]DataSourceRequest request)
         {
-            var jsonVariable = _dictionaryService.GetDictionaryCityModels(request.Page, request.PageSize).ToDataSourceResult(request);
-            jsonVariable.Total = 2097152;
-            return Json(jsonVariable);
-           
+            var jsonVariable = _dictionaryService.GetDictionaryCityModels(request.Page, request.PageSize);
+            DataSourceResult result = new DataSourceResult()
+            {
+                Data = jsonVariable,
+                Total = _dictionaryService.TotalCity()
+            };
+            return Json(result);
+
         }
       
         public ActionResult GetCountyData([DataSourceRequest]DataSourceRequest request, string abc, int edf)
@@ -98,15 +122,37 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request)
+        public ActionResult AddCategory()
         {
-            var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
-            DataSourceResult result = new DataSourceResult()
+            return View();
+        }
+
+        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
             {
-                Data = jsonVariable,
-                Total = _dictionaryService.Total()
-            };
-            return Json(result);
+                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
+
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = _dictionaryService.Total()
+                };
+                
+                return Json(result);
+            }
+            else
+            {
+                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
+
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = _dictionaryService.FilterTotalCategory(categoryName)
+                };
+
+                return Json(result);
+            }
         }
 
         public IActionResult SearchCountyName()
@@ -157,6 +203,63 @@ namespace iWasHere.Web.Controllers
 
         }
 
+        public JsonResult ScheduleFilteredDataSource([DataSourceRequest]DataSourceRequest request, ScheduleTouristAttractionModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var filter = model.TouristAttractionName;
+            }
 
+
+
+
+            var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
+            DataSourceResult result = new DataSourceResult()
+            {
+                Data = jsonVar,
+                Total = _dictionaryService.GetItemsOfSchedule()
+            };
+            return Json(result);
+
+     }
+
+        public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
+        {
+            int rows = 0;
+            var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
+            DataSourceResult dataSource = new DataSourceResult();
+            dataSource.Data = x;
+            dataSource.Total = rows;
+            return Json(dataSource);
+            
+        }
+
+        public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
+        {
+            if (schedule != null)
+            {
+                 string errorMessageForClient=  _dictionaryService.DeleteSchedule(schedule.ScheduleId);
+                if (string.IsNullOrWhiteSpace(errorMessageForClient))
+                {
+                    return Json(ModelState.ToDataSourceResult());
+                }
+                else
+                {
+                    ModelState.AddModelError("a", errorMessageForClient);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+
+                return Json(ModelState.ToDataSourceResult());
+
+               }
+        public ActionResult GetTouristAttraction()
+        {
+            return Json(_dictionaryService.GetTouristAttractionsSchedule());
+        }
+
+
+            return Json(ModelState.ToDataSourceResult());
+        }
     }
 }
