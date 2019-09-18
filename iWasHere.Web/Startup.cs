@@ -50,6 +50,7 @@ namespace iWasHere.Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); ;
             services.AddKendo();
+          
             services.AddScoped<DictionaryService>();
         }
 

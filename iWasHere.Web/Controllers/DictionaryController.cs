@@ -11,6 +11,8 @@ using Kendo.Mvc.UI;
 using iWasHere.Web.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iWasHere.Web.Controllers
@@ -30,10 +32,36 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+
+
+
+        public IActionResult Schedule()
+        {
+            return View();
+        }
+
+
+        public IActionResult ScheduleData([DataSourceRequest]DataSourceRequest request)
+        {
+            List<ScheduleTouristAttractionModel> jsonVariable = _dictionaryService.GetDictionaryScheduleModels(request.Page, request.PageSize);
+          
+            Kendo.Mvc.UI.DataSourceResult v3 = new DataSourceResult();
+            v3.Data = jsonVariable;
+            v3.Total = _dictionaryService.GetItemsOfSchedule();
+            return Json(v3);
+
+        }
         public IActionResult Currency()
         {
             List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
 
+
+
+        //public IActionResult ScheduleFiltered([DataSourceRequest]DataSourceRequest request)
+        //{
+        //    //var jsonVariable = _dictionaryService.GetDictionaryScheduleFiltred().ToDataSourceResult(request);
+        //   // return Json(jsonVariable);
+        //}
             return View(dictionaryLandmarkTypeModels);
         }
 
@@ -130,8 +158,10 @@ namespace iWasHere.Web.Controllers
         public IActionResult SearchCountyName()
         {
             return View();
+
             
         }
+
 
         public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
         {
