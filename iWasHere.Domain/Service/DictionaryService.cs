@@ -30,7 +30,7 @@ namespace iWasHere.Domain.Service
 
         public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModels(int page, int pageSize)
         {
-            //pageSize = 10;
+          
             int skip = (page - 1) * pageSize;
             List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyTypeModel()
             {
@@ -54,22 +54,29 @@ namespace iWasHere.Domain.Service
 
         }
 
-        public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModelsFilter(int page, int pageSize, string name)
+        public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModelsFilter(int page, int pageSize, string name, int countryId,out int totalrows)
         {
-            //pageSize = 10;
+            IQueryable<DictionaryCounty> query = _dbContext.DictionaryCounty;
             int skip = (page - 1) * pageSize;
-            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = 
-                _dbContext.DictionaryCounty
-                .Where(a=>a.DictionaryCountyName==name)
-                .Select(a => new DictionaryCountyTypeModel()
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(a => a.DictionaryCountyName.StartsWith(name));
+            }
+            if (countryId!=0)
+            {
+                query = query.Where(a => a.DictionaryCountryId == countryId);
+            }
+
+            totalrows = query.Count();
+            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = query.Select(a => new DictionaryCountyTypeModel()
             {
                 Id = a.DictionaryCountyId,
                 Name = a.DictionaryCountyName,
                 CountryName = a.DictionaryCountry.DictionaryCountryName
             }).Skip(skip).Take(pageSize).ToList();
-
-
-            //comentariu
+       
+               
+            
             return dictionaryCountyTypeModel;
         }
 
@@ -93,10 +100,16 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCategory.Count();
             return i;
         }
+
+        public int TotalCounty()
+        {
+            int i = _dbContext.DictionaryCounty.Count();
+            return i;
+        }
+
         public List<DictionaryCityModel> GetDictionaryCityModels(int page,int pageSize)
         {
           
-         
         int skip = (page - 1) * pageSize;
         List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
         {
@@ -132,7 +145,44 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLCountries;
         }
-        
-       
+
+        public List<CountryListModel>Filter_GetCountries(string text)
+        {
+            var a = _dbContext.DictionaryCountry.Select(c => new CountryListModel()
+            {
+                Id =c.DictionaryCountryId,
+                Name=c.DictionaryCountryName
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                a = a.Where(p => p.Name.StartsWith(text));
+            }
+            List<CountryListModel> countryListModels = a.Take(50).ToList();
+
+            return countryListModels;
+
+        }
+
+
+        public int FilterTotalCounties(string name, int country)
+        {
+            int i = _dbContext.DictionaryCounty.Where(a => a.DictionaryCountyName == name && a.DictionaryCountryId == country).Count();
+            return i;
+        }
+
+        public string DeleteCounty(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCounty.Single(a => a.DictionaryCountyId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Acest judet nu poate fi sters pentru ca are asociat un oras!!!";
+            }
+        }
+
     }
 }

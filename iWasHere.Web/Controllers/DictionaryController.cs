@@ -21,6 +21,7 @@ namespace iWasHere.Web.Controllers
 
         public DictionaryController(DictionaryService dictionaryService)
         {
+            
             _dictionaryService = dictionaryService;
         }
 
@@ -69,12 +70,17 @@ namespace iWasHere.Web.Controllers
            
         }
       
-        public IActionResult GetCountyData([DataSourceRequest]DataSourceRequest request)
+        public ActionResult GetCountyData([DataSourceRequest]DataSourceRequest request, string abc, int edf)
         {
-            //_dictionaryService.GetDictionaryCountyTypeModels();
-            var jsonVariable = _dictionaryService.GetDictionaryCountyTypeModels(request.Page, request.PageSize).ToDataSourceResult(request);
-            jsonVariable.Total = 2097152;
-             return Json(jsonVariable);
+  
+                var jsonVariable = _dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, abc,edf,out int totalrows);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVariable,
+                    Total = totalrows /*_dictionaryService.FilterTotalCounties(abc, edf)*/
+                };
+                return Json(result);
+            
         }
 
         public IActionResult GetCountry()
@@ -109,11 +115,47 @@ namespace iWasHere.Web.Controllers
             
         }
 
-        public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
+        //public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
+        //{
+        //    return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
+        //}
+
+
+        public IActionResult ClientFiltering()
         {
-            return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
+            return View();
         }
 
+        public ActionResult FilterGetCountries(string text)
+        {
+            return Json(_dictionaryService.Filter_GetCountries(text));
+        }
+
+        public IActionResult AddCounty()
+        {
+            return View();
+
+        }
+
+        public ActionResult Process_DestroyCounty([DataSourceRequest] DataSourceRequest request, DictionaryCountyTypeModel dictionaryCountyType)
+        {
+            if (dictionaryCountyType != null)
+            {
+                string errorMessage=_dictionaryService.DeleteCounty(dictionaryCountyType.Id);
+                if (string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    return Json(ModelState.ToDataSourceResult());
+                }
+                else
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                    return Json(ModelState.ToDataSourceResult()); 
+                }
+            }
+
+            return Json(ModelState.ToDataSourceResult());
+
+        }
 
 
     }

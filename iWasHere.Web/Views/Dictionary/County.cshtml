@@ -5,49 +5,70 @@
 }
 
 <h1 class="text-center">Lista judete</h1>
-<div class="text-right">
-    <p>
-        @(Html.Kendo().Button()
-            .Name("primaryTextButton")
-            .HtmlAttributes(new { type = "button", @class = "k-primary" })
-            .Content("Adauga Judet"))
-    </p>
-
-</div>
-
-<label for="countries">Countries:</label>
+<p>
+@(Html.Kendo().Button()
+                    .Name("textButton")
+                    .HtmlAttributes(new { type = "button" })
+                    .Content("<a href='/dictionary/AddCounty'>Adauga</span>")
+)
+</p>
+@*<label for="countries">Countries:</label>*@
 <div>
+    <label for="countries">Countries:</label>
     @(Html.Kendo().ComboBox()
-          .Name("countries")
-          .HtmlAttributes(new { style = "width:30%;" })
-          .Placeholder("Select country...")
-          .DataTextField("Name")
-          .DataValueField("Id")
-          .Filter(FilterType.Contains)
+              .Name("countries")
+              .DataValueField("Id")
+              .DataTextField("Name")
+              .HtmlAttributes(new { style = "width:60%; id='countries'" })
+          .Filter("StartsWith")
           .DataSource(source =>
-                  {
-                      source.Read(read =>
-                      {
-                          read.Action("GetJsonCountryData", "Dictionary");
-              });
+          {
+              source.Read(read =>
+              {
+                  read.Action("FilterGetCountries", "Dictionary");
+              })
+              .ServerFiltering(true);
           })
-
     )
+    <div class="demo-hint">Type the name of a country</div>
 
-    @(Html.Kendo().Button()
-            .Name("primaryTextButton")
-            .HtmlAttributes(new { type = "button", @class = "k-primary" })
-            .Content("Filtreaza"))
+    @*@(Html.Kendo().ComboBox()
+              .Name("countries")
+              .HtmlAttributes(new { style = "width:30%;" })
+              .Placeholder("Select country...")
+              .DataTextField("Name")
+              .DataValueField("Id")
+              .Filter(FilterType.Contains)
+              .DataSource(source =>
+                      {
+                          source.Read(read =>
+                          {
+                              read.Action("GetJsonCountryData", "Dictionary");
+                  });
+              })
 
+        )*@
+
+    @*@(Html.Kendo().Button()
+        .Name("primaryTextButton")
+        .HtmlAttributes(new { type = "button", @class = "k-primary" })
+        .Content("Filtreaza"))*@
 
 </div>
+<p>
+    <button onclick="test()" class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Filtreaza</button>
 
-<p><label for="counties">
-    County:@(Html.Kendo().TextBox()
-            .Name("kTextBox")
-            .HtmlAttributes(new { @class = "form-control" })
-            )
-</label></p>
+    <button onclick="DeleteFilters()" class="k-button k-primary" id="gett" style="margin-top: 2em; float: right;">Sterge filtre</button>
+</p>
+
+<p>
+    <label for="counties">
+        County:@(Html.Kendo().TextBox()
+.Name("kTextBox")
+.HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
+        )
+    </label>
+</p>
 
 
 
@@ -61,8 +82,14 @@
             columns.Bound(c => c.Id).Width(70);
             columns.Bound(c => c.Name).Width(140);
             columns.Bound(c => c.CountryName).Width(140);
-            columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' /> ").Width(70);
-            columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' /> ").Width(70);
+            columns.Command(command =>
+           {
+               command.Edit()
+                  .Text("Edit")
+                  .UpdateText("Edit")
+                  .CancelText("Cancel");
+                  command.Destroy().Text("Delete");
+           });
 
         })
         .HtmlAttributes(new { style = "height: 550px;" })
@@ -75,7 +102,10 @@
             .ButtonCount(5))
         .DataSource(dataSource => dataSource
             .Ajax()
-            .Read(read => read.Action("GetCountyData", "Dictionary"))
+            .Read(read => read.Action("GetCountyData", "Dictionary").Data("onAdditionalDataTextBoxCounty"))
+            .Events(events => events.Error("error_handler"))
+            .Model(model => model.Id(p => p.Id))
+            .Destroy(update => update.Action("Process_DestroyCounty", "Dictionary"))
             .PageSize(20)
         )
     )
@@ -93,10 +123,55 @@
         float: initial;
     }
 
-    .form-control{
-        width:90%;
-        word-wrap:break-word;
+    .form-control {
+        width: 90%;
+        word-wrap: break-word;
     }
 </style>
 
 
+<script>
+    function onAdditionalData() {
+        return {
+            text: $("#Orase").val()
+        };
+    }
+
+    function onAdditionalDataTextBoxCounty() {
+        var obj = {}
+        obj["abc"] = $("#kTextBox").val();
+        obj["edf"] = $("#countries").data("kendoComboBox").value();
+
+        return obj;
+    }
+
+    function test() {
+
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").dataSource.page(1);
+    }
+
+    function DeleteFilters() {
+        $("#kTextBox").val(null);
+        $("#countries").data("kendoComboBox").value(null);
+
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").dataSource.page(1);
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            e.preventDefault();
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+
+</script>
