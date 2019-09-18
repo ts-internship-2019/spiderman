@@ -1,0 +1,32 @@
+﻿@model IEnumerable<iWasHere.Domain.DTOs.DictionaryCategoryTypeModel>
+@{
+    ViewData["Title"] = "Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Category</h1>
+
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCategoryTypeModel>()
+    .Name("Grid")
+    .Columns(columns =>
+    {
+        columns.Bound(o => o.Name);
+    })
+    .Sortable()
+    .Filterable()
+    .Scrollable()
+    .Groupable()
+    .Pageable(
+        pageable => pageable
+                 .Refresh(true)
+                 .PageSizes(true)
+                 .ButtonCount(5)
+    )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        //.PageSize(10)
+        .PageSize(20)
+        .Read(read => read.Action("CategoryBinding_Read", "Dictionary"))
+
+    )
+)

@@ -48,7 +48,7 @@ namespace iWasHere.Web
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); 
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); ;
             services.AddKendo();
           
             services.AddScoped<DictionaryService>();
