@@ -124,6 +124,11 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
+        public ActionResult AddCategory()
+        {
+            return View();
+        }
+
         public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
         {
             if (string.IsNullOrEmpty(categoryName))
@@ -135,8 +140,7 @@ namespace iWasHere.Web.Controllers
                     Data = jsonVariable,
                     Total = _dictionaryService.Total()
                 };
-
-
+                
                 return Json(result);
             }
             else
@@ -146,20 +150,16 @@ namespace iWasHere.Web.Controllers
                 DataSourceResult result = new DataSourceResult()
                 {
                     Data = jsonVariable,
-                    Total = _dictionaryService.Total()
+                    Total = _dictionaryService.FilterTotalCategory(categoryName)
                 };
-
 
                 return Json(result);
             }
-           
         }
 
         public IActionResult SearchCountyName()
         {
             return View();
-
-            
         }
 
 
@@ -167,8 +167,5 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
         }
-
-
-
     }
 }

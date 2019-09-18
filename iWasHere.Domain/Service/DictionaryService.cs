@@ -37,9 +37,9 @@ namespace iWasHere.Domain.Service
             {
                 Id = a.DictionaryCountyId,
                 Name = a.DictionaryCountyName,
-                CountryName=a.DictionaryCountry.DictionaryCountryName
+                CountryName = a.DictionaryCountry.DictionaryCountryName
             }).Skip(skip).Take(pageSize).ToList();
-               
+
             return dictionaryCountyTypeModel;
         }
 
@@ -59,15 +59,15 @@ namespace iWasHere.Domain.Service
         {
             //pageSize = 10;
             int skip = (page - 1) * pageSize;
-            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = 
+            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel =
                 _dbContext.DictionaryCounty
-                .Where(a=>a.DictionaryCountyName==name)
+                .Where(a => a.DictionaryCountyName == name)
                 .Select(a => new DictionaryCountyTypeModel()
-            {
-                Id = a.DictionaryCountyId,
-                Name = a.DictionaryCountyName,
-                CountryName = a.DictionaryCountry.DictionaryCountryName
-            }).Skip(skip).Take(pageSize).ToList();
+                {
+                    Id = a.DictionaryCountyId,
+                    Name = a.DictionaryCountyName,
+                    CountryName = a.DictionaryCountry.DictionaryCountryName
+                }).Skip(skip).Take(pageSize).ToList();
 
 
             //comentariu
@@ -85,7 +85,6 @@ namespace iWasHere.Domain.Service
 
             }).Skip(skip).Take(pageSize).ToList();
 
-
             return dictionaryCategoryTypeModels;
         }
 
@@ -93,16 +92,32 @@ namespace iWasHere.Domain.Service
         {
             //pageSize = 10;
             int skip = (page - 1) * pageSize;
+            
             List<DictionaryCategoryTypeModel> dictionaryCityyTypeModel =
                 _dbContext.DictionaryCategory
-                .Where(a => a.DictionaryCategoryName == name)
+                .Where(a => a.DictionaryCategoryName.StartsWith(name))
                 .Select(a => new DictionaryCategoryTypeModel()
                 {
                     Id = a.DictionaryCategoryId,
                     Name = a.DictionaryCategoryName
                 }).Skip(skip).Take(pageSize).ToList();
-       
+
             return dictionaryCityyTypeModel;
+        }
+   
+        public void InsertCategoryType(string name)
+        {
+            DictionaryCategory dictionary = new DictionaryCategory();
+            dictionary.DictionaryCategoryName = name;
+
+            _dbContext.DictionaryCategory.Add(dictionary);
+            _dbContext.SaveChanges();
+
+        }
+        public int FilterTotalCategory(string name)
+        {
+            int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName == name).Count();
+            return i;
         }
 
         public int Total()
@@ -110,18 +125,16 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCategory.Count();
             return i;
         }
-        public List<DictionaryCityModel> GetDictionaryCityModels(int page,int pageSize)
+        public List<DictionaryCityModel> GetDictionaryCityModels(int page, int pageSize)
         {
-          
-         
-        int skip = (page - 1) * pageSize;
-        List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
-        {
-            Id = a.DictionaryCityId,
-            CityName = a.DictionaryCityName,
-            CountyName = a.DictionaryCounty.DictionaryCountyName,
-            CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
-        }).Skip(skip).Take(pageSize).ToList();
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
+            {
+                Id = a.DictionaryCityId,
+                CityName = a.DictionaryCityName,
+                CountyName = a.DictionaryCounty.DictionaryCountyName,
+                CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
 
             return dictionaryCityModels;
 
@@ -131,8 +144,8 @@ namespace iWasHere.Domain.Service
         {
             List<DictionaryCountyModel> dictionaryLCounties = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
             {
-             CountyId=a.DictionaryCountyId,
-            CountyName=a.DictionaryCountyName
+                CountyId = a.DictionaryCountyId,
+                CountyName = a.DictionaryCountyName
 
             }).ToList();
 
@@ -158,32 +171,32 @@ namespace iWasHere.Domain.Service
 
 
 
-        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page,int pageSize)
+        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize)
         {
-          
-                int pageSkip = (page - 1) * pageSize;
-                List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule.
-                Select(a => new ScheduleTouristAttractionModel()
-                {
 
-                    Day = a.Day,
-                    StartHour = a.StartHour,
-                    EndHour = a.EndHour,
-                    Season = a.Season.DictionarySeasonName,
-                    TouristAttractionName = a.TouristAttraction.Name
+            int pageSkip = (page - 1) * pageSize;
+            List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule.
+            Select(a => new ScheduleTouristAttractionModel()
+            {
+
+                Day = a.Day,
+                StartHour = a.StartHour,
+                EndHour = a.EndHour,
+                Season = a.Season.DictionarySeasonName,
+                TouristAttractionName = a.TouristAttraction.Name
 
 
 
-                }).Skip(pageSkip).Take(pageSize).ToList();
-              
-               return scheduleTouristAttractions;
+            }).Skip(pageSkip).Take(pageSize).ToList();
 
-         }
+            return scheduleTouristAttractions;
+
+        }
 
 
         public IQueryable<ScheduleFilteredModel> GetDictionaryScheduleFiltred(string searchString)
         {
-           IQueryable<ScheduleFilteredModel> schedulefiltered = _dbContext.Schedule.Where(s => s.TouristAttraction.Name.Contains(searchString)).Select(a => new ScheduleFilteredModel());
+            IQueryable<ScheduleFilteredModel> schedulefiltered = _dbContext.Schedule.Where(s => s.TouristAttraction.Name.Contains(searchString)).Select(a => new ScheduleFilteredModel());
 
 
             return schedulefiltered;
