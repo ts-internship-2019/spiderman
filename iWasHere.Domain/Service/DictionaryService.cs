@@ -176,14 +176,103 @@ namespace iWasHere.Domain.Service
 
         }
 
+        //Andrei
         public int GetItemsOfSchedule()
         {
             return _dbContext.Schedule.Count();
         }
 
 
+        public List<DictionaryCountryModel> GetDictionaryCountryModels()
+        {
+            List<DictionaryCountryModel> dictionaryCountryModels = _dbContext.DictionaryCountry.Select(DictionaryCountry => new DictionaryCountryModel()
+            {
+                CountryId = DictionaryCountry.DictionaryCountryId,
+                CountryName = DictionaryCountry.DictionaryCountryName
+            }).ToList();
+
+            return dictionaryCountryModels;
+        }
+        /*
+        public List<DictionaryCountryModel> GetDictionaryCountryModel(int page, int pageSize)
+        {
+
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountryModel> countries = _dbContext.DictionaryCountry.
+            Select(a => new DictionaryCountryModel()
+            {
+                CountryId = a.DictionaryCountryId,
+                CountryName = a.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return countries;
+
+        }
+        */
+
+        public int TotalCountries()
+        {
+            int i = _dbContext.DictionaryCountry.Count();
+            return i;
+        }
 
 
+        public IEnumerable<DictionaryCountryModel> GetCountryModel(int page, int pageSize, out int rows, string abc)
+        {
+            rows = 0;
+            rows = _dbContext.DictionaryCountry.Count();
+            if (abc == null)
+                return _dbContext.DictionaryCountry.Skip((page - 1) * pageSize).Take(pageSize).Select(Country => new DictionaryCountryModel
+                {
+                    CountryId = Country.DictionaryCountryId,
+                    CountryName = Country.DictionaryCountryName
+                });
+            else
+            {
+                rows = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName.StartsWith(abc)).Count();
+                return _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName.StartsWith(abc)).Skip((page - 1) * pageSize).Take(pageSize).Select(Country => new DictionaryCountryModel
+                {
+                    CountryId = Country.DictionaryCountryId,
+                    CountryName = Country.DictionaryCountryName
+                });
+            }
+        }
+
+        /*
+        public List<DictionaryCountryModel> GetDictionaryCountryFilter(int page, int pageSize, string name)
+        {
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountryModel> countryFilter =
+                _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryName == name || a.DictionaryCountryName.StartsWith(name))
+                .Select(a => new DictionaryCountryModel()
+                {
+                    CountryId = a.DictionaryCountryId,
+                    CountryName = a.DictionaryCountryName
+                }).Skip(skip).Take(pageSize).ToList();
+
+            return countryFilter;
+        }
+        */
+
+        public int FilterTotalCountries(string name)
+        {
+            int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
+            return i;
+        }
+        public string DeleteCountry(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCountry.Single(a => a.DictionaryCountryId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Ghinion frate! Exista un judet in aceasta tara.";
+            }
+        }
 
     }
 }

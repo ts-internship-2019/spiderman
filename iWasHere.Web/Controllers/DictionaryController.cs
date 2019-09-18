@@ -9,10 +9,6 @@ using iWasHere.Domain.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using iWasHere.Web.Models;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iWasHere.Web.Controllers
@@ -148,7 +144,34 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
         }
 
+        public IActionResult Country()
+        {
+            return View();
+        }
 
+        public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
+        {
+            int rows = 0;
+            var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
+            DataSourceResult dataSource = new DataSourceResult();
+            dataSource.Data = x;
+            dataSource.Total = rows;
+            return Json(dataSource);
+            
+        }
 
+        public ActionResult Process_DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
+        {
+            if (country != null)
+            {
+                string errorMessage =_dictionaryService.DeleteCountry(country.CountryId);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                }
+            }
+
+            return Json(ModelState.ToDataSourceResult());
+        }
     }
 }
