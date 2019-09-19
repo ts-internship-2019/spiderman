@@ -1,110 +1,192 @@
-﻿
+﻿@model iWasHere.Domain.DTOs.DictionaryCityModel
 @{
     ViewData["Title"] = "City";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>City</h1>
+<h1>Orase</h1>
+<button onclick="test()" class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Filtreaza</button>
+@(Html.Kendo().Button()
+                    .Name("textButton")
+                    .HtmlAttributes(new { type = "button" })
+                    .Content("<a href='/dictionary/AddCity'>Adauga</span>")
+)
 <td>
     @Html.ActionLink("Adauga", "Adauga", new { /* id=item.PrimaryKey */ }) |
 
 </td>
-@(Html.Kendo().ComboBox()
-              .Name("Judete")
-              .HtmlAttributes(new { style = "width:30%;" })
-              .Placeholder("Selecteaza judet..")
-              .DataTextField("CountyName")
-              .DataValueField("CountyId")
-              .Filter(FilterType.Contains)
-              .DataSource(source =>
-                                                  {
-                                                      source.Read(read =>
-                                                      {
-                                                          read.Action("CountyData", "Dictionary");
-                  });
-              })
-)
-@(Html.Kendo().ComboBox()
-              .Name("Tari")
-              .HtmlAttributes(new { style = "width:30%;" })
-              .Placeholder("Selecteaza tara..")
-              .DataTextField("CountryName")
-              .DataValueField("CountryId")
-              .Filter(FilterType.Contains)
-              .DataSource(source =>
-                                                  {
-                                                      source.Read(read =>
-                                                      {
-                                                          read.Action("CountryData", "Dictionary");
-                  });
-              }).Events(e =>
-            {
-                e.Select("onSelect");
-            })
-)
 
 
-@Html.TextBox("numeTara", null, new { @class = "form-control" })
-
-@(Html.Kendo().TextBox()
-      .Name("kTextBox")
-      .HtmlAttributes(new { style = "width:100%", id = "citytb" }))
-
-@model IEnumerable<iWasHere.Domain.DTOs.DictionaryCityModel>
+<p>
+    <div class="demo-section k-content">
 
 
-    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
-        .Name("grid")
-        .Columns(columns =>
-        {
-            columns.Bound(p => p.CityName).Title("Oras");
-            columns.Bound(p => p.CountyName).Title("Judet").Width(130);
-            columns.Bound(p => p.CountryName).Title("Tara").Width(130);
+        <label for="Judet">
+            Judet:  @(Html.Kendo().ComboBox()
+.Name("counties")
+.DataTextField("CountyName")
+.DataValueField("CountyId")
+.HtmlAttributes(new { style = "width:60%; id='counties'" })
+.Filter("StartsWith")
+.DataSource(source =>
+    {
+source.Read(read =>
+{
+    read.Action("FilterGetCounties", "Dictionary");
+})
+.ServerFiltering(true);
+})
+            )
 
-         columns.Template(" <input type='button' class='k-button info' name='info' value='Modifica' /> ");
 
-         columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' /> ");
-        })
-        .HtmlAttributes(new { style = "height: 550px;" })
-        .Scrollable()
-        .Groupable()
-        .Sortable()
-        .Pageable(pageable => pageable
-            .Refresh(true)
-            .PageSizes(true)
-            .ButtonCount(5))
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .Read(read => read.Action("CityData", "Dictionary"))
-            .PageSize(20)
+    </div>
+    @*@(Html.Kendo().ComboBox()
+                          .Name("Judete")
+                          .HtmlAttributes(new { style = "width:30%;" })
+                          .Placeholder("Selecteaza judet..")
+                          .DataTextField("CountyName")
+                          .DataValueField("CountyId")
+                          .Filter(FilterType.Contains)
+                          .DataSource(source =>
+                                                                              {
+                                                                                  source.Read(read =>
+                                                                                  {
+                                                                                      read.Action("CountyData", "Dictionary");
+                              });
+                          })
+            )
+        </p>
+        <p>
+            @(Html.Kendo().ComboBox()
+                          .Name("Tari")
+                          .HtmlAttributes(new { style = "width:30%;" })
+                          .Placeholder("Selecteaza tara..")
+                          .DataTextField("CountryName")
+                          .DataValueField("CountryId")
+                          .Filter(FilterType.Contains)
+                          .DataSource(source =>
+                                                                              {
+                                                                                  source.Read(read =>
+                                                                                  {
+                                                                                      read.Action("CountryData", "Dictionary");
+                              });
+                          }).Events(e =>
+                        {
+                            e.Select("onSelect");
+                        })
+            )*@
+
+
+</p>
+
+
+
+<p>
+    <label for="Oras">
+        Oras:@(Html.Kendo().TextBox()
+.Name("kTextBox").
+HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
         )
+    </label>
+</p>
+
+@using (Html.BeginForm("Hai", "Dictionary", FormMethod.Post))
+{
+    @Html.TextBoxFor(model => model.CityName)
+    <button type="submit">Hai</button>
+}
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
+    .Name("grid")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.CityName).Title("Oras");
+        columns.Bound(p => p.CountyName).Title("Judet").Width(130);
+        columns.Bound(p => p.CountryName).Title("Tara").Width(130);
+
+        columns.Command(command =>
+           {
+               command.Edit()
+                  .Text("Edit")
+                  .UpdateText("Edit")
+                  .CancelText("Cancel");
+               command.Destroy().Text("Delete");
+           });
+    })
+    .HtmlAttributes(new { style = "height: 550px; id='grid'" })
+    .Scrollable()
+    .Groupable()
+    .Sortable()
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("CityData", "Dictionary").Data("onAdditionalDataTextBoxCity"))
+        .Events(events => events.Error("error_handler"))
+           .Model(model => model.Id(p => p.Id))
+           .Destroy(update => update.Action("DeleteCityData", "Dictionary"))
+        .PageSize(20)
     )
-    <button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Customize</button>
-    <script>
+)
 
 
 
+<script>
+    function test() {
+        //onAdditionalDataTextBoxCity()
+        // e.preventDefault();``````````````````````
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").dataSource.page(1);
+    }
+
+    //$("#get").on('click', function (e) {
+
+    //    //onAdditionalDataTextBoxCity()
+    //    e.preventDefault();
+    //    $("#grid").data("kendoGrid").dataSource.read();
+    //    $("#grid").data("kendoGrid").dataSource.page(1);
+    //});
+
+    function onAdditionalData() {
+        return {
+            text: $("#counties").val()
+        };
+    }
+    function filter() {
+        var cityName = $("#kTextBox").val()
+        //  var countyName = $("#comboBoxId").val()
+        var filter = {}
+        filter["CityName"] = cityName
+        // filter["countyName"] = countyName
+        console.log(filter.cityName, filter.countyName)
+        return filter
+    }
+    function onAdditionalDataTextBoxCity() {
+        var obj = {}
+        obj["city"] = $("#kTextBox").val();
+        obj["county"] = $("#counties").data("kendoComboBox").value();
+        return obj;
+    }
 
 
-
-        function onSelect(e) {
-            if ("kendoConsole" in window) {
-                if (e.item) {
-                    var dataItem = this.dataItem(e.item.index());
-                    kendoConsole.log("event :: select (" + dataItem.Text + " : " + dataItem.Value + ")");
-                } else {
-                    kendoConsole.log("event :: select");
+     function error_handler(e) {    
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
                 }
-            }
+            });        
+            alert(message);
         }
-        var jobValue = document.getElementById('citytb').value
-        $(document).ready(function () {
-            var Tari = $("#Tari").data("kendoComboBox");
-            var selected = $("Tari").data('kendoComboBox').value()
+    }
+    //$(document).ready(function () {
+    //    var Tari = $("#Tari").data("kendoComboBox");
+    //    var selected = $("Tari").data('kendoComboBox').val()
 
-            $("#get").click(function () {
-                var valoare = Tari.val;
-                alert('Thank you! Your Choice is: ' + Tari.value());
-            });
-        });
-    </script>
+
+    //});
+</script>
