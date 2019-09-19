@@ -15,14 +15,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using iWasHere.Domain.Model;
 using iWasHere.Domain.Service;
+using Newtonsoft.Json.Serialization;
 
 namespace iWasHere.Web
 {
     public class Startup
     {
+        //test
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //comentariuuuuuuuuuuuuuu
         }
 
         public IConfiguration Configuration { get; }
@@ -45,8 +48,9 @@ namespace iWasHere.Web
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); ;
             services.AddKendo();
+          
             services.AddScoped<DictionaryService>();
         }
 
@@ -75,7 +79,7 @@ namespace iWasHere.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Dictionary}/{action=Schedule}/{id?}");
             });
         }
     }

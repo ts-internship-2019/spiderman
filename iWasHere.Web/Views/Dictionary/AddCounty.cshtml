@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "AddCounty";
+}
+
+<h1 class="text-center">Adaugare judete</h1>
+
+<label for="countries">Countries:</label>
+<div>
+    @(Html.Kendo().ComboBox()
+              .Name("countries")
+              .DataValueField("Id")
+              .DataTextField("Name")
+              .Placeholder("Alege un oras")
+              .HtmlAttributes(new { style = "width:60%; id='countries'" })
+          .Filter("StartsWith")
+          .DataSource(source =>
+          {
+              source.Read(read =>
+              {
+                  read.Action("FilterGetCountries", "Dictionary");
+              })
+              .ServerFiltering(true);
+          })
+    )
+
+</div>
+
+
