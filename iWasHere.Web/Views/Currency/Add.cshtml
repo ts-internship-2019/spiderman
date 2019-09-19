@@ -1,0 +1,54 @@
+﻿
+
+<div>
+    <h1 class="title">Add</h1>
+
+    <h6>Code valuta</h6>
+    @(Html.Kendo().MaskedTextBox()
+          .Name("txtCode")
+          .Events(events => events.Change("changeTextBox"))
+          .HtmlAttributes(new { style = "width: 22%" })
+    )<h6>Nume valuta</h6>
+    @(Html.Kendo().MaskedTextBox()
+          .Name("TxtName")
+          .Events(events => events.Change("changeTextBox"))
+          .HtmlAttributes(new { style = "width: 22%" })
+    )
+
+    <a class="btn btn-danger btn-lg"
+       style="margin-right: 2em;margin-top: 2em;float: right;"
+       href="/currency/Index">
+        Anuleaza
+    </a>
+    <a class="btn btn-primary btn-lg disabled"
+       style="margin-right: 2em;margin-top: 2em;float: right;"
+       href="/currency/Add"
+       id="clicked_link_save_new">
+        <input type="submit" value="Save" name="action:Save" />
+        Salveaza si nou
+    </a>
+    <a class="btn btn-success btn-lg"
+       style="margin-right: 2em;margin-top: 2em;float: right;"
+       href="/currency/Index"
+       id="clicked_link_save">
+        <input type="submit" value="Save" name="action:Save" onclick="Save()"/>
+        Salveaza
+    </a>
+</div>
+<style>
+    .title {
+        vertical-align: middle;
+        align-self: center;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+    });
+    function Save() {
+        
+        return {
+            txtCurCode = document.getElementById("txtCode").value,
+            txtCurName = document.getElementById("txtName").value
+        }
+    }
+</script>

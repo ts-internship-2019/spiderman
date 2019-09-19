@@ -64,7 +64,7 @@ namespace iWasHere.Web.Controllers
         //    //var jsonVariable = _dictionaryService.GetDictionaryScheduleFiltred().ToDataSourceResult(request);
         //   // return Json(jsonVariable);
         //}
-            return View(dictionaryLandmarkTypeModels);
+            //return View(dictionaryLandmarkTypeModels);
             return View(dictionaryCurrencyModel);
         }
 

@@ -208,9 +208,48 @@ namespace iWasHere.Domain.Service
             }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
             return dictionaryCurrencyModel;
         }
+        public List<DictionaryCurrencyModel> GetDictionaryCurrencyModel(int page, int pageSize, string txtFilterName)
+        {
+            if (!string.IsNullOrEmpty(txtFilterName))
+            {
+                List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.
+                    //Where(a => a.DictionaryCurrencyName.Contains(txtNameFilter))
+                    Where(a => a.DictionaryCurrencyName == txtFilterName)
+                    .Select(a => new DictionaryCurrencyModel()
+                    {
+                        DictionaryItemId = a.DictionaryCurrencyId,
+                        DictionaryItemCode = a.DictionaryCurrencyCode,
+                        DictionaryItemName = a.DictionaryCurrencyName
+                    }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                return dictionaryCurrencyModel;
+            }
+            else
+            {
+                List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.Select(a => new DictionaryCurrencyModel()
+                    {
+                        DictionaryItemId = a.DictionaryCurrencyId,
+                        DictionaryItemCode = a.DictionaryCurrencyCode,
+                        DictionaryItemName = a.DictionaryCurrencyName
+                    }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                return dictionaryCurrencyModel;
+            }
+        }
         public int GetCountDictionaryCurrency()
         {
             return _dbContext.DictionaryCurrency.Count();
+        }
+        public int GetCountDictionaryCurrency(string txtFilterName)
+        {
+            if (!string.IsNullOrEmpty(txtFilterName))
+                return _dbContext.DictionaryCurrency.Where(a => a.DictionaryCurrencyName == txtFilterName).Count();
+            else
+                return _dbContext.DictionaryCurrency.Count();
+
+        }
+
+        public void AddDictionaryCurrency(DictionaryCurrency dictionaryCurrency)
+        {
+            _dbContext.DictionaryCurrency.Add(dictionaryCurrency);
         }
     }
 }
