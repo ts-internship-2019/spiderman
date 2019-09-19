@@ -4,15 +4,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center">Lista judete</h1>
-<p>
-@(Html.Kendo().Button()
-                    .Name("textButton")
-                    .HtmlAttributes(new { type = "button" })
-                    .Content("<a href='/dictionary/AddCounty'>Adauga</span>")
-)
-</p>
-@*<label for="countries">Countries:</label>*@
+<div>
+    <div>
+        <p>
+            <h6 class="text-center">Lista judete</h6>
+
+            @(Html.Kendo().Button()
+                                .Name("textButton")
+                                .HtmlAttributes(new { type = "button" })
+                                .Content("<a href='/dictionary/AddCounty'>Adauga</a>")
+            )
+     
+        </p>
+    </div>
+</div>
+
+
+
 <div>
     <label for="countries">Countries:</label>
     @(Html.Kendo().ComboBox()

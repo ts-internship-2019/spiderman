@@ -218,12 +218,41 @@ namespace iWasHere.Domain.Service
 
 
                 }).Skip(pageSkip).Take(pageSize).ToList();
-
+            
             return scheduleTouristAttractions;
 
         }
 
+        public List<CountryListModel> Filter_GetCountries(string text)
+        {
+            var a = _dbContext.DictionaryCountry.Select(c => new CountryListModel()
+            {
+                Id = c.DictionaryCountryId,
+                Name = c.DictionaryCountryName
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                a = a.Where(p => p.Name.StartsWith(text));
+            }
+            List<CountryListModel> countryListModels = a.Take(50).ToList();
 
+            return countryListModels;
+
+        }
+
+        public string DeleteCounty(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCounty.Single(a => a.DictionaryCountyId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Acest judet nu poate fi sters pentru ca are asociat un oras!!!";
+            }
+        }
 
         public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize, string searchString)
         {
@@ -290,11 +319,7 @@ namespace iWasHere.Domain.Service
 
             //return dictionaryCountyTypeModel;
 
-
         }
-
-
-
 
         public string DeleteSchedule(int id)
         {
@@ -415,18 +440,6 @@ namespace iWasHere.Domain.Service
                 return "Ghinion frate! Exista un judet in aceasta tara.";
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }
