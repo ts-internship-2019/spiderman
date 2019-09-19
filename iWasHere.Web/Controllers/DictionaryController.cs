@@ -171,16 +171,18 @@ namespace iWasHere.Web.Controllers
 
         public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
         {
-            int rows = 0;
+            int rows;
             var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
-            DataSourceResult dataSource = new DataSourceResult();
-            dataSource.Data = x;
-            dataSource.Total = rows;
+            DataSourceResult dataSource = new DataSourceResult
+            {
+                Data = x,
+                Total = rows
+            };
+
             return Json(dataSource);
-            
         }
 
-        public ActionResult Process_DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
+        public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
         {
             if (country != null)
             {
@@ -193,5 +195,37 @@ namespace iWasHere.Web.Controllers
 
             return Json(ModelState.ToDataSourceResult());
         }
+
+        //public IActionResult AddEditCountry()
+        //{
+        //    return View();
+        //}
+
+        //public ActionResult AddEditCountry(DictionaryCountry cm)
+        //{
+        //    if (ModelState.IsValid && cm != null)
+        //    {
+        //        _dictionaryService.AddDictionaryCountry(cm);
+        //    }
+        //    return View();
+        //}
+
+        public IActionResult AddEditCountry()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditCountry(DictionaryCountryModel c)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            return Content($"{c.CountryCode}, {c.CountryName}");
+        }
+
+        
     }
 }

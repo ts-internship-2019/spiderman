@@ -222,22 +222,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountryModels;
         }
-        /*
-        public List<DictionaryCountryModel> GetDictionaryCountryModel(int page, int pageSize)
-        {
 
-            int skip = (page - 1) * pageSize;
-            List<DictionaryCountryModel> countries = _dbContext.DictionaryCountry.
-            Select(a => new DictionaryCountryModel()
-            {
-                CountryId = a.DictionaryCountryId,
-                CountryName = a.DictionaryCountryName
-            }).Skip(skip).Take(pageSize).ToList();
-
-            return countries;
-
-        }
-        */
 
         public int TotalCountries()
         {
@@ -267,28 +252,7 @@ namespace iWasHere.Domain.Service
             }
         }
 
-        /*
-        public List<DictionaryCountryModel> GetDictionaryCountryFilter(int page, int pageSize, string name)
-        {
-            int skip = (page - 1) * pageSize;
-            List<DictionaryCountryModel> countryFilter =
-                _dbContext.DictionaryCountry
-                .Where(a => a.DictionaryCountryName == name || a.DictionaryCountryName.StartsWith(name))
-                .Select(a => new DictionaryCountryModel()
-                {
-                    CountryId = a.DictionaryCountryId,
-                    CountryName = a.DictionaryCountryName
-                }).Skip(skip).Take(pageSize).ToList();
 
-            return countryFilter;
-        }
-        */
-
-        public int FilterTotalCountries(string name)
-        {
-            int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
-            return i;
-        }
         public string DeleteCountry(int id)
         {
             try
@@ -297,10 +261,21 @@ namespace iWasHere.Domain.Service
                 _dbContext.SaveChanges();
                 return null;
             }
-            catch (Exception ex)
+            catch
             {
-                return "Ghinion frate! Exista un judet in aceasta tara.";
+                return "Tara nu poate fi stearsa pentru ca exista judete sau orase in aceasta!";
             }
+        }
+
+        public DictionaryCountry AddDictionaryCountry(DictionaryCountry country)
+        {
+            if (country.DictionaryCountryId != null)
+                if (!string.IsNullOrWhiteSpace(country.DictionaryCountryName))
+                {
+                    _dbContext.Add(country);
+                    _dbContext.SaveChanges();
+                }
+            return null;
         }
 
     }
