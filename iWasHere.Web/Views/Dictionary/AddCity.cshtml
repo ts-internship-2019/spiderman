@@ -2,22 +2,27 @@
 @{
     ViewData["Title"] = "AddCity";
 }
+
+<style>
+    .myBtn{
+        margin-right: 20px;
+    }
+
+</style>
+
 <h2>Adauga informatii despre  un oras</h2>
+<h4>Oras</h4>
 @using (Html.BeginForm("NewCity", "Dictionary", FormMethod.Post))
 {
-    <input type="text" asp-for="CityName" id="textBox"/>
+    <input type="text" asp-for="CityName" id="city"/>
 
 
-@(Html.Kendo().MaskedTextBox()
-              .Name("txtCode")
-              .Events(events => events.Change("changeTextBox"))
-              .HtmlAttributes(new { style = "width: 22%" })
-)<h4>Judet</h4>
-@(Html.Kendo().ComboBox()
-        .Name("counties")
+
+<h4>Judet</h4>
+@(Html.Kendo().ComboBoxFor(model=>model.CountyId)
         .DataTextField("CountyName")
         .DataValueField("CountyId")
-        .HtmlAttributes(new { style = "width:60%; id='counties'" })
+        .HtmlAttributes(new { style = "width:60%; id='county'" })
         .Filter("StartsWith")
         .DataSource(source =>
         {
@@ -28,12 +33,16 @@
         .ServerFiltering(true);
         })
 )
-
 <div>
-    <button class="k-button k-primary" id="save" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza</button>
+    <button class="myBtn k-button k-primary" id="save"  name="submitButton" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza</button>
 
-    <button class="k-button k-primary" id="SaveAndNew" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza si nou</button>
+    <button class="myBtn k-button k-primary"  value="savenew"  name="submitButton" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza si nou</button>
 
-    <button class="k-button k-primary" id="cancel" style="margin-top: 2em; float: left;background-color: #008CBA;">Anuleaza</button>
+    <a class="myBtn k-button k-primary"href="/dictionary/City"  name="submitButton" style="margin-top: 2em; float: left;background-color: #008CBA;">Anuleaza</a>
 </div>
 }
+<script>
+
+
+
+</script>
