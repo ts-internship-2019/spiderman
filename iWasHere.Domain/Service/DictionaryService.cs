@@ -213,8 +213,8 @@ namespace iWasHere.Domain.Service
             if (!string.IsNullOrEmpty(txtFilterName))
             {
                 List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.
-                    //Where(a => a.DictionaryCurrencyName.Contains(txtNameFilter))
-                    Where(a => a.DictionaryCurrencyName == txtFilterName)
+                    Where(a => a.DictionaryCurrencyName.Contains(txtFilterName))
+                    //Where(a => a.DictionaryCurrencyName == txtFilterName)
                     .Select(a => new DictionaryCurrencyModel()
                     {
                         DictionaryItemId = a.DictionaryCurrencyId,
