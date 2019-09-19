@@ -80,6 +80,7 @@ namespace iWasHere.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Dictionary}/{action=Country}/{id?}");
+                    template: "{controller=Dictionary}/{action=City}/{id?}");
             });
         }
 
