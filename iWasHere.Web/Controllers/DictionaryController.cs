@@ -339,6 +339,19 @@ namespace iWasHere.Web.Controllers
                     return Json(ModelState.ToDataSourceResult());
                 }
                 else
+                {
+                    ModelState.AddModelError("a", errorMessageForClient);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+
+
+
+            return Json(ModelState.ToDataSourceResult());
+
+
+
+        }
         public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
         {
             if (country != null)
@@ -388,19 +401,6 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_dictionaryService.GetTouristAttractionsSeasonSchedule());
 
-        }
-        public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
-        {
-            if (country != null)
-            {
-                string errorMessage = _dictionaryService.DeleteCountry(country.CountryId);
-                if (!string.IsNullOrWhiteSpace(errorMessage))
-                {
-                    ModelState.AddModelError("a", errorMessage);
-                }
-            }
-
-            return Json(ModelState.ToDataSourceResult());
         }
 
         public IActionResult AddSchedule(int Id)
