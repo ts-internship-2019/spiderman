@@ -1,7 +1,56 @@
-﻿
+﻿@model iWasHere.Domain.DTOs.DictionaryCategoryTypeModel
+
 @{
     ViewData["Title"] = "AddCategory";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>AddCategory</h1>
+@(Html.Kendo().Button()
+    .Name("Save")
+    .Enable(true)
+    .Content("Disabled button")
+    .HtmlAttributes(new { type = "button" })
+    .Events(ev => ev.Click("onClick")))
+
+
+@*@(Html.Kendo().ComboBoxFor(model => model.Id)
+                .DataTextField("Name")
+                .DataValueField("Id")
+                .HtmlAttributes(new { style = "width:60%; id='county'" })
+                .Filter("StartsWith")
+
+                .DataSource(source =>
+                {
+                    source.Read(read =>
+                    {
+                        read.Action("CategoryComboBox_Read", "Dictionary").Data("categoryName");
+
+                    });
+                    source.Read(read =>
+                    {
+
+                    })
+                 .ServerFiltering(true);
+
+                })
+    )*@
+
+<form style="margin:20px;margin-left:-4px">
+    <label for="category"></label>
+    <input type="text" id="category" name="category" placeholder="Enter category name...">
+</form>
+
+<a href="category" onclick="categoryName()" class="button btn btn-outline-danger">Save</a>
+<button class="button btn btn-outline-danger">Save and new</button>
+<a href="category" class="button btn btn-outline-danger">Anuleaza</a>
+
+<script>
+    function categoryName() {
+        let obj = {}
+        obj['abc'] = document.getElementsByName("Id_input")[0].value;
+
+        return obj;
+        //alert(document.getElementsByName("Id_input")[0].value)
+    }
+</script>

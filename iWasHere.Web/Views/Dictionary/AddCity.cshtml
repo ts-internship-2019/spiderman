@@ -1,0 +1,48 @@
+﻿@model iWasHere.Domain.DTOs.DictionaryCityModel
+@{
+    ViewData["Title"] = "AddCity";
+}
+
+<style>
+    .myBtn{
+        margin-right: 20px;
+    }
+
+</style>
+
+<h2>Adauga informatii despre  un oras</h2>
+<h4>Oras</h4>
+@using (Html.BeginForm("NewCity", "Dictionary", FormMethod.Post))
+{
+    <input type="text" asp-for="CityName" id="city"/>
+
+
+
+<h4>Judet</h4>
+@(Html.Kendo().ComboBoxFor(model=>model.CountyId)
+        .DataTextField("CountyName")
+        .DataValueField("CountyId")
+        .HtmlAttributes(new { style = "width:60%; id='county'" })
+        .Filter("StartsWith")
+        .DataSource(source =>
+        {
+            source.Read(read =>
+            {
+                read.Action("FilterGetCounties", "Dictionary");
+            })
+        .ServerFiltering(true);
+        })
+)
+<div>
+    <button class="myBtn k-button k-primary" id="save"  name="submitButton" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza</button>
+
+    <button class="myBtn k-button k-primary"  value="savenew"  name="submitButton" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza si nou</button>
+
+    <a class="myBtn k-button k-primary"href="/dictionary/City"  name="submitButton" style="margin-top: 2em; float: left;background-color: #008CBA;">Anuleaza</a>
+</div>
+}
+<script>
+
+
+
+</script>
