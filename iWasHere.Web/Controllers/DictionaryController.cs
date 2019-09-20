@@ -131,22 +131,34 @@ namespace iWasHere.Web.Controllers
             }
         }
         public IActionResult CityNew() { return View(); }
-
-        public ActionResult NewCity(DictionaryCityModel city, string submitButton)
+       
+        public ActionResult NewCity(DictionaryCityModel model, string submit)
         {
-            if (submitButton == "cancel")
+            if (submit == "cancel")
             {
                 return View("City");
             }
-            if (city.CityId <= 0)
+
+            if (model.CityName ==""||String.IsNullOrEmpty(model.CityName)) {
+                ModelState.AddModelError("a", "Trebuie sa inserati orasul");
+                return View("AddCity");
+
+            }
+            if (model.CountyId == 0 )
             {
-                _dictionaryService.InsertCity(city);
+                ModelState.AddModelError("a", "Trebuie sa inserati judetul");
+                return View("AddCity");
+
+            }
+            if (model.CityId <= 0)
+            {
+                _dictionaryService.InsertCity(model);
             }
             else
             {
-                _dictionaryService.UpdateCity(city);
+                _dictionaryService.UpdateCity(model);
             }
-            if (submitButton == "savenew")
+            if (submit == "savenew")
             {
                 ModelState.Clear();
                 return View("AddCity");
@@ -232,13 +244,29 @@ namespace iWasHere.Web.Controllers
         //public void DestroyCategory()
         //{
         //    _dictionaryService.DeleteCategory(abc);
-
+        
         //}
 
         public IActionResult SearchCountyName()
         {
             return View();
 
+        }
+
+        //public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
+        //{
+        //    return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
+        //}
+
+
+        public IActionResult ClientFiltering()
+        {
+            return View();
+        }
+
+        public ActionResult FilterGetCountries(string text)
+        {
+            return Json(_dictionaryService.Filter_GetCountries(text));
         }
 
         public IActionResult AddCounty()
@@ -311,21 +339,22 @@ namespace iWasHere.Web.Controllers
                     return Json(ModelState.ToDataSourceResult());
                 }
                 else
+        public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
+        {
+            if (country != null)
+            {
+                string errorMessage =_dictionaryService.DeleteCountry(country.CountryId);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
-                    ModelState.AddModelError("a", errorMessageForClient);
-                    return Json(ModelState.ToDataSourceResult());
+                    ModelState.AddModelError("a", errorMessage);
                 }
             }
-
-
 
             return Json(ModelState.ToDataSourceResult());
 
 
 
         }
-
-
 
         //public IActionResult AddEditCountry()
         //{
