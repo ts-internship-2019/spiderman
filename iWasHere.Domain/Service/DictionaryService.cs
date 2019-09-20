@@ -88,6 +88,42 @@ namespace iWasHere.Domain.Service
             return dictionaryCategoryTypeModels;
         }
 
+        public List<DictionaryCategory> GetSelectedCategory(int id)
+        {
+            var categoryName = _dbContext.DictionaryCategory.Where(categ => categ.DictionaryCategoryId == id);
+            List<DictionaryCategory> categoryListModel = categoryName.Take(1).ToList();
+            return categoryListModel;
+        }
+
+        public List<DictionaryCategoryTypeModel> GetCategoryData(string text)
+        {
+            var categoryName = _dbContext.DictionaryCategory.Select(categ => new DictionaryCategoryTypeModel()
+            {
+                Id = categ.DictionaryCategoryId,
+                Name = categ.DictionaryCategoryName
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                categoryName = categoryName.Where(c => c.Name.StartsWith(text));
+            }
+            List<DictionaryCategoryTypeModel> categoryListModel = categoryName.Take(50).ToList();
+            return categoryListModel;
+        }
+
+        public string DeleteCategory(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCategory.Single(a => a.DictionaryCategoryId.Equals(id)));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch
+            {
+                return "Cannot delete category!";
+            }
+        }
+
         public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeFilter(int page, int pageSize, string name)
         {
             //pageSize = 10;
@@ -104,7 +140,19 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCityyTypeModel;
         }
-   
+
+        public List<DictionaryCategoryTypeModel> TestCategory(int page, int pageSize, string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return GetDictionaryCategoryTypeModel(page,pageSize);
+            }
+            else
+            {
+                return GetDictionaryCategoryTypeFilter(page, pageSize, categoryName);
+            }
+        }
+
         public void InsertCategoryType(string name)
         {
             DictionaryCategory dictionary = new DictionaryCategory();
@@ -112,11 +160,10 @@ namespace iWasHere.Domain.Service
 
             _dbContext.DictionaryCategory.Add(dictionary);
             _dbContext.SaveChanges();
-
         }
         public int FilterTotalCategory(string name)
         {
-            int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName == name).Count();
+            int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName.StartsWith(name)).Count();
             return i;
         }
 
@@ -170,6 +217,17 @@ namespace iWasHere.Domain.Service
 
 
 
+        public int TestTotal(string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return Total();
+            }
+            else
+            {
+                return FilterTotalCategory(categoryName);
+            }
+        }
 
         public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize)
         {
@@ -210,9 +268,41 @@ namespace iWasHere.Domain.Service
             return _dbContext.Schedule.Count();
         }
 
+        public DictionaryCategoryTypeModel getCategoryIdUpdate(int id)
+        {
+            DictionaryCategoryTypeModel dictionaryCountyTypeModel = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryId == id)
+                .Select(a => new DictionaryCategoryTypeModel()
+                {
+                    Id = a.DictionaryCategoryId,
+                    Name = a.DictionaryCategoryName,
+                }).First();
+            return dictionaryCountyTypeModel;
+        }
 
+        public string UpdateCategory(DictionaryCategoryTypeModel dictionaryCategoryTypeModel)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(dictionaryCategoryTypeModel.Name))
+                {
+                    return "Categoria trebuie completata trebuie completat";
+                }
+                else
+                {
+                    DictionaryCategory dictionaryCategory = _dbContext.DictionaryCategory.Find(dictionaryCategoryTypeModel.Id);
+                    dictionaryCategory.DictionaryCategoryName = dictionaryCategoryTypeModel.Name;
+                    //dictionaryCategory.DictionaryCategoryId = dictionaryCategoryTypeModel.DictionaryCategoryId;
+                   
+                    _dbContext.DictionaryCategory.Update(dictionaryCategory);
+                    _dbContext.SaveChanges();
 
-
-
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
     }
 }
