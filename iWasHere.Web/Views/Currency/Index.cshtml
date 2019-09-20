@@ -1,4 +1,5 @@
 ﻿@using Kendo.Mvc.UI
+@model iWasHere.Domain.DTOs.DictionaryCurrencyModel
 
 @{
     ViewData["Title"] = "Index";
@@ -13,46 +14,60 @@
         <h6>Adauga valuta</h6>
         <p>
             @(Html.Kendo().Button()
-                    .Name("textButton")
-                    .HtmlAttributes(new { type = "button", style = "" })
-                    .Content("<a class = 'ceva' href='/currency/Add'>Adauga</a>")
-                    )
+                            .Name("textButton")
+                            .HtmlAttributes(new { type = "button", style = "" })
+                            .Content("<a class = 'ceva' href='/currency/Add'>Adauga</a>")
+            )
         </p>
     </div>
     <div class="demo-section k-content">
         <h6>Filtru nume</h6>
         @(Html.Kendo().MaskedTextBox()
-              .Name("TxtFilterName")
-              .Events(events => events.Change("changeTextBox"))
-              .HtmlAttributes(new { style = "width: 22%" })
+                          .Name("TxtFilterName")
+                          .Events(events => events.Change("changeTextBox"))
+                          .HtmlAttributes(new { style = "width: 22%" })
         )
         <p>
             @(Html.Kendo().Button()
-                    .Name("iconFilter")
-                    .Tag("a")
-                    .Icon("filter")
-                    .Content("Filter")
+                            .Name("iconFilter")
+                            .Tag("a")
+                            .Icon("filter")
+                            .Content("Filter")
             )
 
             @(Html.Kendo().Button()
-                    .Name("iconFilterReset")
-                    .Tag("a")
-                    .Icon("filter-clear")
-                    .Content("Clear Filter"))
+                            .Name("iconFilterReset")
+                            .Tag("a")
+                            .Icon("filter-clear")
+                            .Content("Clear Filter"))
         </p>
     </div>
     @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyModel>()
-  .Name("GridCurrency")
-  .Columns(columns =>
-  {
-      columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id").Hidden();
-      columns.Bound(c => c.DictionaryItemCode).Width(190).Title("Code");
-      columns.Bound(c => c.DictionaryItemName).Width(190).Title("Nume");
-      columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' method='delete'/> ").Width(75);
-      columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' method='delete' /> ").Width(75);
+                  .Name("GridCurrency")
+                  .Columns(columns =>
+                  {
+                  columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id").Hidden();
+                  columns.Bound(c => c.DictionaryItemCode).Width(300).Title("Code");
+                  columns.Bound(c => c.DictionaryItemName).Width(300).Title("Nume");
+                  //columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' method='delete'/> ").Width(75);
+                  //columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' method='delete' /> ").Width(75);
+                  columns.Command(command =>
+                  {
+                      command.Edit()
+                         .Text("Editeaza")
+                         .UpdateText("Edit")
+                         .CancelText("Cancel")
+                         .Template(" <a class = 'ceva' href='/currency/Add?Id=#=DictionaryItemId#'>Edit</a> ");
+                  }).HtmlAttributes(new { style = "width: 60%;" });
+                  columns.Command(command =>
+                  {
+                      command.Destroy().Text("Sterge");
+                      //.Template(" <p style=\" color: red; font-family: \"Times New Roman\";\">Sterge</p>");
+                      //.Template(" <a class = 'ceva' href='' style=\"color: red;\">Delete</a> ");
+                  }).HtmlAttributes(new {  style = "width: 60%;color: red;font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";" });
 
   })
-  .HtmlAttributes(new { style = "height: 500px;" })
+  .HtmlAttributes(new { style = "height: 500px; width: 92%;" })
   .Scrollable()
   .Groupable()
   .Sortable()
@@ -64,6 +79,10 @@
       .Ajax()
       .Read(read => read.Action("DictionaryCurrency", "Currency").Data("FilterByName"))
       .PageSize(20)
+      .Destroy(update => update.Action("DestroyCurrency", "Currency"))
+      .Events(events => events.Error("ErrorHandler"))
+      .Model(model => model.Id(p => p.DictionaryItemId))
+      .Update(update => update.Action("UpdateCurrency", "Currency"))
     )
     )
 </div>
@@ -91,7 +110,7 @@
     }
     .ceva {
     border-color: #9da2a4;
-    color: #9da2a4;
+    color: #66a3ff;
     background-color: #fff;
     background-position: 50% 50%;
     }
@@ -122,6 +141,19 @@
         //alert(cId);
         return {
             txtFilterName: document.getElementById("TxtFilterName").value
+        }
+    }
+    function ErrorHandler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
         }
     }
 </script>

@@ -35,9 +35,24 @@ namespace iWasHere.Controllers
             return View();
         }
 
-        public IActionResult Add()
+        //public IActionResult Add()
+        //{
+        //    return View();
+        //}
+        public IActionResult Add(int id)
         {
-            return View();
+            if (Convert.ToInt32(id) == 0)
+            {
+                return View();
+            }
+            else
+            {
+                DictionaryCurrency dictionaryCurrency = _dictionaryService.GetCurrency(id);
+                DictionaryCurrencyModel dcm = new DictionaryCurrencyModel();
+                dcm.DictionaryItemCode = dictionaryCurrency.DictionaryCurrencyCode;
+                dcm.DictionaryItemName = dictionaryCurrency.DictionaryCurrencyName;
+                return View(dcm);
+            }
         }
         public IActionResult Currency()
         {
@@ -55,12 +70,69 @@ namespace iWasHere.Controllers
         {
             return Json(_dictionaryService.GetDictionaryCurrencyModel());
         }
-        public void Save(string txtCurCode, string txtCurName)
+        public ActionResult Save([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel dict, string submitValue)
+        {
+            if (submitValue == "save")
+            {
+                DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
+                dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
+                dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
+                _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
+                return View("Index");
+            }
+            else if (submitValue == "cancel")
+            {
+                return View("Index");
+            }
+            else
+            {
+                DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
+                dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
+                dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
+                _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
+                return View("Add");
+            }
+        }
+        public ActionResult SaveAndNew([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel dict)
         {
             DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
-            dictionaryCurrency.DictionaryCurrencyCode = txtCurCode;
-            dictionaryCurrency.DictionaryCurrencyName = txtCurName;
+            dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
+            dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
             _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
+            return View("Add");
         }
+
+
+        public ActionResult DestroyCurrency([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
+        {
+            if (currency != null)
+            {
+                string errorMessage = _dictionaryService.DeleteCurrency(currency.DictionaryItemId);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                }
+            }
+
+
+            return Json(ModelState.ToDataSourceResult());
+        }
+
+
+
+        public ActionResult UpdateCurrency([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
+        {
+            //TO DO
+            //if (currency != null)
+            //{
+            //    string errorMessage = _dictionaryService.DeleteCurrency(currency.DictionaryItemId);
+            //    if (!string.IsNullOrWhiteSpace(errorMessage))
+            //    {
+            //        ModelState.AddModelError("a", errorMessage);
+            //    }
+            //}
+            return Json(ModelState.ToDataSourceResult());
+        }
+
     }
 }

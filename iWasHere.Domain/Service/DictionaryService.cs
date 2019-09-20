@@ -93,7 +93,7 @@ namespace iWasHere.Domain.Service
         {
             //pageSize = 10;
             int skip = (page - 1) * pageSize;
-            
+
             List<DictionaryCategoryTypeModel> dictionaryCityyTypeModel =
                 _dbContext.DictionaryCategory
                 .Where(a => a.DictionaryCategoryName.StartsWith(name))
@@ -105,7 +105,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCityyTypeModel;
         }
-   
+
         public void InsertCategoryType(string name)
         {
             DictionaryCategory dictionary = new DictionaryCategory();
@@ -190,16 +190,16 @@ namespace iWasHere.Domain.Service
         {
             int pageSkip = (page - 1) * pageSize;
             List<ScheduleTouristAttractionModel> scheduleTouristAttractions = new List<ScheduleTouristAttractionModel>();
-        
+
             scheduleTouristAttractions = _dbContext.Schedule.
                 Select(a => new ScheduleTouristAttractionModel()
                 {
 
-                Day = a.Day,
-                StartHour = a.StartHour,
-                EndHour = a.EndHour,
-                Season = a.Season.DictionarySeasonName,
-                TouristAttractionName = a.TouristAttraction.Name
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
 
 
 
@@ -213,7 +213,7 @@ namespace iWasHere.Domain.Service
 
         public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize, string searchString)
         {
-           
+
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -305,9 +305,9 @@ namespace iWasHere.Domain.Service
         public int GetItemsOfSchedule(string searchText)
         {
 
-            if (!string.IsNullOrEmpty(searchText) )
+            if (!string.IsNullOrEmpty(searchText))
 
-                 return _dbContext.Schedule.Where(a => a.TouristAttraction.Name == searchText).Count();
+                return _dbContext.Schedule.Where(a => a.TouristAttraction.Name == searchText).Count();
             else
                 return _dbContext.Schedule.Count();
         }
@@ -320,7 +320,7 @@ namespace iWasHere.Domain.Service
                 .Where(a => a.TouristAttraction.Name == searchString || a.TouristAttraction.Name.StartsWith(searchString)).
                 Select(a => new ScheduleTouristAttractionModel()
                 {
-                    ScheduleId=a.ScheduleId,
+                    ScheduleId = a.ScheduleId,
                     Day = a.Day,
                     StartHour = a.StartHour,
                     EndHour = a.EndHour,
@@ -418,11 +418,11 @@ namespace iWasHere.Domain.Service
         {
             List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.
                 Select(a => new DictionaryCurrencyModel()
-            {
-                
-                DictionaryItemId = a.DictionaryCurrencyId,
-                DictionaryItemCode = a.DictionaryCurrencyCode,
-                DictionaryItemName = a.DictionaryCurrencyName
+                {
+
+                    DictionaryItemId = a.DictionaryCurrencyId,
+                    DictionaryItemCode = a.DictionaryCurrencyCode,
+                    DictionaryItemName = a.DictionaryCurrencyName
                 }).ToList();
 
             return dictionaryCurrencyModel;
@@ -455,11 +455,11 @@ namespace iWasHere.Domain.Service
             else
             {
                 List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dbContext.DictionaryCurrency.Select(a => new DictionaryCurrencyModel()
-                    {
-                        DictionaryItemId = a.DictionaryCurrencyId,
-                        DictionaryItemCode = a.DictionaryCurrencyCode,
-                        DictionaryItemName = a.DictionaryCurrencyName
-                    }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                {
+                    DictionaryItemId = a.DictionaryCurrencyId,
+                    DictionaryItemCode = a.DictionaryCurrencyCode,
+                    DictionaryItemName = a.DictionaryCurrencyName
+                }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
                 return dictionaryCurrencyModel;
             }
         }
@@ -470,7 +470,7 @@ namespace iWasHere.Domain.Service
         public int GetCountDictionaryCurrency(string txtFilterName)
         {
             if (!string.IsNullOrEmpty(txtFilterName))
-                return _dbContext.DictionaryCurrency.Where(a => a.DictionaryCurrencyName == txtFilterName).Count();
+                return _dbContext.DictionaryCurrency.Where(a => a.DictionaryCurrencyName.Contains(txtFilterName)).Count();
             else
                 return _dbContext.DictionaryCurrency.Count();
 
@@ -479,6 +479,28 @@ namespace iWasHere.Domain.Service
         public void AddDictionaryCurrency(DictionaryCurrency dictionaryCurrency)
         {
             _dbContext.DictionaryCurrency.Add(dictionaryCurrency);
+            _dbContext.SaveChanges();
+        }
+
+        public string DeleteCurrency(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCurrency.Single(a => a.DictionaryCurrencyId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                return "Te pup pe portofel!";
+                return null;
+            }
+        }
+        public DictionaryCurrency GetCurrency(int id)
+        {
+
+            return _dbContext.DictionaryCurrency.Where(a => a.DictionaryCurrencyId == id).FirstOrDefault();
         }
     }
 }
