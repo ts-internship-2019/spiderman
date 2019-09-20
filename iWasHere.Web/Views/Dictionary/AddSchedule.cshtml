@@ -1,38 +1,109 @@
-﻿
+﻿@model iWasHere.Domain.DTOs.ScheduleTouristAttractionModel
 @{
     ViewData["Title"] = "AddSchedule";
 }
-
 <h1>Adaugare program obiectiv turistic</h1>
-
-<h6>Code valuta</h6>
-
-@(Html.Kendo().ComboBox()
-                          .Name("Judete")
-                          .HtmlAttributes(new { style = "width:30%;" })
-                          .Placeholder("Selecteaza obiectiv turistic")
-                          .DataTextField("TouristAttractionName")
-                          .DataValueField("TouristAttractionId")
-                          .Filter(FilterType.Contains)
-                          .DataSource(source =>
-                {
-                     source.Read(read =>
-               {
-                  read.Action("GetTouristAttraction", "Dictionary");
-                              });
-                          })
-)
-@(Html.Kendo().MaskedTextBox()
-      .Name("txtCode")
-      .Events(events => events.Change("changeTextBox"))
-      .HtmlAttributes(new { style = "width: 22%" })
-)<h6>Nume valuta</h6>
-@(Html.Kendo().MaskedTextBox()
-      .Name("TxtName")
-      .Events(events => events.Change("changeTextBox"))
-      .HtmlAttributes(new { style = "width: 22%" })
-)
-<button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Salveaza</button>
-<button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Salveaza si nou</button>
-<button class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Anuleaza</button>
+@using (Html.BeginForm("NewSchedule", "Dictionary", FormMethod.Post))
+{
+    <div>
+        <h6> Ziua din saptamana</h6>
+        <input type="text" asp-for="Day" id="day" />
     </div>
+    <h6>Sezon</h6>
+    <p>
+        @(Html.Kendo().ComboBoxFor(model => model.SeasonId)
+
+                         .HtmlAttributes(new { style = "width:30%;" })
+                         .Placeholder("Selecteaza sezonul")
+                         .DataTextField("SeasonName")
+                         .DataValueField("SeasonId")
+                           
+                         .Filter(FilterType.Contains)
+                         .DataSource(source =>
+               {
+                    source.Read(read =>
+              {
+                 read.Action("GetSeasons", "Dictionary");
+                             });
+                         })
+        )
+    </p>
+    <h6>Obiectiv turistic</h6>
+    <p>
+        @(Html.Kendo().ComboBoxFor(model => model.TouristAttractionId)
+
+                        .HtmlAttributes(new { style = "width:30%;" })
+                        .Placeholder("Selecteaza obiectiv turistic")
+                        .DataTextField("TouristAttractionName")
+                        .DataValueField("TouristAttractionId")
+                        .Filter(FilterType.Contains)
+                        
+                       
+                        .DataSource(source =>
+              {
+                   source.Read(read =>
+             {
+                read.Action("GetTouristAttraction", "Dictionary");
+                            });
+                        })
+        )
+    </p>
+    <p>
+        <h6>Ora de inceput </h6>
+        @(Html.Kendo().TimePickerFor(model => model.StartHour)
+        
+           .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
+             .Format("HH:mm:ss")
+           .DateInput()
+           
+        )
+    </p>
+    <p>
+        <h6>Ora de sfarsit </h6>
+        @(Html.Kendo().TimePickerFor(model => model.EndHour)
+
+          .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
+          .Format("HH:mm:ss")
+         
+
+          .DateInput()
+        )
+    </p>
+
+    @Html.HiddenFor(a => a.ScheduleId)
+    <div>
+        <button class="k-button k-primary" onclick="Validate" style="margin-top: 2em" name="submitbtn" value="save">Salveaza</button>
+        @if (Model == null)
+        {
+            <button class="k-button k-primary"  onclick="mesaj2" style="margin-top: 2em" name="submitbtn" value="savenew">Salveaza si Nou</button>
+        }
+        <button class="k-button k-primary" style="margin-top: 2em" name="submitbtn" value="cancel">Anuleaza</button>
+
+    </div>
+
+    <script>
+        function mesaj() {
+            alert("s-a salvat o noua inregistrare")
+        }
+        function mesaj2() {
+            alert("s-a salvat o noua inregistrare")
+        }
+
+        function Validate() 
+ {
+    var val = document.getElementById('day').value;
+    
+    if (!val.match(/^[a-zA-Z]+$/)) 
+    {
+        alert('doar litere');
+        return false;
+    }
+    
+    return true;
+}
+
+
+    </script>
+
+}
+

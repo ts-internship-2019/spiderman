@@ -1,0 +1,117 @@
+﻿@model iWasHere.Domain.DTOs.DictionaryCountryModel
+@{
+    ViewData["Title"] = "Adauga Tara";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Adauga Tara</h1>
+<br />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <form class="form-primary">
+        <fieldset class="form-group">
+            <div class="form.field">
+                @Html.EditorFor(model => model.CountryCode, new { placeholder = "Cod Tara" })
+                @Html.ValidationMessageFor(model => model.CountryCode)
+            </div>
+            <div class="form.field">
+                @Html.EditorFor(model => model.CountryName)
+                @Html.ValidationMessageFor(model => model.CountryName)
+            </div>
+            <br />
+            <div>
+                <input type="submit" class="styled" value="Submit" />
+                <a onclick="GoToAddEditCountry" class="styled">Salveaza si Nou</a>
+                <a onclick="GoToCountry" class="styled">Anuleaza</a>
+            </div>
+
+        </fieldset>
+    </form>
+}
+
+
+@*<div class="form">
+        <form asp-controller="DictionaryCountryModel" asp-action="AddEditCountry" method="post">
+            <div>
+                <p>
+                    <input asp-for="CountryCode" id="DictionaryCountryCode" placeholder="Cod Tara" />
+                    <span asp-validation-for="CountryCode" class="text-danger"></span>
+                </p>
+            </div>
+            <div>
+                <p>
+                    <input type="text" asp-for="CountryName" id="DictionaryCountryName" placeholder="Nume Tara" />
+                    <span asp-validation-for="CountryName" class="text-danger"></span>
+                </p>
+            </div>
+            <div>
+                <button class="styled">Salveaza</button>
+                <a asp-action="AddEditCountry" class="styled">Salveaza si Nou</a>
+                <a asp-action="Country" class="styled">Anuleaza</a>
+            </div>
+
+        </form>
+
+    </div>*@
+
+
+
+
+@*<script>
+         function SaveChanges() {
+            var id = $("#txtId").text(response[0].DictionaryCountryId)
+            var code = $("#txtCode").val(response[0].DictionaryCountryCode);
+            var name = $("#txtName").val(response[0].DictionaryCountryName);
+             $.ajax({
+                 type: 'GET',
+                 headers: {
+                     'Cache-Control': 'no-cache'
+                 },
+                 url: '@Url.Action("AddEditCountry", "Dictionary")',
+                 data: {
+                     CountryId: id,
+                     CountryCode: code,
+                     CountryName: name
+                 },
+                 success: function (response) {
+                     alert(response);
+                     alert("A fost intodus");
+                 },
+                 error: function (response) {
+                     alert(response);
+                     alert("N-a fost introdus");
+                 }
+             })
+         }
+    </script>*@
+
+<script>
+
+    function GoToAddEditCountry() {
+        location.href = '/Dictionary/AddEditCountry'
+    }
+    function GoToCountry() {
+        location.href = '/Dictionary/Country'
+    }
+
+</script>
+
+<style>
+    .styled {
+        background-color: #f44336;
+        color: white;
+        padding: 14px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .styled:hover, .styled:active {
+            background-color: red;
+            color: white;
+            text-decoration: none;
+        }
+</style>
