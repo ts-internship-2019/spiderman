@@ -10,6 +10,7 @@ namespace iWasHere.Domain.DTOs
         public TimeSpan StartHour { get; set; }
         public TimeSpan EndHour { get; set; }
 
+        public int ScheduleId { get; set; }
         
         public string Season { get; set;}
 
