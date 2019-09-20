@@ -499,8 +499,11 @@ namespace iWasHere.Domain.Service
                 return _dbContext.Schedule.Count();
         }
 
-        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleFiltred(int page, int pageSize, string searchString)
+       
+
+  public List<ScheduleTouristAttractionModel> GetDictionaryScheduleFiltred(int page, int pageSize, string searchString)
         {
+
 
             int pageSkip = (page - 1) * pageSize;
             List<ScheduleTouristAttractionModel> schedulefiltered = _dbContext.Schedule
@@ -515,14 +518,18 @@ namespace iWasHere.Domain.Service
                     TouristAttractionName = a.TouristAttraction.Name
 
 
-
                 }).Skip(pageSkip).Take(pageSize).ToList();
 
 
-
-
-
+            return schedulefiltered;
         }
+
+
+
+
+
+
+
 
         public int TotalCountries()
         {

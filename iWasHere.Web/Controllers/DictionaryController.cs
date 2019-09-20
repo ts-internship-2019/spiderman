@@ -347,12 +347,26 @@ namespace iWasHere.Web.Controllers
         {
             if (schedule != null)
             {
-                 string errorMessageForClient=  _dictionaryService.DeleteSchedule(schedule.ScheduleId);
+                string errorMessageForClient = _dictionaryService.DeleteSchedule(schedule.ScheduleId);
                 if (string.IsNullOrWhiteSpace(errorMessageForClient))
                 {
                     return Json(ModelState.ToDataSourceResult());
                 }
                 else
+                {
+                    ModelState.AddModelError("a", errorMessageForClient);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+
+
+
+            return Json(ModelState.ToDataSourceResult());
+
+
+
+        }
+
         public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
         {
             if (country != null)
@@ -361,12 +375,14 @@ namespace iWasHere.Web.Controllers
                 if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
                     ModelState.AddModelError("a", errorMessage);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+                else {
+                    return Json(ModelState.ToDataSourceResult());
                 }
             }
-
             return Json(ModelState.ToDataSourceResult());
         }
-
         //public IActionResult AddEditCountry()
         //{
         //    return View();
