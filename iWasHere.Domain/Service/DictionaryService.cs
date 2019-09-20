@@ -31,7 +31,7 @@ namespace iWasHere.Domain.Service
 
         public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModels(int page, int pageSize)
         {
-            //pageSize = 10;
+          
             int skip = (page - 1) * pageSize;
             List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyTypeModel()
             {
@@ -55,23 +55,51 @@ namespace iWasHere.Domain.Service
 
         }
 
-        public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModelsFilter(int page, int pageSize, string name)
+        public List<DictionaryCountyTypeModel> GetDictionaryCountyTypeModelsFilter(int page, int pageSize, string name, int countryId, out int totalrows)
         {
-            //pageSize = 10;
+            IQueryable<DictionaryCounty> query = _dbContext.DictionaryCounty;
             int skip = (page - 1) * pageSize;
-            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel =
-                _dbContext.DictionaryCounty
-                .Where(a => a.DictionaryCountyName == name)
-                .Select(a => new DictionaryCountyTypeModel()
-                {
-                    Id = a.DictionaryCountyId,
-                    Name = a.DictionaryCountyName,
-                    CountryName = a.DictionaryCountry.DictionaryCountryName
-                }).Skip(skip).Take(pageSize).ToList();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(a => a.DictionaryCountyName.StartsWith(name));
+            }
+            if (countryId != 0)
+            {
+                query = query.Where(a => a.DictionaryCountryId == countryId);
+            }
 
-
-            //comentariu
+            totalrows = query.Count();
+            List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = query.Select(a => new DictionaryCountyTypeModel()
+            {
+                Id = a.DictionaryCountyId,
+                Name = a.DictionaryCountyName,
+                CountryName = a.DictionaryCountry.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
+       
+               
+            
             return dictionaryCountyTypeModel;
+        }
+
+
+        public void InsertCity(DictionaryCityModel dictionaryCity)
+        {
+            DictionaryCity dic = new DictionaryCity();
+            dic.DictionaryCityName = dictionaryCity.CityName;
+            dic.DictionaryCountyId = dictionaryCity.CountyId;
+
+            _dbContext.DictionaryCity.Add(dic);
+            _dbContext.SaveChanges();
+        }
+        public void UpdateCity(DictionaryCityModel dictionaryCity)
+        {
+            DictionaryCity dic = new DictionaryCity();
+            dic.DictionaryCityId = dictionaryCity.CityId;
+            dic.DictionaryCityName = dictionaryCity.CityName;
+            dic.DictionaryCountyId = dictionaryCity.CountyId;
+
+            _dbContext.DictionaryCity.Update(dic);
+            _dbContext.SaveChanges();
         }
 
         public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeModel(int page, int pageSize)
@@ -126,9 +154,9 @@ namespace iWasHere.Domain.Service
 
         public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeFilter(int page, int pageSize, string name)
         {
-            //pageSize = 10;
+
             int skip = (page - 1) * pageSize;
-            
+
             List<DictionaryCategoryTypeModel> dictionaryCityyTypeModel =
                 _dbContext.DictionaryCategory
                 .Where(a => a.DictionaryCategoryName.StartsWith(name))
@@ -172,12 +200,58 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCategory.Count();
             return i;
         }
+        public List<DictionaryCityModel> GetDictionaryCityData(int page, int pageSize, string name, int countyId)
+        {
+            IQueryable<DictionaryCity> query = _dbContext.DictionaryCity;
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(a => a.DictionaryCityName.Contains(name));
+            }
+
+            if (countyId != 0)
+            {
+                query = query.Where(a => a.DictionaryCountyId == countyId);
+            }
+
+            int skip = (page - 1) * pageSize;
+
+            List<DictionaryCityModel> dictionaryCityModels = query.Select(a => new DictionaryCityModel()
+            {
+                CityId = a.DictionaryCityId,
+                CityName = a.DictionaryCityName,
+                CountyName = a.DictionaryCounty.DictionaryCountyName,
+                CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryCityModels;
+        }
+
+        public int FilterTotalCities(string name, int county)
+        {
+            if ((county <= 0 || county.ToString() == null) && String.IsNullOrEmpty(name) && String.IsNullOrWhiteSpace(name))
+            {
+                return _dbContext.DictionaryCity.Count();
+            }
+            else if (county <= 0 || county.ToString() == null)
+            {
+                return _dbContext.DictionaryCity.Where(a => a.DictionaryCityName.Contains(name)).Count();
+            }
+            else if (String.IsNullOrEmpty(name) && String.IsNullOrWhiteSpace(name))
+            {
+                return _dbContext.DictionaryCity.Where(a => a.DictionaryCountyId == county).Count();
+            }
+            else
+            {
+                return _dbContext.DictionaryCity.Where(a => a.DictionaryCityName.Contains(name) && a.DictionaryCountyId == county).Count();
+            }
+        }
         public List<DictionaryCityModel> GetDictionaryCityModels(int page, int pageSize)
         {
             int skip = (page - 1) * pageSize;
             List<DictionaryCityModel> dictionaryCityModels = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
-                Id = a.DictionaryCityId,
+                CityId = a.DictionaryCityId,
                 CityName = a.DictionaryCityName,
                 CountyName = a.DictionaryCounty.DictionaryCountyName,
                 CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName
@@ -209,13 +283,62 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLCountries;
         }
+
+        public List<DictionaryCountyModel> Filter_GetCounties(string text)
+        {
+            var a = _dbContext.DictionaryCounty.Select(c => new DictionaryCountyModel()
+            {
+                CountyId = c.DictionaryCountyId,
+                CountyName = c.DictionaryCountyName
+
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                a = a.Where(p => p.CountyName.StartsWith(text));
+            }
+            List<DictionaryCountyModel> countyListModels = a.Take(50).ToList();
+
+            return countyListModels;
+
+        }
+
+        public DictionaryCityModel GetCity(int id)
+        {
+
+            DictionaryCityModel dictionaryCity = _dbContext.DictionaryCity
+                .Where(a => a.DictionaryCityId == id)
+                .Select(a => new DictionaryCityModel()
+                {
+
+                    CityId = a.DictionaryCityId,
+                    CityName = a.DictionaryCityName,
+                    CountyName = a.DictionaryCounty.DictionaryCountyName,
+                    CountryName = a.DictionaryCounty.DictionaryCountry.DictionaryCountryName,
+                    CountyId = a.DictionaryCountyId
+
+                }).First();
+
+            return dictionaryCity;
+        }
+
         public int TotalCity()
         {
             int i = _dbContext.DictionaryCity.Count();
             return i;
         }
-
-
+        public String DeleteCity(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCity.Single(a => a.DictionaryCityId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Exista un obiectiv turistic in acest oras.Nu poate fi sters.";
+            }
+        }
 
         public int TestTotal(string categoryName)
         {
@@ -228,45 +351,339 @@ namespace iWasHere.Domain.Service
                 return FilterTotalCategory(categoryName);
             }
         }
+        public List<DictionarySeasonModel> GetTouristAttractionsSeasonSchedule()
+        {
+            List<DictionarySeasonModel> seasons = _dbContext.DictionarySeason.Select(a => new DictionarySeasonModel()
+            {
+                SeasonId = a.DictionarySeasonId,
+                SeasonName = a.DictionarySeasonName
+
+            }).ToList();
+
+
+        public ScheduleTouristAttractionModel GetScheduleValueById(int scheduleId)
+        {
+            //Schedule var1 = _dbContext.Schedule.Where(a => a.ScheduleId == scheduleId).FirstOrDefault();
+            //ScheduleTouristAttractionModel var2 = new ScheduleTouristAttractionModel();
+            //var2.ScheduleId = var1.ScheduleId;
+            //var2.Day = var1.Day;
+            //var2.StartHour = var1.StartHour;
+            //var2.TouristAttractionId = var1.TouristAttractionId;
+            //var2.TouristAttractionName = var1.TouristAttraction.Name;
+            //var2.SeasonId = var1.SeasonId;
+            //var2.Season = var1.Season.DictionarySeasonName;
+            //return var2;
+
+            ScheduleTouristAttractionModel scheduleTouristAttractionModel = _dbContext.Schedule.Where(a => a.ScheduleId == scheduleId)
+                .Select(a => new ScheduleTouristAttractionModel()
+                {
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name,
+                    SeasonId = a.SeasonId,
+                    TouristAttractionId = a.TouristAttractionId
+                }).First();
+
+
+
+            return scheduleTouristAttractionModel;
+        }
 
         public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize)
         {
-
             int pageSkip = (page - 1) * pageSize;
-            List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule.
-            Select(a => new ScheduleTouristAttractionModel()
-            {
+            List<ScheduleTouristAttractionModel> scheduleTouristAttractions = new List<ScheduleTouristAttractionModel>();
+        
+            scheduleTouristAttractions = _dbContext.Schedule.
+                Select(a => new ScheduleTouristAttractionModel()
+                {
 
-                Day = a.Day,
-                StartHour = a.StartHour,
-                EndHour = a.EndHour,
-                Season = a.Season.DictionarySeasonName,
-                TouristAttractionName = a.TouristAttraction.Name
-
-
-
-            }).Skip(pageSkip).Take(pageSize).ToList();
-
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
+                }).Skip(pageSkip).Take(pageSize).ToList();
+            
             return scheduleTouristAttractions;
 
         }
 
-
-        public IQueryable<ScheduleFilteredModel> GetDictionaryScheduleFiltred(string searchString)
+        public List<CountryListModel> Filter_GetCountries(string text)
         {
-            IQueryable<ScheduleFilteredModel> schedulefiltered = _dbContext.Schedule.Where(s => s.TouristAttraction.Name.Contains(searchString)).Select(a => new ScheduleFilteredModel());
+            var a = _dbContext.DictionaryCountry.Select(c => new CountryListModel()
+            {
+                Id = c.DictionaryCountryId,
+                Name = c.DictionaryCountryName
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                a = a.Where(p => p.Name.StartsWith(text));
+            }
+            List<CountryListModel> countryListModels = a.Take(50).ToList();
+            return countryListModels;
+        }
+  public List<ScheduleTouristAttractionModel> GetDictionaryScheduleFiltred(int page, int pageSize, string searchString)
+        {
+
+
+            int pageSkip = (page - 1) * pageSize;
+            List<ScheduleTouristAttractionModel> schedulefiltered = _dbContext.Schedule
+                .Where(a => a.TouristAttraction.Name == searchString || a.TouristAttraction.Name.StartsWith(searchString)).
+                Select(a => new ScheduleTouristAttractionModel()
+                {
+                    ScheduleId = a.ScheduleId,
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
+
+
+                }).Skip(pageSkip).Take(pageSize).ToList();
 
 
             return schedulefiltered;
+        }
 
+
+
+
+
+
+
+
+        public string UpdateSchedule(ScheduleTouristAttractionModel scheduleTourist)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(Convert.ToString(scheduleTourist.TouristAttractionId)))
+                {
+                    return "Obiectivul turistic  este obligatoriu";
+                }
+                else
+                {
+                    Schedule schedule = _dbContext.Schedule.Find(scheduleTourist.ScheduleId);
+                    schedule.ScheduleId = scheduleTourist.ScheduleId;
+                    schedule.TouristAttractionId = scheduleTourist.TouristAttractionId;
+                    schedule.SeasonId = scheduleTourist.SeasonId;
+                    schedule.Day = scheduleTourist.Day;
+                    schedule.StartHour = scheduleTourist.StartHour;
+                    schedule.EndHour = scheduleTourist.EndHour;
+                    schedule.Season = _dbContext.DictionarySeason.Find(scheduleTourist.SeasonId);
+                    schedule.TouristAttraction = _dbContext.TouristAttraction.Find(scheduleTourist.TouristAttractionId);
+                    _dbContext.Schedule.Update(schedule);
+                    _dbContext.SaveChanges();
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return "Trebuie sa completati campurile!";
+            }
+        }
+        public string DeleteCounty(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCounty.Single(a => a.DictionaryCountyId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Acest judet nu poate fi sters pentru ca are asociat un oras!!!";
+            }
+        }
+
+        public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize, string searchString)
+        {
+           
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                int pageSkip = (page - 1) * pageSize;
+                List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule
+                     .Where(a => a.TouristAttraction.Name.Contains(searchString)).
+                     Select(a => new ScheduleTouristAttractionModel()
+                     {
+                         ScheduleId = a.ScheduleId,
+                         Day = a.Day,
+                         StartHour = a.StartHour,
+                         EndHour = a.EndHour,
+                         Season = a.Season.DictionarySeasonName,
+                         TouristAttractionName = a.TouristAttraction.Name
+
+                     }).Skip(pageSkip).Take(pageSize).ToList();
+                return scheduleTouristAttractions;
+            }
+            else
+            {
+                int pageSkip1 = (page - 1) * pageSize;
+                List<ScheduleTouristAttractionModel> scheduleTouristAttractions = _dbContext.Schedule.
+                Select(a => new ScheduleTouristAttractionModel()
+                {
+                    ScheduleId = a.ScheduleId,
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
+
+                }).Skip(pageSkip1).Take(pageSize).ToList();
+                return scheduleTouristAttractions;
+
+            }
 
 
         }
+
+        public string DeleteSchedule(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.Schedule.Single(a => a.ScheduleId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "Acest program nu poate fi sters pentru ca are asociat un muzeu.";
+
+            }
+        }
+
 
         public int GetItemsOfSchedule()
         {
             return _dbContext.Schedule.Count();
         }
+        public int GetItemsOfSchedule(string searchText)
+        {
+
+            if (!string.IsNullOrEmpty(searchText))
+
+                 return _dbContext.Schedule.Where(a => a.TouristAttraction.Name == searchText).Count();
+            else
+                return _dbContext.Schedule.Count();
+        }
+        /*
+        public List<DictionaryCountryModel> GetDictionaryCountryModel(int page, int pageSize)
+        {
+
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountryModel> countries = _dbContext.DictionaryCountry.
+            Select(a => new DictionaryCountryModel()
+            {
+                CountryId = a.DictionaryCountryId,
+                CountryName = a.DictionaryCountryName
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return countries;
+
+            int pageSkip = (page - 1) * pageSize;
+            List<ScheduleTouristAttractionModel> schedulefiltered = _dbContext.Schedule
+                .Where(a => a.TouristAttraction.Name == searchString || a.TouristAttraction.Name.StartsWith(searchString)).
+                Select(a => new ScheduleTouristAttractionModel()
+                {
+                    ScheduleId = a.ScheduleId,
+                    Day = a.Day,
+                    StartHour = a.StartHour,
+                    EndHour = a.EndHour,
+                    Season = a.Season.DictionarySeasonName,
+                    TouristAttractionName = a.TouristAttraction.Name
+
+                }).Skip(pageSkip).Take(pageSize).ToList();
+
+            return schedulefiltered;
+        }
+        */
+
+        public int TotalCountries()
+        {
+            int i = _dbContext.DictionaryCountry.Count();
+            return i;
+        }
+
+        public IEnumerable<DictionaryCountryModel> GetCountryModel(int page, int pageSize, out int rows, string abc)
+        {
+            rows = 0;
+            rows = _dbContext.DictionaryCountry.Count();
+            if (abc == null)
+                return _dbContext.DictionaryCountry.Skip((page - 1) * pageSize).Take(pageSize).Select(Country => new DictionaryCountryModel
+                {
+                    CountryId = Country.DictionaryCountryId,
+                    CountryName = Country.DictionaryCountryName
+                });
+            else
+            {
+                rows = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName.StartsWith(abc)).Count();
+                return _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName.StartsWith(abc)).Skip((page - 1) * pageSize).Take(pageSize).Select(Country => new DictionaryCountryModel
+                {
+                    CountryId = Country.DictionaryCountryId,
+                    CountryName = Country.DictionaryCountryName
+                });
+            }
+        }
+
+        public int FilterTotalCountries(string name)
+        {
+            int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
+            return i;
+        }
+        public string DeleteCountry(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCountry.Single(a => a.DictionaryCountryId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch
+            {
+                return " Aceasta tara nu poate fi stearsa!Exista un judet in aceasta tara.";
+            }
+        }
+
+        public string InsertNewSchedule(ScheduleTouristAttractionModel scheduleTourist)
+        {
+            try
+            {
+                Schedule schedule = new Schedule();
+                schedule.TouristAttractionId = scheduleTourist.TouristAttractionId;
+                schedule.SeasonId = scheduleTourist.SeasonId;
+                schedule.Day = scheduleTourist.Day;
+                schedule.StartHour = scheduleTourist.StartHour;
+                schedule.EndHour = scheduleTourist.EndHour;
+                _dbContext.Schedule.Add(schedule);
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception e)
+            {
+                return "Trebuie sa completati programul!";
+            }
+        }
+        public DictionaryCountry AddDictionaryCountry(DictionaryCountry country)
+        {
+            if (country.DictionaryCountryId != null)
+                if (!string.IsNullOrWhiteSpace(country.DictionaryCountryName))
+                {
+                    _dbContext.Add(country);
+                    _dbContext.SaveChanges();
+                }
+            return null;
+        }
+
+        public string InsertNewCounty(DictionaryCountyTypeModel dictionaryCounty)
+        {
+            try
+            {
+                DictionaryCounty dic = new DictionaryCounty();
+                dic.DictionaryCountyName = dictionaryCounty.Name;
+                dic.DictionaryCountryId = dictionaryCounty.CountryId;
 
         public DictionaryCategoryTypeModel getCategoryIdUpdate(int id)
         {
@@ -278,6 +695,26 @@ namespace iWasHere.Domain.Service
                 }).First();
             return dictionaryCountyTypeModel;
         }
+                _dbContext.DictionaryCounty.Add(dic);
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch(Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
+
+        public DictionaryCountyTypeModel getCountyIdUpdate(int id)
+        {
+            DictionaryCountyTypeModel dictionaryCountyTypeModel = _dbContext.DictionaryCounty.Where(a => a.DictionaryCountyId == id)
+                .Select(a => new DictionaryCountyTypeModel()
+                {
+                    Id = a.DictionaryCountyId,
+                    Name = a.DictionaryCountyName,
+                    CountryName = a.DictionaryCountry.DictionaryCountryName,
+                    CountryId= a.DictionaryCountryId
+                }).First();
 
         public string UpdateCategory(DictionaryCategoryTypeModel dictionaryCategoryTypeModel)
         {
@@ -295,7 +732,33 @@ namespace iWasHere.Domain.Service
                    
                     _dbContext.DictionaryCategory.Update(dictionaryCategory);
                     _dbContext.SaveChanges();
+            return dictionaryCountyTypeModel;
+        }
 
+        public string UpdateCounty(DictionaryCountyTypeModel dictionaryCountyTypeModel)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(dictionaryCountyTypeModel.Name))
+                {
+                    return "Judetul trebuie completat";
+                }
+                else
+                {
+                    DictionaryCounty dictionaryCounty = _dbContext.DictionaryCounty.Find(dictionaryCountyTypeModel.Id);
+                    dictionaryCounty.DictionaryCountyName = dictionaryCountyTypeModel.Name;
+                    dictionaryCounty.DictionaryCountryId = dictionaryCountyTypeModel.CountryId;
+                    dictionaryCounty.DictionaryCountyId = dictionaryCountyTypeModel.Id;
+                    _dbContext.DictionaryCounty.Update(dictionaryCounty);
+                    _dbContext.SaveChanges();
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
                     return null;
                 }
             }
