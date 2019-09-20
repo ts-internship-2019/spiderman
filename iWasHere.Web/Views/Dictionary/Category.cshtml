@@ -17,7 +17,20 @@
     #addCategory, #addCategoryInput {
         float: right;
     }
-   
+
+    #categoryInput{
+        margin-bottom:20px;
+    }
+    .filterBtn{
+        width: 10rem;
+    }
+    .filterBtnReset{
+        display:block;
+        margin-bottom:20px;
+    }
+    h1 {
+        margin-top: 20px;
+    }
 }
 </style>
 
@@ -26,9 +39,9 @@
 
 <h1>Category</h1>
 <input id='categoryInput' type="text" />
-<button onclick="resetGrid()">Filter</button>
+<button class="filterBtn btn btn-danger" onclick="resetGrid()">Filter</button>
 
-
+<button class="filterBtn filterBtnReset btn btn-danger" onclick="resetGrid(); resetFilters()">Clear Filters</button>
 
 @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCategoryTypeModel>
     ()
@@ -37,6 +50,10 @@
     .Columns(columns =>
     {
     columns.Bound(o => o.Name);
+    columns.Command(command =>
+    {    
+        command.Destroy().Text("Delete");
+    });
     })
     .Sortable()
     .Filterable()
@@ -46,17 +63,34 @@
     pageable => pageable
     .Refresh(true)
     .PageSizes(true)
-    .ButtonCount(5)
+    .ButtonCount(1)
     )
     .DataSource(dataSource => dataSource
-    .Ajax()
-    //.PageSize(10)
-    .PageSize(20)
-    .Read(read => read.Action("CategoryBinding_Read", "Dictionary").Data("filter"))
+        .Ajax()
+        //.PageSize(10)
+        .PageSize(20)
+        .Events(events => events.Error("ErrorHandler"))
+        .Read(read => read.Action("CategoryBinding_Read", "Dictionary").Data("filter"))
+        .Model(model => model.Id(p => p.Id))
+        .Destroy(update => update.Action("DestroyCategory", "Dictionary"))
     )
 )
 
 <script>
+    function ErrorHandler(e) {   
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
+                }
+            });       
+            alert(message);
+        }
+    }
+
     function filter() {
         var categoryObj = {}
         categoryObj['categoryName'] = $('#categoryInput').val();
@@ -66,5 +100,9 @@
     function resetGrid() {
         $('#Grid').data('kendoGrid').dataSource.read();
         $('#Grid').data('kendoGrid').dataSource.page(1);
+    }
+
+    function resetFilters() {
+        $('#categoryInput').val("");
     }
 </script>

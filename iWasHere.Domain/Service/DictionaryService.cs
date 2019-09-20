@@ -117,6 +117,35 @@ namespace iWasHere.Domain.Service
             return dictionaryCategoryTypeModels;
         }
 
+        public List<DictionaryCategoryTypeModel> GetCategoryData(string text)
+        {
+            var categoryName = _dbContext.DictionaryCategory.Select(categ => new DictionaryCategoryTypeModel()
+            {
+                Id = categ.DictionaryCategoryId,
+                Name = categ.DictionaryCategoryName
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                categoryName = categoryName.Where(c => c.Name.StartsWith(text));
+            }
+            List<DictionaryCategoryTypeModel> categoryListModel = categoryName.Take(50).ToList();
+            return categoryListModel;
+        }
+
+        public string DeleteCategory(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCategory.Single(a => a.DictionaryCategoryId.Equals(id)));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch
+            {
+                return "Cannot delete category!";
+            }
+        }
+
         public List<DictionaryCategoryTypeModel> GetDictionaryCategoryTypeFilter(int page, int pageSize, string name)
         {
             //pageSize = 10;
@@ -134,6 +163,18 @@ namespace iWasHere.Domain.Service
             return dictionaryCityyTypeModel;
         }
 
+        public List<DictionaryCategoryTypeModel> TestCategory(int page, int pageSize, string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return GetDictionaryCategoryTypeModel(page,pageSize);
+            }
+            else
+            {
+                return GetDictionaryCategoryTypeFilter(page, pageSize, categoryName);
+            }
+        }
+
         public void InsertCategoryType(string name)
         {
             DictionaryCategory dictionary = new DictionaryCategory();
@@ -141,11 +182,10 @@ namespace iWasHere.Domain.Service
 
             _dbContext.DictionaryCategory.Add(dictionary);
             _dbContext.SaveChanges();
-
         }
         public int FilterTotalCategory(string name)
         {
-            int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName == name).Count();
+            int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName.StartsWith(name)).Count();
             return i;
         }
 
@@ -296,8 +336,17 @@ namespace iWasHere.Domain.Service
             }
         }
 
-
-
+        public int TestTotal(string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return Total();
+            }
+            else
+            {
+                return FilterTotalCategory(categoryName);
+            }
+        }
 
         public List<ScheduleTouristAttractionModel> GetDictionaryScheduleModels(int page, int pageSize)
         {
@@ -473,7 +522,6 @@ namespace iWasHere.Domain.Service
 
 
 
-            return schedulefiltered;
         }
 
         public int TotalCountries()
@@ -504,28 +552,7 @@ namespace iWasHere.Domain.Service
             }
         }
 
-        /*
-        public List<DictionaryCountryModel> GetDictionaryCountryFilter(int page, int pageSize, string name)
-        {
-            int skip = (page - 1) * pageSize;
-            List<DictionaryCountryModel> countryFilter =
-                _dbContext.DictionaryCountry
-                .Where(a => a.DictionaryCountryName == name || a.DictionaryCountryName.StartsWith(name))
-                .Select(a => new DictionaryCountryModel()
-                {
-                    CountryId = a.DictionaryCountryId,
-                    CountryName = a.DictionaryCountryName
-                }).Skip(skip).Take(pageSize).ToList();
 
-            return countryFilter;
-        }
-        */
-
-        public int FilterTotalCountries(string name)
-        {
-            int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
-            return i;
-        }
         public string DeleteCountry(int id)
         {
             try
@@ -534,10 +561,21 @@ namespace iWasHere.Domain.Service
                 _dbContext.SaveChanges();
                 return null;
             }
-            catch (Exception ex)
+            catch
             {
-                return "Ghinion frate! Exista un judet in aceasta tara.";
+                return "Tara nu poate fi stearsa pentru ca exista judete sau orase in aceasta!";
             }
+        }
+
+        public DictionaryCountry AddDictionaryCountry(DictionaryCountry country)
+        {
+            if (country.DictionaryCountryId != null)
+                if (!string.IsNullOrWhiteSpace(country.DictionaryCountryName))
+                {
+                    _dbContext.Add(country);
+                    _dbContext.SaveChanges();
+                }
+            return null;
         }
 
     }
