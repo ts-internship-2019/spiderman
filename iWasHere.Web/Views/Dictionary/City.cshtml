@@ -4,55 +4,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Orase</h1>
-<button onclick="test()" class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Filtreaza</button>
-@(Html.Kendo().Button()
-                    .Name("textButton")
-                    .HtmlAttributes(new { type = "button" })
-                    .Content("<a href='/dictionary/AddCity'>Adauga</span>")
-)
-<td>
-    @Html.ActionLink("Adauga", "Adauga", new { /* id=item.PrimaryKey */ }) |
 
-</td>
-
-<a href="@Url.Action("CreateOrEdit","City",0)" class="btn btn-info"></a>
-<p>
-    <div class="demo-section k-content">
-
-
-        <label for="Judet">
-            Judet:  @(Html.Kendo().ComboBox()
-.Name("counties")
-.DataTextField("CountyName")
-.DataValueField("CountyId")
-.HtmlAttributes(new { style = "width:60%; id='counties'" })
-.Filter("StartsWith")
-.DataSource(source =>
-    {
-source.Read(read =>
-{
-    read.Action("FilterGetCounties", "Dictionary");
-})
-.ServerFiltering(true);
-})
-            )
-
-
-    </div>
-
-
-</p>
-
-
-
-<p>
+<div class="demo-section k-content">
+    <h2 align="center">Orase</h2>
+    <br /><br />
+    @(Html.Kendo().Button()
+                       .Name("textButton")
+                       .HtmlAttributes(new { type = "button" })
+                       .Content("<a href='/dictionary/AddCity'>Adauga</a>")
+    )<br />
+    <label for="Judet">Judet:</label>
+    @(Html.Kendo().ComboBox()
+        .Name("counties")
+        .DataTextField("CountyName")
+        .DataValueField("CountyId")
+        .HtmlAttributes(new { style = "width:60%; id='counties'" })
+        .Filter("StartsWith")
+        .DataSource(source =>
+        {
+        source.Read(read =>
+        {
+        read.Action("FilterGetCounties", "Dictionary");
+        })
+        .ServerFiltering(true);
+        })
+    )
     <label for="Oras">
-        Oras:@(Html.Kendo().TextBox()
-.Name("kTextBox").
-HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
-        )
+        Oras:
     </label>
+    @(Html.Kendo().TextBox()
+        .Name("kTextBox").
+        HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
+    )
+    <button onclick="deleteFilters()" class="k-button k-primary" id="gett">Sterge filtrele</button>
+    <button onclick="test()" class="k-button k-primary" id="get">Filtreaza</button>
+    <br /><br />
+</div>
+
+
+
+<p>
+
 </p>
 
 
@@ -62,16 +54,16 @@ HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTe
     {
 
 
-        columns.Bound(p => p.CityName).Title("Oras");
+        columns.Bound(p => p.CityName).Title("Oras").Width(150);
         columns.Bound(p => p.CountyName).Title("Judet").Width(130);
-        columns.Bound(p => p.CountryName).Title("Tara").Width(130);
-        
+        columns.Bound(p => p.CountryName).Title("Tara").Width(150);
+        columns.Template("<a class='k-button btn btn-outline-primary' href='/Dictionary/AddCity?Id=#=CityId# '> Editeaza </a>").Width(150);
         columns.Command(command =>
         {
             command.Destroy().Text("Delete");
-        });
-        columns.Template("<a class='k-button' href='/Dictionary/AddCity?Id=#=CityId# '> Editeaza </a>").Width(150);
-       //   columns.Template("<a href='"+@Url.Action("AddCity", "Dictionary")+"?id=#=CityId#' class='btn btn-info'> Modifica</a> ");
+        })
+            .HtmlAttributes(new { style = "class = \"btn btn-outline-danger\"" }).Width(150);
+        //   columns.Template("<a href='"+@Url.Action("AddCity", "Dictionary")+"?id=#=CityId#' class='btn btn-info'> Modifica</a> ");
 
     })
     .HtmlAttributes(new { style = "height: 550px; id='grid'" })
@@ -98,11 +90,11 @@ HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTe
 
 <script>
 
-      function DeleteFilters() {
+    function deleteFilters() {
         $("#kTextBox").val(null);
         $("#counties").data("kendoComboBox").value(null);
 
- 
+
 
         $("#grid").data("kendoGrid").dataSource.read();
         $("#grid").data("kendoGrid").dataSource.page(1);
@@ -146,22 +138,22 @@ HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTe
     }
 
 
-     function error_handler(e) {    
+    function error_handler(e) {
         if (e.errors) {
             var message = "Errors:\n";
             $.each(e.errors, function (key, value) {
                 if ('errors' in value) {
-                    $.each(value.errors, function() {
+                    $.each(value.errors, function () {
                         message += this + "\n";
                     });
                 }
-            });        
+            });
             alert(message);
         }
     }
-      function setEdit() {
+    function setEdit() {
         getInput = "edit"
-        localStorage.setItem("storageName",getInput);
+        localStorage.setItem("storageName", getInput);
     }
     function cityPage() {
 

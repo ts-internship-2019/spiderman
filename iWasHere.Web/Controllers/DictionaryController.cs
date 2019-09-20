@@ -138,21 +138,33 @@ namespace iWasHere.Web.Controllers
         }
         public IActionResult CityNew() { return View(); }
        
-        public ActionResult NewCity(DictionaryCityModel city, string submitButton)
+        public ActionResult NewCity(DictionaryCityModel model, string submit)
         {
-            if (submitButton == "cancel")
+            if (submit == "cancel")
             {
                 return View("City");
             }
-            if (city.CityId <= 0)
+
+            if (model.CityName ==""||String.IsNullOrEmpty(model.CityName)) {
+                ModelState.AddModelError("a", "Trebuie sa inserati orasul");
+                return View("AddCity");
+
+            }
+            if (model.CountyId == 0 )
             {
-                _dictionaryService.InsertCity(city);
+                ModelState.AddModelError("a", "Trebuie sa inserati judetul");
+                return View("AddCity");
+
+            }
+            if (model.CityId <= 0)
+            {
+                _dictionaryService.InsertCity(model);
             }
             else
             {
-                _dictionaryService.UpdateCity(city);
+                _dictionaryService.UpdateCity(model);
             }
-            if (submitButton == "savenew")
+            if (submit == "savenew")
             {
                 ModelState.Clear();
                 return View("AddCity");
@@ -204,6 +216,7 @@ namespace iWasHere.Web.Controllers
                 return Json(result);
             }
         }
+      
 
         public IActionResult SearchCountyName()
         {
@@ -227,6 +240,10 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.Filter_GetCountries(text));
         }
 
+        public ActionResult FilterGetCounties(string text)
+        {
+            return Json(_dictionaryService.Filter_GetCounties(text));
+        }
         public IActionResult AddCounty()
         {
             return View();
@@ -303,13 +320,6 @@ namespace iWasHere.Web.Controllers
                 return Json(ModelState.ToDataSourceResult());
 
                }
-        public ActionResult GetTouristAttraction()
-        {
-            return Json(_dictionaryService.GetTouristAttractionsSchedule());
-        }
-
-            return Json(ModelState.ToDataSourceResult());
-
-            //return Json(ModelState.ToDataSourceResult());
+    
         }
     }
