@@ -49,6 +49,7 @@ namespace iWasHere.Controllers
             {
                 DictionaryCurrency dictionaryCurrency = _dictionaryService.GetCurrency(id);
                 DictionaryCurrencyModel dcm = new DictionaryCurrencyModel();
+                dcm.DictionaryItemId = id;
                 dcm.DictionaryItemCode = dictionaryCurrency.DictionaryCurrencyCode;
                 dcm.DictionaryItemName = dictionaryCurrency.DictionaryCurrencyName;
                 return View(dcm);
@@ -72,37 +73,48 @@ namespace iWasHere.Controllers
         }
         public ActionResult Save([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel dict, string submitValue)
         {
-            if (submitValue == "save")
+            if (dict.DictionaryItemId <= 0)
             {
-                DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
-                dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
-                dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
-                _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
-                return View("Index");
-            }
-            else if (submitValue == "cancel")
-            {
-                return View("Index");
+                if (submitValue == "save")
+                {
+                    DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
+                    dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
+                    dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
+                    _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
+                    return View("Index");
+                }
+                else if (submitValue == "cancel")
+                {
+                    return View("Index");
+                }
+                else
+                {
+                    DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
+                    dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
+                    dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
+                    _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
+                    ModelState.Clear();
+                    return View("Add");
+                }
             }
             else
             {
-                DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
-                dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
-                dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
-                _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
-                return View("Add");
+                if (submitValue == "save")
+                {
+                    DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
+                    dictionaryCurrency.DictionaryCurrencyId = dict.DictionaryItemId;
+                    dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
+                    dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
+                    _dictionaryService.EditDictionaryCurrency(dictionaryCurrency);
+                    return View("Index");
+                }
+                else
+                {
+                    return View("Index");
+                }
             }
+            
         }
-        public ActionResult SaveAndNew([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel dict)
-        {
-            DictionaryCurrency dictionaryCurrency = new DictionaryCurrency();
-            dictionaryCurrency.DictionaryCurrencyCode = dict.DictionaryItemCode;
-            dictionaryCurrency.DictionaryCurrencyName = dict.DictionaryItemName;
-            _dictionaryService.AddDictionaryCurrency(dictionaryCurrency);
-            return View("Add");
-        }
-
-
         public ActionResult DestroyCurrency([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
         {
             if (currency != null)

@@ -1,10 +1,11 @@
 ﻿@model iWasHere.Domain.DTOs.DictionaryCurrencyModel
-
+@Html.HiddenFor(a => a.DictionaryItemId)
 <div>
     <h1 class="title">Add</h1>
-
     <form action="Save" method="post">
 
+        
+            <input  type ="hidden" asp-for="DictionaryItemId" /><br />
         <h6>Code valuta</h6>
         <input type="text" asp-for="DictionaryItemCode" /><br />
         <h6>Nume valuta</h6>
@@ -15,13 +16,15 @@
                 style="margin-right: 2em;margin-top: 2em;float: right;">
             Anuleaza
         </button>
-        <button class="btn btn-primary btn-lg disable"
-                type="submit"
-                name="submitValue"
-                value="saveNew"
-                style="margin-right: 2em;margin-top: 2em;float: right;">
-            Salveaza si nou
-        </button>
+        @if (Model.DictionaryItemId <= 0)
+        {
+            <button class="btn btn-primary btn-lg disable"
+                    type="submit"
+                    name="submitValue"
+                    value="saveNew"
+                    style="margin-right: 2em;margin-top: 2em;float: right;">
+                Salveaza si nou
+            </button>}
         <button class="btn btn-success btn-lg"
                 type="submit"
                 name="submitValue"
@@ -30,7 +33,6 @@
             Salveaza
         </button>
     </form>
-
 
 </div>
 <style>

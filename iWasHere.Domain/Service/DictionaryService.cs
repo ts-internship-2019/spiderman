@@ -654,5 +654,10 @@ namespace iWasHere.Domain.Service
 
             return _dbContext.DictionaryCurrency.Where(a => a.DictionaryCurrencyId == id).FirstOrDefault();
         }
+        public void EditDictionaryCurrency(DictionaryCurrency dict)
+        {
+            _dbContext.Update(dict);
+            _dbContext.SaveChanges();
+        }
     }
 }

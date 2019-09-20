@@ -20,7 +20,7 @@ namespace iWasHere.Web.Controllers
 
         public DictionaryController(DictionaryService dictionaryService)
         {
-            
+
             _dictionaryService = dictionaryService;
 
         }
@@ -42,8 +42,8 @@ namespace iWasHere.Web.Controllers
 
         public IActionResult ScheduleData([DataSourceRequest]DataSourceRequest request, string txtFilterName)
         {
-            List<ScheduleTouristAttractionModel> jsonVariable = _dictionaryService.GetDictionaryScheduleModels(request.Page, request.PageSize,txtFilterName);
-          
+            List<ScheduleTouristAttractionModel> jsonVariable = _dictionaryService.GetDictionaryScheduleModels(request.Page, request.PageSize, txtFilterName);
+
             Kendo.Mvc.UI.DataSourceResult v3 = new DataSourceResult();
             v3.Data = jsonVariable;
             v3.Total = _dictionaryService.GetItemsOfSchedule(txtFilterName);
@@ -56,11 +56,11 @@ namespace iWasHere.Web.Controllers
 
 
 
-        //public IActionResult ScheduleFiltered([DataSourceRequest]DataSourceRequest request)
-        //{
-        //    //var jsonVariable = _dictionaryService.GetDictionaryScheduleFiltred().ToDataSourceResult(request);
-        //   // return Json(jsonVariable);
-        //}
+            //public IActionResult ScheduleFiltered([DataSourceRequest]DataSourceRequest request)
+            //{
+            //    //var jsonVariable = _dictionaryService.GetDictionaryScheduleFiltred().ToDataSourceResult(request);
+            //   // return Json(jsonVariable);
+            //}
             //return View(dictionaryLandmarkTypeModels);
             return View(dictionaryCurrencyModel);
         }
@@ -90,31 +90,31 @@ namespace iWasHere.Web.Controllers
             return Json(JsonVariable);
 
         }
-        public ActionResult CityData([DataSourceRequest]DataSourceRequest request,string city,int county)
+        public ActionResult CityData([DataSourceRequest]DataSourceRequest request, string city, int county)
         {
-         
-                var jsonVariable = _dictionaryService.GetDictionaryCityData(request.Page, request.PageSize,city,county);
+
+            var jsonVariable = _dictionaryService.GetDictionaryCityData(request.Page, request.PageSize, city, county);
             DataSourceResult result = new DataSourceResult()
             {
                 Data = jsonVariable,
-                Total = _dictionaryService.FilterTotalCities(city,county)
-                };
-                return Json(result);
-            
+                Total = _dictionaryService.FilterTotalCities(city, county)
+            };
+            return Json(result);
+
 
         }
-      
+
         public ActionResult GetCountyData([DataSourceRequest]DataSourceRequest request, string abc, int edf)
         {
-  
-                var jsonVariable = _dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, abc,edf,out int totalrows);
-                DataSourceResult result = new DataSourceResult()
-                {
-                    Data = jsonVariable,
-                    Total = totalrows /*_dictionaryService.FilterTotalCounties(abc, edf)*/
-                };
-                return Json(result);
-            
+
+            var jsonVariable = _dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, abc, edf, out int totalrows);
+            DataSourceResult result = new DataSourceResult()
+            {
+                Data = jsonVariable,
+                Total = totalrows /*_dictionaryService.FilterTotalCounties(abc, edf)*/
+            };
+            return Json(result);
+
         }
 
         public IActionResult GetCountry()
@@ -131,7 +131,8 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
-        public IActionResult AddCity(int id) {
+        public IActionResult AddCity(int id)
+        {
             if (Convert.ToInt32(id) == 0)
             {
 
@@ -144,7 +145,7 @@ namespace iWasHere.Web.Controllers
             }
         }
         public IActionResult CityNew() { return View(); }
-       
+
         public ActionResult NewCity(DictionaryCityModel city, string submitButton)
         {
             if (submitButton == "cancel")
@@ -171,11 +172,11 @@ namespace iWasHere.Web.Controllers
         }
         public ActionResult SaveCity(string city, int county)
         {
-           DatabaseContext gf = new DatabaseContext();
+            DatabaseContext gf = new DatabaseContext();
             gf.DictionaryCity.Add(new Domain.Models.DictionaryCity
             {
-               DictionaryCityName=city,
-               DictionaryCountyId=12
+                DictionaryCityName = city,
+                DictionaryCountyId = 12
             });
             return Json(gf.SaveChanges());
         }
@@ -195,7 +196,7 @@ namespace iWasHere.Web.Controllers
                     Data = jsonVariable,
                     Total = _dictionaryService.Total()
                 };
-                
+
                 return Json(result);
             }
             else
@@ -215,7 +216,7 @@ namespace iWasHere.Web.Controllers
         public IActionResult SearchCountyName()
         {
             return View();
-            
+
         }
 
         //public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
@@ -244,7 +245,7 @@ namespace iWasHere.Web.Controllers
         {
             if (dictionaryCountyType != null)
             {
-                string errorMessage=_dictionaryService.DeleteCounty(dictionaryCountyType.Id);
+                string errorMessage = _dictionaryService.DeleteCounty(dictionaryCountyType.Id);
                 if (string.IsNullOrWhiteSpace(errorMessage))
                 {
                     return Json(ModelState.ToDataSourceResult());
@@ -252,101 +253,99 @@ namespace iWasHere.Web.Controllers
                 else
                 {
                     ModelState.AddModelError("a", errorMessage);
-                    return Json(ModelState.ToDataSourceResult()); 
-                }
-            }
-
-            return Json(ModelState.ToDataSourceResult());
-
-        }
-
-        public JsonResult ScheduleFilteredDataSource([DataSourceRequest]DataSourceRequest request, ScheduleTouristAttractionModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var filter = model.TouristAttractionName;
-            }
-
-
-
-
-            var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
-            DataSourceResult result = new DataSourceResult()
-            {
-                Data = jsonVar,
-                Total = _dictionaryService.GetItemsOfSchedule()
-            };
-            return Json(result);
-
-     }
-
-        public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
-        {
-            int rows;
-            var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
-            DataSourceResult dataSource = new DataSourceResult
-            {
-                Data = x,
-                Total = rows
-            };
-
-            return Json(dataSource);
-        }
-
-        public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
-        {
-            if (schedule != null)
-            {
-                 string errorMessageForClient=  _dictionaryService.DeleteSchedule(schedule.ScheduleId);
-                if (string.IsNullOrWhiteSpace(errorMessageForClient))
-                {
                     return Json(ModelState.ToDataSourceResult());
                 }
-                else
-        public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
-        {
-            if (country != null)
-            {
-                string errorMessage =_dictionaryService.DeleteCountry(country.CountryId);
-                if (!string.IsNullOrWhiteSpace(errorMessage))
-                {
-                    ModelState.AddModelError("a", errorMessage);
-                }
             }
 
             return Json(ModelState.ToDataSourceResult());
+
         }
 
-        //public IActionResult AddEditCountry()
-        //{
-        //    return View();
-        //}
+    //    public JsonResult ScheduleFilteredDataSource([DataSourceRequest]DataSourceRequest request, ScheduleTouristAttractionModel model)
+    //    {
+    //        if (ModelState.IsValid)
+    //        {
+    //            var filter = model.TouristAttractionName;
+    //        }
 
-        //public ActionResult AddEditCountry(DictionaryCountry cm)
-        //{
-        //    if (ModelState.IsValid && cm != null)
-        //    {
-        //        _dictionaryService.AddDictionaryCountry(cm);
-        //    }
-        //    return View();
-        //}
 
-        public IActionResult AddEditCountry()
+
+
+    //        var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
+    //        DataSourceResult result = new DataSourceResult()
+    //        result.Data = jsonVar;
+    //        result.Total = _dictionaryService.GetItemsOfSchedule();
+    //        return Json(result);
+
+    //}
+
+    public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
+    {
+        int rows;
+        var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
+        DataSourceResult dataSource = new DataSourceResult
+        {
+            Data = x,
+            Total = rows
+        };
+
+        return Json(dataSource);
+    }
+
+    //public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
+    //{
+    //    if (schedule != null)
+    //    {
+    //         string errorMessageForClient=  _dictionaryService.DeleteSchedule(schedule.ScheduleId);
+    //        if (string.IsNullOrWhiteSpace(errorMessageForClient))
+    //        {
+    //            return Json(ModelState.ToDataSourceResult());
+    //        }
+    //        else
+    public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
+    {
+        if (country != null)
+        {
+            string errorMessage = _dictionaryService.DeleteCountry(country.CountryId);
+            if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                ModelState.AddModelError("a", errorMessage);
+            }
+        }
+
+        return Json(ModelState.ToDataSourceResult());
+    }
+
+    //public IActionResult AddEditCountry()
+    //{
+    //    return View();
+    //}
+
+    //public ActionResult AddEditCountry(DictionaryCountry cm)
+    //{
+    //    if (ModelState.IsValid && cm != null)
+    //    {
+    //        _dictionaryService.AddDictionaryCountry(cm);
+    //    }
+    //    return View();
+    //}
+
+    public IActionResult AddEditCountry()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AddEditCountry(DictionaryCountryModel c)
+    {
+        if (!ModelState.IsValid)
         {
             return View();
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddEditCountry(DictionaryCountryModel c)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-            return Content($"{c.CountryCode}, {c.CountryName}");
-        }
-
-        
+        return Content($"{c.CountryCode}, {c.CountryName}");
     }
+
+
+}
 }
