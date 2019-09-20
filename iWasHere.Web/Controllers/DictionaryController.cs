@@ -478,12 +478,7 @@ namespace iWasHere.Web.Controllers
             {
                 return Json(ModelState.ToDataSourceResult());
             }
-        }      
-    }
-}
-
-
-
+        }
 
         public ActionResult NewSchedule(ScheduleTouristAttractionModel scheduleTouristAttractionModel, string submitbtn, int Id)
         {
@@ -491,6 +486,8 @@ namespace iWasHere.Web.Controllers
             {
                 return View("Schedule");
             }
+
+
 
             if (scheduleTouristAttractionModel != null)
             {
@@ -538,3 +535,4 @@ namespace iWasHere.Web.Controllers
         }
     }
 }
+
