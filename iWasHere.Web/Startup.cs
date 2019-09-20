@@ -79,7 +79,7 @@ namespace iWasHere.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dictionary}/{action=Schedule}/{id?}");
+                    template: "{controller=Dictionary}/{action=County}/{id?}");
             });
         }
     }

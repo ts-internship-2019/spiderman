@@ -30,8 +30,6 @@ namespace iWasHere.Web.Controllers
             return View(dictionaryLandmarkTypeModels);
         }
 
-
-
         public IActionResult Schedule()
         {
             return View();
@@ -161,11 +159,6 @@ namespace iWasHere.Web.Controllers
             
         }
 
-        //public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
-        //{
-        //    return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
-        //}
-
 
         public IActionResult ClientFiltering()
         {
@@ -177,11 +170,7 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.Filter_GetCountries(text));
         }
 
-        public IActionResult AddCounty()
-        {
-            return View();
-
-        }
+    
 
         public ActionResult Process_DestroyCounty([DataSourceRequest] DataSourceRequest request, DictionaryCountyTypeModel dictionaryCountyType)
         {
@@ -249,16 +238,83 @@ namespace iWasHere.Web.Controllers
                     return Json(ModelState.ToDataSourceResult());
                 }
             }
-
                 return Json(ModelState.ToDataSourceResult());
 
-               }
+        }
         public ActionResult GetTouristAttraction()
         {
             return Json(_dictionaryService.GetTouristAttractionsSchedule());
         }
 
-
-            //return Json(ModelState.ToDataSourceResult());
+        public IActionResult AddCounty(int id)
+        {
+            if (Convert.ToInt32(id) == 0)
+            {
+                return View();
+            }
+            else
+            {
+                DictionaryCountyTypeModel dictionaryCounty = _dictionaryService.getCountyIdUpdate(Convert.ToInt32(id));
+                return View(dictionaryCounty);
+            }
         }
+        
+        [HttpPost]
+        public IActionResult NewCounty(DictionaryCountyTypeModel county, string submitButton)
+        {
+            if (submitButton == "Cancel")
+
+            {
+
+                return View("County");
+
+            }
+            if (county != null)
+            {
+                string errorMessageForInsertCity;
+                if (county.Id == 0)
+                {                  
+                        errorMessageForInsertCity = _dictionaryService.InsertNewCounty(county);
+                        if (String.IsNullOrWhiteSpace(errorMessageForInsertCity))
+                        {
+                            if (submitButton == "SaveAndNew")
+                            {
+                                ModelState.Clear();
+                                return View("AddCounty");
+                            }
+                            else
+                            {
+                                return View("County");
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("a", errorMessageForInsertCity);
+                            return View("AddCounty");
+                        }                    
+                }
+                else
+                {                  
+                    errorMessageForInsertCity= _dictionaryService.UpdateCounty(county);
+                    if (String.IsNullOrWhiteSpace(errorMessageForInsertCity))
+                    {
+                        return View("County");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("a", errorMessageForInsertCity);
+                        return View("County");
+                    }
+                }
+            }
+            else
+            {
+                return Json(ModelState.ToDataSourceResult());
+            }
+        }      
     }
+}
+
+
+
+

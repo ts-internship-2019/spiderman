@@ -7,18 +7,17 @@
 <div>
     <div>
         <p>
-            <h6 class="text-center">Lista judete</h6>
+            <h2 class="text-center">Lista judete</h2>
 
             @(Html.Kendo().Button()
                                 .Name("textButton")
                                 .HtmlAttributes(new { type = "button" })
-                                .Content("<a href='/dictionary/AddCounty'>Adauga</a>")
+                                .Content("<a href='/dictionary/AddCounty'>Adauga un nou judet</a>")
             )
      
         </p>
     </div>
 </div>
-
 
 
 <div>
@@ -40,33 +39,12 @@
     )
     <div class="demo-hint">Type the name of a country</div>
 
-    @*@(Html.Kendo().ComboBox()
-              .Name("countries")
-              .HtmlAttributes(new { style = "width:30%;" })
-              .Placeholder("Select country...")
-              .DataTextField("Name")
-              .DataValueField("Id")
-              .Filter(FilterType.Contains)
-              .DataSource(source =>
-                      {
-                          source.Read(read =>
-                          {
-                              read.Action("GetJsonCountryData", "Dictionary");
-                  });
-              })
-
-        )*@
-
-    @*@(Html.Kendo().Button()
-        .Name("primaryTextButton")
-        .HtmlAttributes(new { type = "button", @class = "k-primary" })
-        .Content("Filtreaza"))*@
-
+    
 </div>
 <p>
-    <button onclick="test()" class="k-button k-primary" id="get" style="margin-top: 2em; float: right;">Filtreaza</button>
+    <button onclick="test()" class="btn btn-outline-danger" id="get" style="margin-top: 2em; float: right;">Filtreaza</button>
 
-    <button onclick="DeleteFilters()" class="k-button k-primary" id="gett" style="margin-top: 2em; float: right;">Sterge filtre</button>
+    <button onclick="DeleteFilters()" class="btn btn-outline-danger" id="gett" style="margin-top: 2em; float: right;">Sterge filtre</button>
 </p>
 
 <p>
@@ -82,22 +60,19 @@
 
 <div class="text-center">
 
-
     @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCountyTypeModel>()
         .Name("grid")
         .Columns(columns =>
         {
-            columns.Bound(c => c.Id).Width(70);
-            columns.Bound(c => c.Name).Width(140);
-            columns.Bound(c => c.CountryName).Width(140);
+            columns.Bound(c => c.Id).Width(70).Hidden();
+            columns.Bound(c => c.Name). Title("Judet").Width(140);
+            columns.Bound(c => c.CountryName).Title("Tara").Width(140);
+            columns.Template("<a class='btn btn-outline-info' href='/Dictionary/AddCounty?Id=#=Id# '> Editeaza </a>").Width(140);
             columns.Command(command =>
            {
-               command.Edit()
-                  .Text("Edit")
-                  .UpdateText("Edit")
-                  .CancelText("Cancel");
-                  command.Destroy().Text("Delete");
-           });
+               
+                  command.Destroy().Text("Sterge");
+           }).Width(140);
 
         })
         .HtmlAttributes(new { style = "height: 550px;" })
@@ -107,7 +82,7 @@
         .Pageable(pageable => pageable
             .Refresh(true)
             .PageSizes(true)
-            .ButtonCount(5))
+            .ButtonCount(1))
         .DataSource(dataSource => dataSource
             .Ajax()
             .Read(read => read.Action("GetCountyData", "Dictionary").Data("onAdditionalDataTextBoxCounty"))
@@ -118,7 +93,6 @@
         )
     )
 </div>
-
 
 
 <style>
@@ -139,6 +113,8 @@
 
 
 <script>
+     var getInput;
+
     function onAdditionalData() {
         return {
             text: $("#Orase").val()
@@ -155,6 +131,7 @@
 
     function test() {
 
+       
         $("#grid").data("kendoGrid").dataSource.read();
         $("#grid").data("kendoGrid").dataSource.page(1);
     }
@@ -181,5 +158,11 @@
             alert(message);
         }
     }
+
+    function setEdit() {        
+        getInput = "edit"
+        localStorage.setItem("storageName",getInput);
+    }
+
 
 </script>

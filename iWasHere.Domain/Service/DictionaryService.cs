@@ -294,31 +294,6 @@ namespace iWasHere.Domain.Service
             }
 
 
-            //IQueryable<ScheduleTouristAttractionModel> query = _dbContext.Schedule;
-            //int skip = (page - 1) * pageSize;
-            //if (!string.IsNullOrWhiteSpace(searchString))
-            //{
-            //    query = query.Where(a => a.DictionaryCountyName.StartsWith(searchString));
-            //}
-            //if (countryId != 0)
-            //{
-            //    query = query.Where(a => a.DictionaryCountryId == countryId);
-            //}
-
-
-
-            //totalrows = query.Count();
-            //List<DictionaryCountyTypeModel> dictionaryCountyTypeModel = query.Select(a => new DictionaryCountyTypeModel()
-            //{
-            //    Id = a.DictionaryCountyId,
-            //    Name = a.DictionaryCountyName,
-            //    CountryName = a.DictionaryCountry.DictionaryCountryName
-            //}).Skip(skip).Take(pageSize).ToList();
-
-
-
-            //return dictionaryCountyTypeModel;
-
         }
 
         public string DeleteSchedule(int id)
@@ -370,10 +345,6 @@ namespace iWasHere.Domain.Service
 
                 }).Skip(pageSkip).Take(pageSize).ToList();
 
-
-
-
-
             return schedulefiltered;
         }
 
@@ -382,7 +353,6 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCountry.Count();
             return i;
         }
-
 
         public IEnumerable<DictionaryCountryModel> GetCountryModel(int page, int pageSize, out int rows, string abc)
         {
@@ -405,23 +375,6 @@ namespace iWasHere.Domain.Service
             }
         }
 
-        /*
-        public List<DictionaryCountryModel> GetDictionaryCountryFilter(int page, int pageSize, string name)
-        {
-            int skip = (page - 1) * pageSize;
-            List<DictionaryCountryModel> countryFilter =
-                _dbContext.DictionaryCountry
-                .Where(a => a.DictionaryCountryName == name || a.DictionaryCountryName.StartsWith(name))
-                .Select(a => new DictionaryCountryModel()
-                {
-                    CountryId = a.DictionaryCountryId,
-                    CountryName = a.DictionaryCountryName
-                }).Skip(skip).Take(pageSize).ToList();
-
-            return countryFilter;
-        }
-        */
-
         public int FilterTotalCountries(string name)
         {
             int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
@@ -441,5 +394,61 @@ namespace iWasHere.Domain.Service
             }
         }
 
+        public string InsertNewCounty(DictionaryCountyTypeModel dictionaryCounty)
+        {
+            try
+            {
+                DictionaryCounty dic = new DictionaryCounty();
+                dic.DictionaryCountyName = dictionaryCounty.Name;
+                dic.DictionaryCountryId = dictionaryCounty.CountryId;
+
+                _dbContext.DictionaryCounty.Add(dic);
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch(Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
+
+        public DictionaryCountyTypeModel getCountyIdUpdate(int id)
+        {
+            DictionaryCountyTypeModel dictionaryCountyTypeModel = _dbContext.DictionaryCounty.Where(a => a.DictionaryCountyId == id)
+                .Select(a => new DictionaryCountyTypeModel()
+                {
+                    Id = a.DictionaryCountyId,
+                    Name = a.DictionaryCountyName,
+                    CountryName = a.DictionaryCountry.DictionaryCountryName,
+                    CountryId= a.DictionaryCountryId
+                }).First();
+
+            return dictionaryCountyTypeModel;
+        }
+
+        public string UpdateCounty(DictionaryCountyTypeModel dictionaryCountyTypeModel)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(dictionaryCountyTypeModel.Name))
+                {
+                    return "Judetul trebuie completat";
+                }
+                else
+                {
+                    DictionaryCounty dictionaryCounty = _dbContext.DictionaryCounty.Find(dictionaryCountyTypeModel.Id);
+                    dictionaryCounty.DictionaryCountyName = dictionaryCountyTypeModel.Name;
+                    dictionaryCounty.DictionaryCountryId = dictionaryCountyTypeModel.CountryId;
+                    dictionaryCounty.DictionaryCountyId = dictionaryCountyTypeModel.Id;
+                    _dbContext.DictionaryCounty.Update(dictionaryCounty);
+                    _dbContext.SaveChanges();
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
     }
 }
