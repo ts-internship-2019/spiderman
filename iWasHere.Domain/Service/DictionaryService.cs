@@ -359,6 +359,8 @@ namespace iWasHere.Domain.Service
                 SeasonName = a.DictionarySeasonName
 
             }).ToList();
+            return seasons;
+        }
 
 
         public ScheduleTouristAttractionModel GetScheduleValueById(int scheduleId)
@@ -739,6 +741,20 @@ namespace iWasHere.Domain.Service
         }
 
         public string DeleteCurrency(int id)
+        {
+            try
+            {
+                _dbContext.Remove(_dbContext.DictionaryCurrency.Single(a => a.DictionaryCurrencyId == id));
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                    return "Te pup pe portofel!";
+                return null;
+            }
+        }
         public string InsertNewSchedule(ScheduleTouristAttractionModel scheduleTourist)
         {
             try
@@ -776,6 +792,15 @@ namespace iWasHere.Domain.Service
                 DictionaryCounty dic = new DictionaryCounty();
                 dic.DictionaryCountyName = dictionaryCounty.Name;
                 dic.DictionaryCountryId = dictionaryCounty.CountryId;
+                _dbContext.DictionaryCounty.Add(dic);
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch(Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
 
         public DictionaryCategoryTypeModel getCategoryIdUpdate(int id)
         {
@@ -787,15 +812,6 @@ namespace iWasHere.Domain.Service
                 }).First();
             return dictionaryCountyTypeModel;
         }
-                _dbContext.DictionaryCounty.Add(dic);
-                _dbContext.SaveChanges();
-                return null;
-            }
-            catch(Exception e)
-            {
-                return "Trebuie sa completati campurile";
-            }
-        }
 
         public DictionaryCountyTypeModel getCountyIdUpdate(int id)
         {
@@ -805,9 +821,11 @@ namespace iWasHere.Domain.Service
                     Id = a.DictionaryCountyId,
                     Name = a.DictionaryCountyName,
                     CountryName = a.DictionaryCountry.DictionaryCountryName,
-                    CountryId= a.DictionaryCountryId
+                    CountryId = a.DictionaryCountryId
                 }).First();
+            return dictionaryCountyTypeModel;
 
+        }
         public string UpdateCategory(DictionaryCategoryTypeModel dictionaryCategoryTypeModel)
         {
             try
@@ -823,22 +841,15 @@ namespace iWasHere.Domain.Service
                     //dictionaryCategory.DictionaryCategoryId = dictionaryCategoryTypeModel.DictionaryCategoryId;
                    
                     _dbContext.DictionaryCategory.Update(dictionaryCategory);
-                    _dbContext.SaveChanges();
-            return dictionaryCountyTypeModel;
-        }
-            try
-            {
-                _dbContext.Remove(_dbContext.DictionaryCurrency.Single(a => a.DictionaryCurrencyId == id));
-                _dbContext.SaveChanges();
-                return null;
+                    _dbContext.SaveChanges(); return null;
+                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                if (ex != null)
-                return "Te pup pe portofel!";
-                return null;
+                return "Trebuie sa completati campurile";
             }
         }
+
         public DictionaryCurrency GetCurrency(int id)
         {
 
@@ -873,13 +884,6 @@ namespace iWasHere.Domain.Service
                 return "Trebuie sa completati campurile";
             }
         }
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return "Trebuie sa completati campurile";
-            }
-        }
+                   
     }
 }

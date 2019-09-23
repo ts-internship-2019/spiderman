@@ -16,7 +16,7 @@
                 style="margin-right: 2em;margin-top: 2em;float: right;">
             Anuleaza
         </button>
-        @if (Model.DictionaryItemId <= 0)
+        @if (Model == null)
         {
             <button class="btn btn-primary btn-lg disable"
                     type="submit"
