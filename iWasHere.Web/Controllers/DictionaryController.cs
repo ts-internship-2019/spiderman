@@ -39,7 +39,6 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-
         public IActionResult ScheduleData([DataSourceRequest]DataSourceRequest request, string txtFilterName)
         {
             List<ScheduleTouristAttractionModel> jsonVariable = _dictionaryService.GetDictionaryScheduleModels(request.Page, request.PageSize, txtFilterName);
@@ -72,7 +71,6 @@ namespace iWasHere.Web.Controllers
 
         public IActionResult City()
         {
-
             return View();
         }
 
@@ -145,22 +143,34 @@ namespace iWasHere.Web.Controllers
             }
         }
         public IActionResult CityNew() { return View(); }
-
-        public ActionResult NewCity(DictionaryCityModel city, string submitButton)
+       
+        public ActionResult NewCity(DictionaryCityModel model, string submit)
         {
-            if (submitButton == "cancel")
+            if (submit == "cancel")
             {
                 return View("City");
             }
-            if (city.CityId <= 0)
+
+            if (model.CityName ==""||String.IsNullOrEmpty(model.CityName)) {
+                ModelState.AddModelError("a", "Trebuie sa inserati orasul");
+                return View("AddCity");
+
+            }
+            if (model.CountyId == 0 )
             {
-                _dictionaryService.InsertCity(city);
+                ModelState.AddModelError("a", "Trebuie sa inserati judetul");
+                return View("AddCity");
+
+            }
+            if (model.CityId <= 0)
+            {
+                _dictionaryService.InsertCity(model);
             }
             else
             {
-                _dictionaryService.UpdateCity(city);
+                _dictionaryService.UpdateCity(model);
             }
-            if (submitButton == "savenew")
+            if (submit == "savenew")
             {
                 ModelState.Clear();
                 return View("AddCity");
@@ -181,48 +191,143 @@ namespace iWasHere.Web.Controllers
             return Json(gf.SaveChanges());
         }
         public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request)
+        //public ActionResult AddCategory()
+        //{
+        //    return View();
+        //}
+
+        public ActionResult AddCategory(int id)
         {
-            return View();
+            if (Convert.ToInt32(id) == 0)
+            {
+                return View();
+            }
+            else
+            {
+                DictionaryCategoryTypeModel dictionaryCategory = _dictionaryService.getCategoryIdUpdate(Convert.ToInt32(id));
+                return View(dictionaryCategory);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetSelectedCategory(DictionaryCategoryTypeModel dataT)
+        {
+            return Json(new { result = _dictionaryService.GetSelectedCategory(dataT.Id) });
+        }
+
+        [HttpPut]
+        public JsonResult AddCategoryController(DictionaryCategoryTypeModel dataT)
+        {
+            if(dataT.Id == 0 || string.IsNullOrEmpty(Convert.ToString(dataT.Id)))
+            {
+                _dictionaryService.InsertCategoryType(dataT.Name);
+            }else
+            {
+                //throw new Exception("NU FACE NIMIC");
+                _dictionaryService.UpdateCategory(dataT);
+            }
+            
+            return Json(new { result = dataT.Name });
+        }
+        public ActionResult Search(string searchText)
+        {
+            return Json(searchText);
+        }
+        public ActionResult Search(string searchText)
+        {
+            return Json(searchText);
+        }
+
+        public ActionResult DestroyCategory(DictionaryCategoryTypeModel category)
+        {
+            if (!string.IsNullOrEmpty(category.Id.ToString()))
+            {
+                string errorMessage = _dictionaryService.DeleteCategory(category.Id);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    ModelState.AddModelError("A", errorMessage);
+                }
+            }
+            return Json(ModelState.ToDataSourceResult());
+        }
+
+        public void CategoryComboBox_Read(string text,string abc)
+        {
+            if (!string.IsNullOrEmpty(abc))
+            {
+                _dictionaryService.InsertCategoryType(abc);
+            }
+
+            //return Json(_dictionaryService.GetCategoryData(text));
+        }
+
+        public ActionResult DestroyCategory(DictionaryCategoryTypeModel category)
+        {
+            if (!string.IsNullOrEmpty(category.Id.ToString()))
+            {
+                string errorMessage = _dictionaryService.DeleteCategory(category.Id);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    ModelState.AddModelError("A", errorMessage);
+                }
+            }
+            return Json(ModelState.ToDataSourceResult());
         }
 
         public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
         {
-            if (string.IsNullOrEmpty(categoryName))
+            var jsonVariable = _dictionaryService.TestCategory(request.Page, request.PageSize, categoryName);
+        public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
+        {
+            var jsonVariable = _dictionaryService.TestCategory(request.Page, request.PageSize, categoryName);
+
+            DataSourceResult result = new DataSourceResult()
             {
-                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
+                Data = jsonVariable,
+                Total = _dictionaryService.TestTotal(categoryName)
+            };
 
-                DataSourceResult result = new DataSourceResult()
-                {
-                    Data = jsonVariable,
-                    Total = _dictionaryService.Total()
-                };
+            return Json(result);
 
-                return Json(result);
-            }
-            else
-            {
-                var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
 
-                DataSourceResult result = new DataSourceResult()
-                {
-                    Data = jsonVariable,
-                    Total = _dictionaryService.FilterTotalCategory(categoryName)
-                };
+            //if (string.IsNullOrEmpty(categoryName))
+            //{
+            //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
 
-                return Json(result);
-            }
+            //    DataSourceResult result = new DataSourceResult()
+            //    {
+            //        Data = jsonVariable,
+            //        Total = _dictionaryService.Total()
+            //    };
+
+            //    return Json(result);
+            //}
+            //else
+            //{
+            //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
+
+            //    DataSourceResult result = new DataSourceResult()
+            //    {
+            //        Data = jsonVariable,
+            //        Total = _dictionaryService.FilterTotalCategory(categoryName)
+            //    };
+
+            //    return Json(result);
+            //}
+
         }
+
+        //public void DestroyCategory()
+        //{
+        //    _dictionaryService.DeleteCategory(abc);
+        
+        //}
 
         public IActionResult SearchCountyName()
         {
             return View();
 
         }
-
-        //public IActionResult GetCountyByName([DataSourceRequest]DataSourceRequest request, string name)
-        //{
-        //    return Json(_dictionaryService.GetDictionaryCountyTypeModelsFilter(request.Page, request.PageSize, name));
-        //}
 
 
         public IActionResult ClientFiltering()
@@ -235,11 +340,7 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.Filter_GetCountries(text));
         }
 
-        public IActionResult AddCounty()
-        {
-            return View();
-
-        }
+    
 
         public ActionResult Process_DestroyCounty([DataSourceRequest] DataSourceRequest request, DictionaryCountyTypeModel dictionaryCountyType)
         {
@@ -271,13 +372,20 @@ namespace iWasHere.Web.Controllers
 
 
 
-    //        var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
-    //        DataSourceResult result = new DataSourceResult()
-    //        result.Data = jsonVar;
-    //        result.Total = _dictionaryService.GetItemsOfSchedule();
-    //        return Json(result);
+            DataSourceResult result = new DataSourceResult()
+            {
+                Data = jsonVariable,
+                Total = _dictionaryService.TestTotal(categoryName)
+            };
+            var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
+            DataSourceResult result = new DataSourceResult()
+            {
+                Data = jsonVar,
+                Total = _dictionaryService.GetItemsOfSchedule()
+            };
+            return Json(result);
 
-    //}
+        }
 
     public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
     {
@@ -289,32 +397,77 @@ namespace iWasHere.Web.Controllers
             Total = rows
         };
 
-        return Json(dataSource);
-    }
+            return Json(result);
 
-    //public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
-    //{
-    //    if (schedule != null)
-    //    {
-    //         string errorMessageForClient=  _dictionaryService.DeleteSchedule(schedule.ScheduleId);
-    //        if (string.IsNullOrWhiteSpace(errorMessageForClient))
-    //        {
-    //            return Json(ModelState.ToDataSourceResult());
-    //        }
-    //        else
-    public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
-    {
-        if (country != null)
-        {
-            string errorMessage = _dictionaryService.DeleteCountry(country.CountryId);
-            if (!string.IsNullOrWhiteSpace(errorMessage))
-            {
-                ModelState.AddModelError("a", errorMessage);
-            }
+
+            //if (string.IsNullOrEmpty(categoryName))
+            //{
+            //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
+
+            //    DataSourceResult result = new DataSourceResult()
+            //    {
+            //        Data = jsonVariable,
+            //        Total = _dictionaryService.Total()
+            //    };
+
+            //    return Json(result);
+            //}
+            //else
+            //{
+            //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
+
+            //    DataSourceResult result = new DataSourceResult()
+            //    {
+            //        Data = jsonVariable,
+            //        Total = _dictionaryService.FilterTotalCategory(categoryName)
+            //    };
+
+            //    return Json(result);
+            //}
+
+            return Json(dataSource);
+
         }
 
-        return Json(ModelState.ToDataSourceResult());
-    }
+        public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
+        {
+            if (schedule != null)
+            {
+                string errorMessageForClient = _dictionaryService.DeleteSchedule(schedule.ScheduleId);
+                if (string.IsNullOrWhiteSpace(errorMessageForClient))
+                {
+                    return Json(ModelState.ToDataSourceResult());
+                }
+                else
+                {
+                    ModelState.AddModelError("a", errorMessageForClient);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+
+
+
+            return Json(ModelState.ToDataSourceResult());
+
+
+
+        }
+        public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
+        {
+            if (country != null)
+            {
+                string errorMessage =_dictionaryService.DeleteCountry(country.CountryId);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                }
+            }
+
+            return Json(ModelState.ToDataSourceResult());
+
+
+
+        }
 
     //public IActionResult AddEditCountry()
     //{
@@ -335,17 +488,165 @@ namespace iWasHere.Web.Controllers
         return View();
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult AddEditCountry(DictionaryCountryModel c)
-    {
-        if (!ModelState.IsValid)
+        public ActionResult AddEditCountry(DictionaryCountryModel c)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            return Content($"{c.CountryCode}, {c.CountryName}");
+        }
+
+        public ActionResult GetSeasons()
+        {
+            return Json(_dictionaryService.GetTouristAttractionsSeasonSchedule());
+
+        }
+
+        //public void DestroyCategory()
+        //{
+        //    _dictionaryService.DeleteCategory(abc);
+        
+        //}
+
+        public IActionResult SearchCountyName()
         {
             return View();
         }
-        return Content($"{c.CountryCode}, {c.CountryName}");
+        public IActionResult AddSchedule(int Id)
+        {
+            if (Convert.ToInt32(Id) == 0)
+            {
+                return View();
+            }
+            else
+            {
+                ScheduleTouristAttractionModel scheduleTouristAttractionModel = _dictionaryService.GetScheduleValueById(Convert.ToInt32(Id));
+                scheduleTouristAttractionModel.ScheduleId = Id;
+                return View(scheduleTouristAttractionModel);
+            }
+        }
+
+        public IActionResult AddCounty(int id)
+        {
+            if (Convert.ToInt32(id) == 0)
+            {
+                return View();
+            }
+            else
+            {
+                DictionaryCountyTypeModel dictionaryCounty = _dictionaryService.getCountyIdUpdate(Convert.ToInt32(id));
+                return View(dictionaryCounty);
+            }
+        }
+        
+        [HttpPost]
+        public IActionResult NewCounty(DictionaryCountyTypeModel county, string submitButton)
+        {
+            if (submitButton == "Cancel")
+
+            {
+
+                return View("County");
+
+            }
+            if (county != null)
+            {
+                string errorMessageForInsertCity;
+                if (county.Id == 0)
+                {                  
+                        errorMessageForInsertCity = _dictionaryService.InsertNewCounty(county);
+                        if (String.IsNullOrWhiteSpace(errorMessageForInsertCity))
+                        {
+                            if (submitButton == "SaveAndNew")
+                            {
+                                ModelState.Clear();
+                                return View("AddCounty");
+                            }
+                            else
+                            {
+                                return View("County");
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("a", errorMessageForInsertCity);
+                            return View("AddCounty");
+                        }                    
+                }
+                else
+                {                  
+                    errorMessageForInsertCity= _dictionaryService.UpdateCounty(county);
+                    if (String.IsNullOrWhiteSpace(errorMessageForInsertCity))
+                    {
+                        return View("County");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("a", errorMessageForInsertCity);
+                        return View("County");
+                    }
+                }
+            }
+            else
+            {
+                return Json(ModelState.ToDataSourceResult());
+            }
+        }
+
+        public ActionResult NewSchedule(ScheduleTouristAttractionModel scheduleTouristAttractionModel, string submitbtn, int Id)
+        {
+            if (submitbtn == "cancel")
+            {
+                return View("Schedule");
+            }
+
+
+
+            if (scheduleTouristAttractionModel != null)
+            {
+                string errorMessageForInsertSchedule;
+                if (scheduleTouristAttractionModel.ScheduleId == 0)
+                {
+                    errorMessageForInsertSchedule = _dictionaryService.InsertNewSchedule(scheduleTouristAttractionModel);
+                    if (String.IsNullOrWhiteSpace(errorMessageForInsertSchedule))
+                    {
+                        if (submitbtn == "savenew")
+                        {
+                            ModelState.Clear();
+                            return View("AddSchedule");
+                        }
+                        else
+                        {
+                            return View("Schedule");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("a", errorMessageForInsertSchedule);
+                        return View("AddSchedule");
+                    }
+                }
+                else
+                {
+                    //scheduleTouristAttractionModel.ScheduleId = Id;
+                    errorMessageForInsertSchedule = _dictionaryService.UpdateSchedule(scheduleTouristAttractionModel);
+                    if (String.IsNullOrWhiteSpace(errorMessageForInsertSchedule))
+                    {
+                        return View("Schedule");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("a", errorMessageForInsertSchedule);
+                        return View("Schedule");
+                    }
+                }
+            }
+            else
+            {
+                return Json(ModelState.ToDataSourceResult());
+            }
+        }
     }
-
-
 }
-}
+
