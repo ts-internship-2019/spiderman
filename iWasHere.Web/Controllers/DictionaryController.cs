@@ -203,7 +203,7 @@ namespace iWasHere.Web.Controllers
                 return View(dictionaryCategory);
             }
         }
-
+       
         [HttpGet]
         public JsonResult GetSelectedCategory(DictionaryCategoryTypeModel dataT)
         {
@@ -249,7 +249,6 @@ namespace iWasHere.Web.Controllers
             {
                 _dictionaryService.InsertCategoryType(abc);
             }
-
         }
 
         public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)

@@ -115,7 +115,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCategoryTypeModels;
         }
-
+    
         public List<DictionaryCategory> GetSelectedCategory(int id)
         {
             var categoryName = _dbContext.DictionaryCategory.Where(categ => categ.DictionaryCategoryId == id);
