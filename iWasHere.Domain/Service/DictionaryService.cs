@@ -115,7 +115,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCategoryTypeModels;
         }
-
+    
         public List<DictionaryCategory> GetSelectedCategory(int id)
         {
             var categoryName = _dbContext.DictionaryCategory.Where(categ => categ.DictionaryCategoryId == id);
@@ -784,6 +784,12 @@ namespace iWasHere.Domain.Service
                 }
             return null;
         }
+        public void  AddImage(Image image)
+        {
+                    _dbContext.Add(image);
+                    _dbContext.SaveChanges();
+              
+        }
 
         public string InsertNewCounty(DictionaryCountyTypeModel dictionaryCounty)
         {
@@ -924,10 +930,12 @@ namespace iWasHere.Domain.Service
         {
             return _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == id).FirstOrDefault();
         }
-        public void AddTouristAttractions(TouristAttraction touristAttraction)
+        public int AddTouristAttractions(TouristAttraction touristAttraction)
         {
             _dbContext.TouristAttraction.Add(touristAttraction);
             _dbContext.SaveChanges();
+            int id = touristAttraction.TouristAttractionId;
+            return id;
         }
         public int GetCountTouristAttraction(string txtFilterName)
         {

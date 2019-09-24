@@ -5,41 +5,48 @@
 }
 
 
-<div class="demo-section k-content">
-    <h2 align="center">Orase</h2>
-    <br /><br />
-    @(Html.Kendo().Button()
-                       .Name("textButton")
-                       .HtmlAttributes(new { type = "button" })
-                       .Content("<a href='/dictionary/AddCity'>Adauga</a>")
-    )<br />
-    <label for="Judet">Judet:</label>
-    @(Html.Kendo().ComboBox()
-        .Name("counties")
-        .DataTextField("CountyName")
-        .DataValueField("CountyId")
-        .HtmlAttributes(new { style = "width:60%; id='counties'" })
-        .Filter("StartsWith")
-        .DataSource(source =>
-        {
-        source.Read(read =>
-        {
-        read.Action("FilterGetCounties", "Dictionary");
-        })
-        .ServerFiltering(true);
-        })
-    )
-    <label for="Oras">
-        Oras:
-    </label>
-    @(Html.Kendo().TextBox()
-        .Name("kTextBox").
-        HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
-    )
-    <button onclick="deleteFilters()" class="k-button k-primary" id="gett">Sterge filtrele</button>
-    <button onclick="test()" class="k-button k-primary" id="get">Filtreaza</button>
-    <br /><br />
-</div>
+    <div class="demo-section k-content">
+        <h2 align="center">Orase</h2>
+        <br /><br />
+        @(Html.Kendo().Button()
+                           .Name("textButton")
+                           .HtmlAttributes(new { type = "button", style = "width:200px;",align="center" })
+                           .Content("<a href='/dictionary/AddCity'>Adauga un oras</a>")
+        )
+
+        <p></p>
+        
+        <label for="Oras">
+            Oras:
+        </label>
+        @(Html.Kendo().TextBox()
+            .Name("kTextBox").
+            HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
+        )
+    <label for="Judet">Judet:</label> @(Html.Kendo().ComboBox()
+            .Name("counties")
+            .DataTextField("CountyName")
+            .DataValueField("CountyId")
+            .HtmlAttributes(new { style = "width:60%; id='counties'" })
+            .Filter("StartsWith")
+            .DataSource(source =>
+            {
+            source.Read(read =>
+            {
+            read.Action("FilterGetCounties", "Dictionary");
+            })
+            .ServerFiltering(true);
+            })
+        )
+
+    </div>
+<p>
+        <button onclick="test()" class="btn btn-outline-danger " id="get" style="margin-top: 2em; float: left";>Filtreaza</button>
+        <button onclick="deleteFilters()" class="btn btn-outline-danger" id="gett" style="margin-top: 2em; float: right">Sterge filtrele</button>
+        <p></p>
+</p>
+        <br /><br />
+ 
 
 
 
@@ -57,7 +64,7 @@
         columns.Bound(p => p.CityName).Title("Oras").Width(150);
         columns.Bound(p => p.CountyName).Title("Judet").Width(130);
         columns.Bound(p => p.CountryName).Title("Tara").Width(150);
-        columns.Template("<a class='k-button btn btn-outline-primary' href='/Dictionary/AddCity?Id=#=CityId# '> Editeaza </a>").Width(150);
+        columns.Template("<a class='btn btn-outline-info' href='/Dictionary/AddCity?Id=#=CityId# '> Editeaza </a>").Width(150);
         columns.Command(command =>
         {
             command.Destroy().Text("Delete");
@@ -68,7 +75,7 @@
     })
     .HtmlAttributes(new { style = "height: 550px; id='grid'" })
     .Scrollable()
-    .Groupable()
+   
     .Sortable()
     .Pageable(pageable => pageable
         .Refresh(true)

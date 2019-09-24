@@ -119,6 +119,7 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+       
 
         public JsonResult GetJsonCountryData()
         {
@@ -142,7 +143,7 @@ namespace iWasHere.Web.Controllers
                 return View(dictionaryCity);
             }
         }
-        public IActionResult CityNew() { return View(); }
+        
        
         public ActionResult NewCity(DictionaryCityModel model, string submit)
         {
@@ -202,7 +203,7 @@ namespace iWasHere.Web.Controllers
                 return View(dictionaryCategory);
             }
         }
-
+       
         [HttpGet]
         public JsonResult GetSelectedCategory(DictionaryCategoryTypeModel dataT)
         {
@@ -248,7 +249,6 @@ namespace iWasHere.Web.Controllers
             {
                 _dictionaryService.InsertCategoryType(abc);
             }
-
         }
 
         public ActionResult CategoryBinding_Read([DataSourceRequest] DataSourceRequest request, string categoryName)
@@ -316,6 +316,25 @@ namespace iWasHere.Web.Controllers
             if (dictionaryCountyType != null)
             {
                 string errorMessage = _dictionaryService.DeleteCounty(dictionaryCountyType.Id);
+                if (string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    return Json(ModelState.ToDataSourceResult());
+                }
+                else
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+
+            return Json(ModelState.ToDataSourceResult());
+
+        }
+        public ActionResult DeleteCityData([DataSourceRequest] DataSourceRequest request, DictionaryCityModel model)
+        {
+            if (model!= null)
+            {
+                string errorMessage = _dictionaryService.DeleteCity(model.CityId);
                 if (string.IsNullOrWhiteSpace(errorMessage))
                 {
                     return Json(ModelState.ToDataSourceResult());
@@ -418,11 +437,7 @@ namespace iWasHere.Web.Controllers
                     ModelState.AddModelError("a", errorMessage);
                 }
             }
-
             return Json(ModelState.ToDataSourceResult());
-
-
-
         }
 
     //public IActionResult AddEditCountry()
