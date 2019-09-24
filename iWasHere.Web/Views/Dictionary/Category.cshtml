@@ -3,11 +3,170 @@
     ViewData["Title"] = "Category";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <link href="https://fonts.googleapis.com/css?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 
 <style>
+    body {
+  font-family: 'Roboto', sans-serif;
+}
+body, .button:after {
+  background: #2c3e50;
+}
+    
+    .ctn {
+  display: block;
+  margin: auto;
+  text-align: center;
+}
+footer {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  color: #FFF;
+}
+footer a, footer a:after {
+  font-size: 1em !important;
+}
+/*END BODY*/
+
+/*GRADIENTS*/
+  /*GREEN*/
+  .b-green, .b-green:before {
+    background: rgba(73,155,234,1);
+    background: -moz-linear-gradient(45deg, rgba(73,155,234,1) 0%, rgba(26,188,156,1) 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, rgba(26,188,156,1)));
+    background: -webkit-linear-gradient(45deg, rgba(73,155,234,1) 0%, rgba(26,188,156,1) 100%);
+    background: -o-linear-gradient(45deg, rgba(73,155,234,1) 0%, rgba(26,188,156,1) 100%);
+    background: -ms-linear-gradient(45deg, rgba(73,155,234,1) 0%, rgba(26,188,156,1) 100%);
+    background: linear-gradient(45deg, rgba(73,155,234,1) 0%, rgba(26,188,156,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#1abc9c', GradientType=1 );
+  }
+  /*PINK*/
+  .b-pink, .b-pink:before {
+    background: rgba(231,72,234,1);
+    background: -moz-linear-gradient(45deg, rgba(231,72,234,1) 0%, rgba(75,26,188,1) 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(231,72,234,1)), color-stop(100%, rgba(75,26,188,1)));
+    background: -webkit-linear-gradient(45deg, rgba(231,72,234,1) 0%, rgba(75,26,188,1) 100%);
+    background: -o-linear-gradient(45deg, rgba(231,72,234,1) 0%, rgba(75,26,188,1) 100%);
+    background: -ms-linear-gradient(45deg, rgba(231,72,234,1) 0%, rgba(75,26,188,1) 100%);
+    background: linear-gradient(45deg, rgba(231,72,234,1) 0%, rgba(75,26,188,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e748ea', endColorstr='#4b1abc', GradientType=1 );
+  }
+  /*RED*/
+  .b-red, .b-red:before {
+    background: rgba(234,110,72,1);
+    background: -moz-linear-gradient(45deg, rgba(234,110,72,1) 0%, rgba(188,26,99,1) 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(234,110,72,1)), color-stop(100%, rgba(188,26,99,1)));
+    background: -webkit-linear-gradient(45deg, rgba(234,110,72,1) 0%, rgba(188,26,99,1) 100%);
+    background: -o-linear-gradient(45deg, rgba(234,110,72,1) 0%, rgba(188,26,99,1) 100%);
+    background: -ms-linear-gradient(45deg, rgba(234,110,72,1) 0%, rgba(188,26,99,1) 100%);
+    background: linear-gradient(45deg, rgba(234,110,72,1) 0%, rgba(188,26,99,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea6e48', endColorstr='#bc1a63', GradientType=1 );
+  }
+  /*ORANGE*/
+  .b-orange, .b-orange:before {
+    background: rgba(255,193,7,1);
+    background: -moz-linear-gradient(45deg, rgba(255,193,7,1) 0%, rgba(255,87,34,1) 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(255,193,7,1)), color-stop(100%, rgba(255,87,34,1)));
+    background: -webkit-linear-gradient(45deg, rgba(255,193,7,1) 0%, rgba(255,87,34,1) 100%);
+    background: -o-linear-gradient(45deg, rgba(255,193,7,1) 0%, rgba(255,87,34,1) 100%);
+    background: -ms-linear-gradient(45deg, rgba(255,193,7,1) 0%, rgba(255,87,34,1) 100%);
+    background: linear-gradient(45deg, rgba(255,193,7,1) 0%, rgba(255,87,34,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc107', endColorstr='#ff5722', GradientType=1 );
+  }
+  /*BLUE*/
+  .b-blue, .b-blue:before {
+    background: rgba(5,118,255,1);
+    background: -moz-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(5,118,255,1)), color-stop(100%, rgba(36,248,255,1)));
+    background: -webkit-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: -o-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: -ms-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0576ff', endColorstr='#24f8ff', GradientType=1 );
+  }
+/*END GRADIENTS*/
+/*BASE BUTTON*/
+.button {
+  display: inline-block;
+  position: relative;
+  border-radius: 3px;
+  text-decoration: none;
+  padding: .5em;
+  margin: .5em;
+  font-size: 2em;
+  font-weight: bold;
+  transition: all .5s;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.button:hover {
+  text-shadow: 0px 0px 0px rgba(255, 255, 255, .75);
+}
+.button:hover:after {
+  left: 100%;
+  top: 100%;
+  bottom: 100%;
+  right: 100%;
+}
+.button:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  border-radius: 5px;
+  transition: all .5s;
+}
+.button:after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  right: 2px;
+  z-index: -1;
+  border-radius: 5px;
+  transition: all .5s;
+}
+.button2 {
+  display: inline-block;
+  font-size: 2em;
+  margin: .5em;
+  padding: .5em;
+  border-radius: 5px;
+  transition: all .5s;
+  filter: hue-rotate(0deg);
+  color: #FFF;
+  text-decoration: none;
+}
+/*END BASE BUTTON*/
+/*ROTATE*/
+.rot-360-noscoop:hover {
+  filter: hue-rotate(360deg);
+  transform: rotate(360deg);
+}
+.rot-135:hover {
+  filter: hue-rotate(135deg);
+}
+.rot-90:hover {
+  filter: hue-rotate(90deg);
+}
+/*END ROTATE*/
+
     #addCategory {
         display: block;
         border: 2px solid red;
+    }
+    body {
+        background-image: linear-gradient(to right top, #18171a, #2e214c, #462982, #632bb9, #8624f2);
+        
     }
 
     #addCategoryInput {
@@ -20,28 +179,55 @@
 
     #categoryInput{
         margin-bottom:20px;
+        border-radius:12px;
     }
     .filterBtn{
         width: 10rem;
     }
     .filterBtnReset{
-        display:block;
         margin-bottom:20px;
     }
     h1 {
         margin-top: 20px;
+        color:#0DFF92;
+        font-family: 'Courgette', cursive;
     }
+    a:hover{
+        text-decoration:none;
+    }
+    #Grid {
+        border-radius:12px;
+        border-color:none;
+    }
+    .k-grouping-header{
+        border-radius:12px;
+    }
+    .k-pager-wrap{
+         border-radius:12px;
+    }
+    .k-grid-header{
+        border-radius:12px;
+    }
+    .k-grid-header-wrap{
+        border-radius:12px;
+    }
+      input:focus{
+           outline: none;
+        }
 }
 </style>
+<div class="ctn">
+    <a href="addcategory" class="button b-orange">Add Category</a>
+</div> 
 
-<a href="addcategory" class="button btn btn-outline-danger">Add Category</a>
+
 <br />
 
 <h1>Category</h1>
-<input id='categoryInput' type="text" />
-<button class="filterBtn btn btn-danger" onclick="resetGrid()">Filter</button>
+<input id='categoryInput' type="text" placeholder="Search..."/>
+<button style="border:none;font-size:20px;" class="filterBtn button b-orange" onclick="resetGrid()">Filter</button>
 
-<button class="filterBtn filterBtnReset btn btn-danger" onclick="resetGrid(); resetFilters()">Clear Filters</button>
+<button style="border:none;font-size:20px;" class="filterBtn filterBtnReset button b-red" onclick="resetGrid(); resetFilters()">Clear Filters</button>
 
 @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCategoryTypeModel>
     ()
@@ -49,16 +235,18 @@
     .HtmlAttributes(new { style = "id=Grid" })
     .Columns(columns =>
     {
-    columns.Bound(o => o.Name);
-    columns.Command(command =>
-    {    
-        command.Destroy().Text("Delete");
-    });
+        columns.Bound(o => o.Name).Width(150);
+        columns.Template("<a class='btn btn-outline-info' href='/Dictionary/AddCategory?Id=#=Id# '> Editeaza </a>").Width(150);
+        columns.Command(command =>
+        {
+            command.Destroy().Text("Delete").HtmlAttributes(new {style="class='btn-outline-danger'"});
+        }).Width(150);
+
     })
     .Sortable()
     .Filterable()
     .Scrollable()
-    .Groupable()
+    //.Groupable()
     .Pageable(
     pageable => pageable
     .Refresh(true)
@@ -75,6 +263,7 @@
         .Destroy(update => update.Action("DestroyCategory", "Dictionary"))
     )
 )
+
 
 <script>
     function ErrorHandler(e) {   

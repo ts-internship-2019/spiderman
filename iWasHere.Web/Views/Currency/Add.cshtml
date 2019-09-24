@@ -1,0 +1,55 @@
+﻿@model iWasHere.Domain.DTOs.DictionaryCurrencyModel
+@Html.HiddenFor(a => a.DictionaryItemId)
+<div>
+    <h1 class="title">Add</h1>
+    <form action="Save" method="post">
+
+        
+            <input  type ="hidden" asp-for="DictionaryItemId" /><br />
+        <h6>Code valuta</h6>
+        <input type="text" asp-for="DictionaryItemCode" /><br />
+        <h6>Nume valuta</h6>
+        <input type="text" asp-for="DictionaryItemName" /><br /><br />
+        <button class="btn btn-danger btn-lg"
+                name="submitValue"
+                value="cancel"
+                style="margin-right: 2em;margin-top: 2em;float: right;">
+            Anuleaza
+        </button>
+        @if (Model == null)
+        {
+            <button class="btn btn-primary btn-lg disable"
+                    type="submit"
+                    name="submitValue"
+                    value="saveNew"
+                    style="margin-right: 2em;margin-top: 2em;float: right;">
+                Salveaza si nou
+            </button>}
+        <button class="btn btn-success btn-lg"
+                type="submit"
+                name="submitValue"
+                value="save"
+                style="margin-right: 2em;margin-top: 2em;float: right;">
+            Salveaza
+        </button>
+    </form>
+
+</div>
+<style>
+    .title {
+        vertical-align: middle;
+        align-self: center;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+    });
+
+
+    function Save() {
+        return {
+            txtCurCode = document.getElementById("txtCode").value,
+            txtCurName = document.getElementById("txtName").value
+        }
+    }
+</script>

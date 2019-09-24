@@ -1,17 +1,24 @@
-﻿
+﻿@model iWasHere.Domain.DTOs.DictionaryCountyTypeModel
+
 @{
     ViewData["Title"] = "AddCounty";
 }
 
 <h1 class="text-center">Adaugare judete</h1>
 
-<label for="countries">Countries:</label>
-<div>
-    @(Html.Kendo().ComboBox()
-              .Name("countries")
+
+<h4>Judet</h4>
+@using (Html.BeginForm("NewCounty", "Dictionary", FormMethod.Post))
+{
+    <input type="text" asp-for="Name" id="textBoxCounty" />
+
+    <h4>Tara</h4>
+    <div>
+        <p>
+            @(Html.Kendo().ComboBoxFor(model => model.CountryId)
               .DataValueField("Id")
               .DataTextField("Name")
-              .Placeholder("Alege un oras")
+              .Placeholder("Selecteaza o tara")
               .HtmlAttributes(new { style = "width:60%; id='countries'" })
           .Filter("StartsWith")
           .DataSource(source =>
@@ -22,8 +29,50 @@
               })
               .ServerFiltering(true);
           })
-    )
+            )
+        </p>
+    </div>
+    @Html.HiddenFor(a => a.Id)
+    <div>
 
-</div>
+        <button onclick="checkValues()" class="btn btn-outline-success" style="margin-top: 2em" name="submitButton" value="Save">Salveaza</button>
+        @if (Model == null) {
+        <button onclick="checkValues()" class="btn btn-outline-warning" style="margin-top: 2em" name="submitButton" value="SaveAndNew">Salveaza si Nou</button>
+        }
+        <button onclick="anuleazaAdaugarea()" class="btn btn-outline-dark" style="margin-top: 2em" name="submitButton" value="Cancel">Anuleaza</button>
+    </div>
+
+}
+
+<script>
+
+     function anuleazaAdaugarea() {
+
+            window.location.href = '@Url.Action("County", "Dictionary")';
+
+    }
+
+    function isEmpty(str) {
+        return str === null || str.match(/^ *$/) !== null;
+    }
 
 
+    function checkValues() {
+        if ( isEmpty($('#textBoxCounty').val()) ) {
+
+            alert("Numele judetului este obligatoriu");
+        }
+
+        if (!/^[a-zA-Z]*$/g.test($('#textBoxCounty').val())) {
+            alert("Introduceti doar litere!");
+
+        }
+
+        if (isEmpty($('#countries').val())) {
+
+            alert("Nu ati ales tara!");            
+
+        }  
+    }
+
+</script>

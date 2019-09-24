@@ -1,0 +1,185 @@
+﻿@model iWasHere.Domain.DTOs.TouristAttractionsDTOEdit
+@Html.HiddenFor(a => a.TouristAttractionId)
+@{
+    ViewData["Title"] = "CreateEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h1 class="title" align="center">Adauga obiectiv turistic</h1>
+    <form action="Save" method="post" enctype="multipart/form-data">
+
+
+        <input type="hidden" asp-for="TouristAttractionId" /><br />
+        <h6>Nume</h6>
+        <input type="text" asp-for="Name" /><br />
+        <h6>Descriere</h6>
+        <input type="text" asp-for="Description" /><br /><br />
+
+        <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
+        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
+
+        <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
+
+
+
+        @(Html.Kendo().ComboBoxFor(model => model.CategoryId)
+                         .Placeholder("Tip atractie")
+                         .DataTextField("Name")
+                         .DataValueField("Id")
+                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
+                         .Filter(FilterType.Contains)
+                         .DataSource(source =>
+                         {
+                             source.Read(read =>
+                             {
+                                 read.Action("GetCategory", "TouristAttractions");
+                             });
+                         })
+        )
+        <br />
+        <br />
+        @(Html.Kendo().ComboBoxFor(model => model.LandmarkId)
+                         .Placeholder("Landmark")
+                         .DataTextField("DictionaryItemName")
+                         .DataValueField("DictionaryItemId")
+                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
+                         .Filter(FilterType.Contains)
+                         .DataSource(source =>
+                         {
+                             source.Read(read =>
+                             {
+                                 read.Action("GetLandmark", "TouristAttractions");
+                             });
+                         })
+        )
+        <br />
+        <br />
+        @(Html.Kendo().ComboBoxFor(model => model.CityId)
+                         .Placeholder("Alege oras")
+                         .DataTextField("DictionaryCityName")
+                         .DataValueField("DictionaryCityId")
+                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
+                         .Filter(FilterType.Contains)
+                         .DataSource(source =>
+                         {
+                             source.Read(read =>
+                             {
+                                 read.Action("GetCity", "TouristAttractions");
+                             });
+                         })
+        )
+        <h6>Latitudine</h6>
+        <input type="text" asp-for="Latitudine" /><br />
+        <h6>Longitudine</h6>
+        <input type="text" asp-for="Longtitudine" /><br /><br />
+        <br />
+        <br />
+        <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
+
+
+        <br />
+        <br /><div class="gallery" id="gal"></div>
+
+        <button class="btn btn-danger btn-lg"
+                name="submitValue"
+                value="cancel"
+                style="margin-right: 2em;margin-top: 2em;float: right;">
+            Anuleaza
+        </button>
+        @if (Model == null)
+        {
+            <button class="btn btn-primary btn-lg disable"
+                    type="submit"
+                    name="submitValue"
+                    value="saveNew"
+                    style="margin-right: 2em;margin-top: 2em;float: right;">
+                Salveaza si nou
+            </button>}
+        <button class="btn btn-success btn-lg"
+                type="submit"
+                name="submitValue"
+                value="save"
+                style="margin-right: 2em;margin-top: 2em;float: right;">
+            Salveaza
+        </button>
+
+        <br /><br /><br />
+    </form>
+
+</div>
+<style>
+    .title {
+        vertical-align: middle;
+        align-self: center;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+    });
+
+    document.getElementById('CheckBoxId').onclick = function () {
+        debugger;
+        if (this.checked) {
+            document.getElementById("inputCostTicket").style.display = "initial";
+            document.getElementById("lblCostTicket").style.display = "initial";
+        } else {
+            document.getElementById("inputCostTicket").style.display = "none";
+            document.getElementById("lblCostTicket").style.display = "none";
+        }
+    }
+
+    //function Save() {
+    //    return {
+    //        txtCurCode = document.getElementById("txtCode").value,
+    //        txtCurName = document.getElementById("txtName").value
+    //    }
+    //}
+
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+    $(function () {
+        // Multiple images preview in browser
+        var imagesPreview = function (input, placeToInsertImagePreview) {
+
+            if (input.files) {
+                var filesAmount = input.files.length;
+
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+
+        };
+
+        $('#gallery-photo-add').on('change', function () {
+            var div = document.getElementById('gallery-photo-add');
+            while (div.firstChild)
+                div.removeChild(div.firstChild);
+            $("#gal").html("");
+
+            $('#gal').empty();
+            $("#gal").children().remove();
+            imagesPreview(this, 'div.gallery');
+        });
+    });
+</script>
+<script>
+    function clear() {
+
+        var node = document.getElementsById("gallery-photo-add");
+        while (node.firstChild) {
+            myNode.removeChild(node.firstChild);
+        }
+    }
+
+</script>      
