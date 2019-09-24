@@ -43,28 +43,14 @@ namespace iWasHere.Controllers
       
         public IActionResult TouristAttractionsGrid([DataSourceRequest] DataSourceRequest request, string txtFilterName)
         {
-            List<TouristAttraction> myList = _dictionaryService.GetTouristAttractionsModel(request.Page, request.PageSize, txtFilterName);
-            var v2 = new DataSourceResult();
+            List<TouristAttractionsDTO> myList = _dictionaryService.GetTouristAttractionsModel(request.Page, request.PageSize, txtFilterName);
+            DataSourceResult v2 = new DataSourceResult();
             v2.Data = myList;
             v2.Total = _dictionaryService.GetCountTouristAttraction(txtFilterName);
             return Json(v2);
         }
 
 
-        public ActionResult DestroyTouristAttractions([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
-        {
-            if (currency != null)
-            {
-                string errorMessage = _dictionaryService.DeleteCurrency(currency.DictionaryItemId);
-                if (!string.IsNullOrWhiteSpace(errorMessage))
-                {
-                    ModelState.AddModelError("a", errorMessage);
-                }
-            }
-
-
-            return Json(ModelState.ToDataSourceResult());
-        }
 
 
         public ActionResult UpdateTouristAttractions([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
@@ -89,13 +75,17 @@ namespace iWasHere.Controllers
             else
             {
                 TouristAttraction touristAttraction = _dictionaryService.GetTouristAttractions(Id);
-                touristAttraction.TouristAttractionId = Id;
-                touristAttraction.Category = _dictionaryService.GetDictionaryCategory(touristAttraction.CategoryId);
-                touristAttraction.City = _dictionaryService.GetDictionaryCity(touristAttraction.CityId);
-                touristAttraction.Landmark = _dictionaryService.GetLandmark(touristAttraction.LandmarkId);
-               
-                ViewData["Images"] = _dictionaryService.GetImages(Id);
-                return View(touristAttraction);
+
+                TouristAttractionsDTOEdit touristAttractionsDTOEdit = new TouristAttractionsDTOEdit();
+                touristAttractionsDTOEdit.Name = touristAttraction.Name;
+                touristAttractionsDTOEdit.Description = touristAttraction.Description;
+                touristAttractionsDTOEdit.Latitudine = touristAttraction.Latitudine;
+                touristAttractionsDTOEdit.Longtitudine = touristAttraction.Longtitudine;
+                touristAttractionsDTOEdit.CityId = touristAttraction.CityId;
+                touristAttractionsDTOEdit.CategoryId = touristAttraction.CategoryId;
+                touristAttractionsDTOEdit.LandmarkId = touristAttraction.LandmarkId;
+                touristAttractionsDTOEdit.TouristAttractionId = Id;
+                return View(touristAttractionsDTOEdit);
                 //return View();
             }
         }
@@ -112,7 +102,7 @@ namespace iWasHere.Controllers
             return Json(_dictionaryService.GetTouristAttractionsCity(txtName));
         }
         [HttpPost]
-        public ActionResult Save([DataSourceRequest] DataSourceRequest request, TouristAttractionScheduleModel tA, string submitValue, IFormFile[] photos)
+        public ActionResult Save([DataSourceRequest] DataSourceRequest request, TouristAttractionsDTOEdit tA, string submitValue, IFormFile[] photos)
         {
             if (tA.TouristAttractionId <= 0)
             {
@@ -127,9 +117,7 @@ namespace iWasHere.Controllers
                     touristAttraction.CityId = tA.CityId;
                     touristAttraction.LandmarkId = tA.LandmarkId;
                     touristAttraction.CategoryId = tA.CategoryId;
-                    touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
-                    touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
-                    touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
+
                     int touristAttractionId = _dictionaryService.AddTouristAttractions(touristAttraction);
                     AddImg(photos, touristAttractionId);
                     return View("Index");
@@ -149,10 +137,7 @@ namespace iWasHere.Controllers
                     touristAttraction.CityId = tA.CityId;
                     touristAttraction.LandmarkId = tA.LandmarkId;
                     touristAttraction.CategoryId = tA.CategoryId;
-                    touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
-                    touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
-                    touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
-             
+
                     int touristAttractionId=_dictionaryService.AddTouristAttractions(touristAttraction);
                     AddImg(photos,touristAttractionId);
                     ModelState.Clear();
@@ -172,14 +157,8 @@ namespace iWasHere.Controllers
                     touristAttraction.CityId = tA.CityId;
                     touristAttraction.LandmarkId = tA.LandmarkId;
                     touristAttraction.CategoryId = tA.CategoryId;
-                    touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
-                    touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
-                    touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
-                    touristAttraction.City.DictionaryCityId = 1;
-                    touristAttraction.Category.DictionaryCategoryId= 1;
-                    touristAttraction.Landmark = new DictionaryLandmarkType();
-                    touristAttraction.Landmark.DictionaryItemId = 4;
-                    _dictionaryService.EditTouristAttractions(touristAttraction); AddImg(photos, touristAttraction.TouristAttractionId);
+
+                    _dictionaryService.EditTouristAttractions(touristAttraction);
                     return View("Index");
                 }
                 else
@@ -290,8 +269,24 @@ namespace iWasHere.Controllers
                 _dictionaryService.AddImage(img);
             }
 
+        }
+        public ActionResult GetLandmark(string txtName)
+        {
+            return Json(_dictionaryService.GetTouristAttractionsLandmark_v2());
+        }
+        public ActionResult DestroyTouristAttractions([DataSourceRequest] DataSourceRequest request, TouristAttractionsDTO tA)
+        {
+            if (tA != null)
+            {
+                string errorMessage = _dictionaryService.DeleteTouristAttraction(tA.TouristAttractionId);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                }
+            }
 
-          
+
+            return Json(ModelState.ToDataSourceResult());
         }
     }
     

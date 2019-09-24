@@ -1,4 +1,4 @@
-﻿@model iWasHere.Domain.Models.TouristAttraction
+﻿@model iWasHere.Domain.DTOs.TouristAttractionsDTOEdit
 @Html.HiddenFor(a => a.TouristAttractionId)
 @{
     ViewData["Title"] = "CreateEdit";
@@ -6,9 +6,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <div>
-        <h1 class="title" align="center">Adauga obiectiv turistic</h1>
-        <form action="Save" method="post" enctype="multipart/form-data">
+<div>
+    <h1 class="title" align="center">Adauga obiectiv turistic</h1>
+    <form action="Save" method="post" enctype="multipart/form-data">
 
 
             <input type="hidden" asp-for="TouristAttractionId" /><br />
@@ -22,92 +22,61 @@
 
             <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
 
-            @(Html.Kendo().ComboBoxFor(model => model.CategoryId)
-                             .Placeholder("Tip atractie")
-                             .DataTextField("Name")
-                             .DataValueField("Id")
-                             .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
-                             .Filter(FilterType.Contains)
-                             .DataSource(source =>
-                             {
-                                 source.Read(read =>
-                                 {
-                                     read.Action("GetCategory", "TouristAttractions");
-                                 });
-                             })
-            )
-            <br />
-            <br />
-            @(Html.Kendo().ComboBoxFor(model => model.CityId)
-                             .Placeholder("Alege oras")
-                             .DataTextField("DictionaryCityName")
-                             .DataValueField("Id")
-                             .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
-                             .Filter(FilterType.Contains)
-                             .DataSource(source =>
-                             {
-                                 source.Read(read =>
-                                 {
-                                     read.Action("GetCity", "TouristAttractions");
-                                 });
-                             })
-            )
-            @*@(Html.Kendo().ComboBoxFor(model => model.Schedule.TouristAttractionId)
+
+
+        @(Html.Kendo().ComboBoxFor(model => model.CategoryId)
+                         .Placeholder("Tip atractie")
+                         .DataTextField("Name")
+                         .DataValueField("Id")
                          .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
-                         .Placeholder("Start rogram")
-                         .DataTextField(Model.Schedule.StartHour.ToString())
-                         .DataValueField("ScheduleId")
                          .Filter(FilterType.Contains)
                          .DataSource(source =>
                          {
                              source.Read(read =>
                              {
-                                 read.Action("GetSchedule", "TouristAttractions");
+                                 read.Action("GetCategory", "TouristAttractions");
                              });
                          })
         )
-        @(Html.Kendo().ComboBoxFor(model => model.Schedule.TouristAttractionId)
+        <br />
+        <br />
+        @(Html.Kendo().ComboBoxFor(model => model.LandmarkId)
+                         .Placeholder("Landmark")
+                         .DataTextField("DictionaryItemName")
+                         .DataValueField("DictionaryItemId")
                          .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
-                         .Placeholder("Sfarsit program")
-                         .DataTextField(Model.Schedule.EndHour.ToString())
-                         .DataValueField("ScheduleId")
                          .Filter(FilterType.Contains)
                          .DataSource(source =>
                          {
                              source.Read(read =>
                              {
-                                 read.Action("GetSchedule", "TouristAttractions");
+                                 read.Action("GetLandmark", "TouristAttractions");
                              });
                          })
-        )*@
-            @*<p>
-            <h6>Ora de inceput </h6>
-            @(Html.Kendo().TimePickerFor(model => model.StartHour)
-
-               .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
-                 .Format("HH:mm:ss")
-               .DateInput()
-
-            )
-        </p>
-        <p>
-            <h6>Ora de sfarsit </h6>
-            @(Html.Kendo().TimePickerFor(model => model.EndHour)
-
-              .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
-              .Format("HH:mm:ss")
-
-
-              .DateInput()
-            )
-        </p>*@
-            <h6>Latitudine</h6>
-            <input type="text" asp-for="Latitudine" /><br />
-            <h6>Longitudine</h6>
-            <input type="text" asp-for="Longtitudine" /><br /><br />
-            <br />
-            <br />
-            <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
+        )
+        <br />
+        <br />
+        @(Html.Kendo().ComboBoxFor(model => model.CityId)
+                         .Placeholder("Alege oras")
+                         .DataTextField("DictionaryCityName")
+                         .DataValueField("DictionaryCityId")
+                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
+                         .Filter(FilterType.Contains)
+                         .DataSource(source =>
+                         {
+                             source.Read(read =>
+                             {
+                                 read.Action("GetCity", "TouristAttractions");
+                             });
+                         })
+        )
+        <h6>Latitudine</h6>
+        <input type="text" asp-for="Latitudine" /><br />
+        <h6>Longitudine</h6>
+        <input type="text" asp-for="Longtitudine" /><br /><br />
+        <br />
+        <br />
+        <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
 
 
             <br />
