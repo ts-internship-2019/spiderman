@@ -79,7 +79,7 @@ namespace iWasHere.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Currency}/{action=Index}/{id?}");
+                    template: "{controller=touristattractions}/{action=Index}/{id?}");
             });
         }
 

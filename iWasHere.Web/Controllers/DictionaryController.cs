@@ -212,15 +212,16 @@ namespace iWasHere.Web.Controllers
         [HttpPut]
         public JsonResult AddCategoryController(DictionaryCategoryTypeModel dataT)
         {
-            if(dataT.Id == 0 || string.IsNullOrEmpty(Convert.ToString(dataT.Id)))
+            if (dataT.Id == 0 || string.IsNullOrEmpty(Convert.ToString(dataT.Id)))
             {
                 _dictionaryService.InsertCategoryType(dataT.Name);
-            }else
+            }
+            else
             {
                 //throw new Exception("NU FACE NIMIC");
                 _dictionaryService.UpdateCategory(dataT);
             }
-            
+
             return Json(new { result = dataT.Name });
         }
         public ActionResult Search(string searchText)
