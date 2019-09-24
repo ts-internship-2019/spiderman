@@ -9,7 +9,7 @@ using iWasHere.Web.Models;
 namespace iWasHere.Web.Controllers
 {
     public class HomeController : Controller
-    {//schimbareiri
+    {
         public IActionResult Index()
         {
             return View();

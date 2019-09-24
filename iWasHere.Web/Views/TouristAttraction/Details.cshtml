@@ -1,0 +1,85 @@
+﻿@model iWasHere.Domain.DTOs.TouristAttractionMapsModel
+
+@{
+    ViewData["Title"] = "TouristAttraction";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Detalii obiectiv turistic</h1>
+
+@using (Html.BeginForm("GetTouristAttractionMapsValues", "TouristAttraction", FormMethod.Post))
+{
+    @Html.HiddenFor(a => a.TouristAttractionId)
+    <input type="text" asp-for="Latitude" hidden id="Latitude" />
+
+    <input type="text" asp-for="Longitude" hidden id="Longitude" />
+
+    <div id="map"></div>
+
+}
+
+
+@using (Html.BeginForm("AddReview", "TouristAttraction", FormMethod.Post))
+{
+    @*<div>
+        <h6> UserName </h6>
+        <input type="text" asp-for="" id="user" />
+    </div>
+    <div>
+        <h6> Titlu Comentariu</h6>
+        <input type="text" asp-for="" id="title" />
+    </div>
+    <div>
+        <h6> Comentariu </h6>
+        <input type="text" asp-for="" id="comment" />
+    </div>
+
+
+    @Html.HiddenFor(a => a.Re)
+    <div>
+        <button class="k-button k-primary" onclick="validate()" style="margin-top: 2em" name="submitbtn" value="save">Salveaza</button>
+
+        <button class="k-button k-primary" style="margin-top: 2em" name="submitbtn" value="cancel">Anuleaza</button>
+
+    </div>*@
+
+
+}
+
+
+
+
+
+
+<script>
+    var map;
+    function initMap() {
+        debugger;
+        var Latitude = parseFloat($("#Latitude").val());
+        var Longitude = parseFloat($("#Longitude").val());
+
+        var location = { lat: Latitude, lng: Longitude };
+
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 15, center: location });
+
+        var marker = new google.maps.Marker({ position: location, map: map });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVxnhhEH_WDFhXv_PWaJNXztPWKLBO81Y&callback=initMap" async defer></script>
+
+
+
+
+
+
+<style>
+    #map {
+        height: 400px;
+        width: 700px;
+    }
+</style>
+
+
+
+

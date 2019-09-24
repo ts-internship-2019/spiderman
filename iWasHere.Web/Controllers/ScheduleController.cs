@@ -18,14 +18,10 @@ namespace iWasHere.Web.Controllers
             _dictionaryService = dictionaryService;
         }
 
-      
-
-
+     
         public IActionResult Schedule()
         {
                 return View();
-
-
         }
 
 
@@ -34,7 +30,6 @@ namespace iWasHere.Web.Controllers
             var jsonVariable = _dictionaryService.GetDictionaryScheduleModels(request.Page, request.PageSize).ToDataSourceResult(request);
             jsonVariable.Total = 2097152;
             return Json(jsonVariable);
-
         }
     }
 }

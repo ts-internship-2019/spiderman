@@ -10,5 +10,7 @@ namespace iWasHere.Domain.DTOs
         public int TouristAttractionId { get; set; }
         public string TouristAttractionName { get; set; }
 
+
+
     }
 }
