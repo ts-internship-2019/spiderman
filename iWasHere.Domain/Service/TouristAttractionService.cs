@@ -19,7 +19,7 @@ namespace iWasHere.Domain.Service
             _dbContext = databaseContext;
         }
 
-        public List<TouristAttraction> GetObjectiveDetails(int id)
+        public List<TouristAttractionModel> GetObjectiveDetails(int id)
         {
             //TouristAttraction touristAttraction = _dbContext.TouristAttraction.Find(id);
             //touristAttraction.City = _dbContext.DictionaryCity.Find(touristAttraction.CityId);
@@ -27,8 +27,21 @@ namespace iWasHere.Domain.Service
             //touristAttraction.Landmark = _dbContext.DictionaryLandmarkType.Find(touristAttraction.LandmarkId);
 
 
-            var categoryName = _dbContext.TouristAttraction.Include(a => a.City).Include(a => a.Category).Include(a=> a.Landmark).Where(categ => categ.TouristAttractionId == id);
-            List<TouristAttraction> categoryListModel = categoryName.Take(1).ToList();
+            var categoryName = _dbContext.TouristAttraction
+                .Include(a => a.City)
+                .Include(a => a.Category)
+                .Include(a=> a.Landmark)
+                .Where(categ => categ.TouristAttractionId == id)
+                .Select(a=> new TouristAttractionModel() {
+                    CategoryName = a.Category.DictionaryCategoryName,
+                    CityName = a.City.DictionaryCityName,
+                    LandmarkTypeName = a.Landmark.DictionaryItemName,
+                    Latitudine = a.Latitudine,
+                    Longtitudine = a.Longtitudine,
+                    Description = a.Description,
+                    Name = a.Name
+                });
+            List<TouristAttractionModel> categoryListModel = categoryName.Take(1).ToList();
 
           
 

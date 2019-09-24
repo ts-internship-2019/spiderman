@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    @*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
 
 <style>
     body{
@@ -20,6 +20,7 @@
         background-color:#2A0537;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
         text-align: center;
+        width:500px;
     }
 
     label {
@@ -81,6 +82,7 @@
         <div class="col-lg-6"><label for="landmark">Landmark</label></div>
         <div class="col-lg-6"><input type="text" id="landmark" name="landmark" value="Landmark" readonly="readonly" /></div>
     </div>
+
 </div>
 
 
@@ -93,7 +95,7 @@ window.onload=function(){update()}
         var url = new URL(url_string);
         let id = url.searchParams.get("Id");
         alert("Id-ul este " + id);
-
+        
         if (id !== null) {
             var touristData = {
                 Id: id
@@ -102,14 +104,20 @@ window.onload=function(){update()}
         type: "GET",
         url: "@Url.Action("GetObjectiveDetails", "TouristAttraction")",
         content: "application/json; charset=utf-8",
-        dataType: "text/json",
+        dataType: "json",
         //transferEncoding:"chunke",
         data: touristData,
         cache: false,
-        success: function(d) {
+            success: function (d) {
             if (d.result) {
-               
-               console.log(d.result)
+                console.log(d);
+                document.getElementById('name').value = d.result[0].Name;
+                document.getElementById('description').value = d.result[0].Description;
+                document.getElementById('longitude').value = d.result[0].Longtitudine;
+                document.getElementById('latitude').value = d.result[0].Latitudine;
+                document.getElementById('category').value = d.result[0].CategoryName;
+                document.getElementById('city').value = d.result[0].CityName;
+                document.getElementById('landmark').value = d.result[0].LandmarkTypeName;
             }
             else {
                 alert("Error");
