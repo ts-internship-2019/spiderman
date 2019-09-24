@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using iWasHere.Web.Models;
-
+using System.IO;
 namespace iWasHere.Web.Controllers
 {
     public class HomeController : Controller
@@ -15,6 +15,7 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
+      
         public IActionResult Privacy()
         {
             return View();

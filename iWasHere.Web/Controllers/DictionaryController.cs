@@ -114,6 +114,7 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+       
 
         public JsonResult GetJsonCountryData()
         {
@@ -136,7 +137,7 @@ namespace iWasHere.Web.Controllers
                 return View(dictionaryCity);
             }
         }
-        public IActionResult CityNew() { return View(); }
+        
        
         public ActionResult NewCity(DictionaryCityModel model, string submit)
         {
@@ -309,6 +310,25 @@ namespace iWasHere.Web.Controllers
             return Json(ModelState.ToDataSourceResult());
 
         }
+        public ActionResult DeleteCityData([DataSourceRequest] DataSourceRequest request, DictionaryCityModel model)
+        {
+            if (model!= null)
+            {
+                string errorMessage = _dictionaryService.DeleteCity(model.CityId);
+                if (string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    return Json(ModelState.ToDataSourceResult());
+                }
+                else
+                {
+                    ModelState.AddModelError("a", errorMessage);
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+
+            return Json(ModelState.ToDataSourceResult());
+
+        }
 
         public JsonResult ScheduleFilteredDataSource([DataSourceRequest]DataSourceRequest request, ScheduleTouristAttractionModel model)
         {
@@ -412,7 +432,8 @@ namespace iWasHere.Web.Controllers
             }
             return Content($"{c.CountryCode}, {c.CountryName}");
         }
+    
 
-        
+
     }
 }

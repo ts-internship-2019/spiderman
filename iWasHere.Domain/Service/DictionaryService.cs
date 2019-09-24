@@ -584,6 +584,12 @@ namespace iWasHere.Domain.Service
                 }
             return null;
         }
+        public void  AddImage(Image image)
+        {
+                    _dbContext.Add(image);
+                    _dbContext.SaveChanges();
+              
+        }
 
     }
 }

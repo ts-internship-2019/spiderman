@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewData["Title"] = "AddImages";
+}
+
+<h3>Adauga imagini</h3>
+@{
+    Layout = null;
+}
+
+@model iWasHere.Domain.DTOs.ImageModel
+
+@*<form asp-controller="product" asp-action="save" method="post" enctype="multipart/form-data">
+        <table cellpadding="2" cellspacing="2">
+
+            <tr>
+                <td>Photo</td>
+                <td>
+                    <input type="file" name="photos" multiple="multiple" class="form-control custom-file-input" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td>
+                <td><input type="submit" value="Save" /></td>
+            </tr>
+        </table>
+        <div class="gallery"></div>
+    </form>*@
+
+<form asp-controller="AddImages" asp-action="AddImages" method="post" enctype="multipart/form-data">
+
+    @*<table cellpadding="2" cellspacing="2">*@
+
+    @*<tr>
+                <td>Photo</td>
+                <td>
+                    <input type="file" name="photos" multiple="multiple" class="form-control custom-file-input" id="photos" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td>
+                <td><input type="submit" value="Save" /></td>
+            </tr>
+        </table>*@
+
+    <input type="file" name="photos" multiple="multiple" class="form-control custom-file-input" id="gallery-photo-add" onchange="clear()"/>
+    <div class="gallery" id="gal"></div>
+    <input type="submit" class = "btn btn-outline-info" value="Save"  />
+
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @section Scripts {
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+           
+                // Multiple images preview in browser
+                var imagesPreview = function (input, placeToInsertImagePreview) {
+
+                    if (input.files) {
+                        var filesAmount = input.files.length;
+
+                        for (i = 0; i < filesAmount; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = function (event) {
+                                $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                            }
+
+                            reader.readAsDataURL(input.files[i]);
+                        }
+                    }
+
+                };
+
+            $('#gallery-photo-add').on('change', function () {
+                $("#gal").html("");
+
+                 $('#gal').empty();
+                     $("#gal").children().remove();
+                    imagesPreview(this, 'div.gallery');
+                });
+            });
+        </script>
+    <script>
+        function clear() {
+
+    var node = document.getElementsById("gallery-photo-add");
+   while (node.firstChild) {
+    myNode.removeChild(node.firstChild);
+  }
+}
+
+    </script>
+    }
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    
+    $(function () {
+        // Multiple images preview in browser
+        var imagesPreview = function (input, placeToInsertImagePreview) {
+
+            if (input.files) {
+                var filesAmount = input.files.length;
+
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+
+        };
+
+        $('#gallery-photo-add').on('change', function () {
+            var div = document.getElementById('gallery-photo-add');
+while(div.firstChild)
+    div.removeChild(div.firstChild);
+            $("#gal").html("");
+
+                 $('#gal').empty();
+                     $("#gal").children().remove();
+            imagesPreview(this, 'div.gallery');
+        });
+    });
+</script> 
+<script>
+    function clear() {
+       
+        var node = document.getElementsById("gallery-photo-add");
+        while (node.firstChild) {
+            myNode.removeChild(node.firstChild);
+        }
+    }
+
+</script>                

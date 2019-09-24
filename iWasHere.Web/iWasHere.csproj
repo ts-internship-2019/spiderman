@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\kendo-ui\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

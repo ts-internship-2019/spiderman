@@ -6,6 +6,7 @@
 
     <div>
         <h2 align="center">Adauga informatii despre  un oras</h2>
+        <img style=" height:200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQEhNtGxZfcNJq-XA7UBHaPwnY2BPifYNr8mFQW5sUQQ8qReQ7" alt="Alternate Text" />
         @using (Html.BeginForm("NewCity", "Dictionary", FormMethod.Post))
         {
             @Html.HiddenFor(a => a.CityId)
@@ -15,11 +16,15 @@
             <br />
             <input type="text" asp-for="CityName" id="city" />
             <br />
-            <br/>
+            <br />
+            <label for="Judet">
+                Judet:
+            </label>
+            <br />
             @(Html.Kendo().ComboBoxFor(model => model.CountyId)
               .DataValueField("CountyId")
               .DataTextField("CountyName")
-              .Placeholder("Selecteaza un judet")
+              .Placeholder("Selecteaza un judet...")
               .HtmlAttributes(new { style = "align:left; width:60%; id='counties'" })
               .Filter("StartsWith")
               .DataSource(source =>
@@ -32,40 +37,44 @@
               })
             )
             <br />
-            <button onclick="validate()" class="myBtn k-button k-primary" id="save" name="submit" style="margin-top: 2em; float: left;background-color: #008CBA;">Salveaza</button>
+            <button onclick="validate()" class="btn btn-outline-info " id="save" name="submit" style="margin-top: 2em; float: left;">Salveaza</button>
 
             @if (Model == null)
             {
                 <button onclick="validate()"
-                        class="myBtn k-button k-primary"
+                        class="btn btn-outline-info "
                         value="savenew" name="submit"
-                        style="margin-top: 2em; float: left;background-color: #008CBA;">
+                        style="margin-top: 2em; float: left;">
                     Salveaza si nou
                 </button>
             }
-            <a class="btn btn-danger" href="/dictionary/City" name="submit" style="margin-top: 2em; float: left;">Anuleaza</a>
+            <a class="btn btn-outline-danger " href="/dictionary/City" name="submit" style="margin-top: 2em; float: left;">Anuleaza</a>
         }
     </div>
 
 <style>
-    .myBtn {
+    .btn {
         margin-right: 20px;
     }
 </style>
 <script>
     function validate() {
-        if (isEmpty($('#city').val())) {
+        if (invalid($('#city').val())) {
             alert("Trebuie sa introduceti numele orasului");
         }
-        if (isEmpty($('#counties').val())) {
-            alert("Trebuie sa introduceti numele judetului");
+       
+        var co = $('#counties');
+        if (co.val() == undefined) {
+            alert("Selecteaza un judet!");
+            $('#co').focus();
         }
-        var combo = $find('<%=counties.CountyId %>');
-        if (combo.get_selectedIndex() == null) {
-            alert("You must select a category before processing search!");
-        }
+        //var combo = $find('<%=counties.CountyId %>');
+        //if (combo.get_selectedIndex() == undefined) {
+        //    alert("Selecteaza un judet!");
+        //}
+
     }
-    function isEmpty(str) {
+    function invalid(str) {
         return str === null || str == "" || str == " " || str.match(/^ *$/) !== null;
     }
 </script>
