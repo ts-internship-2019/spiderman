@@ -84,7 +84,9 @@
     </div>
 
 </div>
-
+<div id="objective-images">
+    
+</div>
 
 
 <script>
@@ -118,6 +120,13 @@ window.onload=function(){update()}
                 document.getElementById('category').value = d.result[0].CategoryName;
                 document.getElementById('city').value = d.result[0].CityName;
                 document.getElementById('landmark').value = d.result[0].LandmarkTypeName;
+                console.log("Array length " + d.result[0].Image.length);
+
+                //if (d.result[0].Image.length>0) {
+                //    d.result[0].Image.map(img => {
+                //        document.getElementById("objective-images").appendChild()
+                //    })
+                //}
             }
             else {
                 alert("Error");
