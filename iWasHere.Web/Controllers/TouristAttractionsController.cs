@@ -93,7 +93,8 @@ namespace iWasHere.Controllers
                 touristAttraction.Category = _dictionaryService.GetDictionaryCategory(touristAttraction.CategoryId);
                 touristAttraction.City = _dictionaryService.GetDictionaryCity(touristAttraction.CityId);
                 touristAttraction.Landmark = _dictionaryService.GetLandmark(touristAttraction.LandmarkId);
-                touristAttraction.Image = _dictionaryService.GetImages(Id);
+               
+                ViewData["Images"] = _dictionaryService.GetImages(Id);
                 return View(touristAttraction);
                 //return View();
             }
@@ -174,8 +175,11 @@ namespace iWasHere.Controllers
                     touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
                     touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
                     touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
-
-                    _dictionaryService.EditTouristAttractions(touristAttraction);
+                    touristAttraction.City.DictionaryCityId = 1;
+                    touristAttraction.Category.DictionaryCategoryId= 1;
+                    touristAttraction.Landmark = new DictionaryLandmarkType();
+                    touristAttraction.Landmark.DictionaryItemId = 4;
+                    _dictionaryService.EditTouristAttractions(touristAttraction); AddImg(photos, touristAttraction.TouristAttractionId);
                     return View("Index");
                 }
                 else
