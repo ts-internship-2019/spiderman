@@ -8,11 +8,15 @@
 
 <style>
     body{
-        /*background-image: linear-gradient(to right bottom, #2a0537, #392a64, #3e4f92, #3676c0, #12a0eb);*/
+        background-image: linear-gradient(to right top, #af71f2, #a661f2, #9c4ff2, #913cf2, #8624f2);
         background-color:black;
+       
+        background-position:center;
+        background-size:cover;
+        background-repeat:no-repeat;
         box-sizing:border-box;
     }
-    input {
+    .details {
         border: 1px solid purple;
         color: white;
         font-size: 18px;
@@ -22,6 +26,7 @@
         text-align: center;
         width:500px;
     }
+    
 
     label {
         width: 100px;
@@ -34,7 +39,11 @@
     input:focus {
         outline: none;
     }
-
+    textarea:focus{
+        outline:none;    }
+    textarea:hover{
+         cursor: default;
+    }
     h1,h3{
         color:white;
     }
@@ -56,31 +65,32 @@
 <div class="parent" id="gradient">
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="name">Name</label></div>
-        <div class="col-lg-6"><input type="text" id="name" name="name" value="Name" readonly="readonly" /></div>
+        <div class="col-lg-6"><input class="details" type="text" id="name" name="name" value="Name" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"> <label for="description">Description</label></div>
-        <div class="col-lg-6"><input type="text" id="description" name="description" value="Description" readonly="readonly" /></div>
+        @* <div class="col-lg-6"><input type="text" id="description" name="description" value="Description" readonly="readonly" /></div>*@
+        <div class="col-lg-6"><textarea class="details"  id="description" name="description" value="Description" readonly="readonly"></textarea></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"> <label for="longitude">Longitude</label> </div>
-        <div class="col-lg-6"> <input type="text" id="longitude" name="longitude" value="Longitude" readonly="readonly" /></div>
+        <div class="col-lg-6"> <input class="details" type="text" id="longitude" name="longitude" value="Longitude" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="latitude">Latitude</label></div>
-        <div class="col-lg-6"><input type="text" id="latitude" name="latitude" value="Latitude" readonly="readonly" /></div>
+        <div class="col-lg-6"><input class="details" type="text" id="latitude" name="latitude" value="Latitude" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="category">Category</label></div>
-        <div class="col-lg-6"><input type="text" id="category" name="category" value="Category" readonly="readonly" /></div>
+        <div class="col-lg-6"><input class="details" type="text" id="category" name="category" value="Category" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="city">City</label></div>
-        <div class="col-lg-6"><input type="text" id="city" name="city" value="City" readonly="readonly" /></div>
+        <div class="col-lg-6"><input class="details" type="text" id="city" name="city" value="City" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="landmark">Landmark</label></div>
-        <div class="col-lg-6"><input type="text" id="landmark" name="landmark" value="Landmark" readonly="readonly" /></div>
+        <div class="col-lg-6"><input class="details" type="text" id="landmark" name="landmark" value="Landmark" readonly="readonly" /></div>
     </div>
 
 </div>

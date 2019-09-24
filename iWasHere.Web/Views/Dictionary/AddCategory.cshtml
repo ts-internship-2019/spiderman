@@ -10,7 +10,7 @@
   font-family: 'Roboto', sans-serif;
 }
 body, .button:after {
-  background: #2c3e50;
+  background: #535353;
 }
     
     .ctn {
@@ -161,7 +161,7 @@ footer a, footer a:after {
             background-color:black;
         }
         body {
-            background-color:#222222;
+            background-image: linear-gradient(to right top, #18171a, #2e214c, #462982, #632bb9, #8624f2);
         }
         a:hover{
             text-decoration:none;
@@ -174,7 +174,9 @@ footer a, footer a:after {
             border-radius:12px;
             color:black;
         }
-       
+        #category{
+            font-size:20px;
+        }
          input:focus{
            outline: none;
         }
@@ -183,9 +185,10 @@ footer a, footer a:after {
     <form style="margin:20px;margin-left:-4px">
         <label for="category"></label>
         <input  type="text" id="category" name="category" placeholder="Enter category name..."  maxlength="20">
-        <a href="category" onclick="addCategory()" class="button b-green">Save</a>
+        
+        <a href="category" onclick="addCategory()" class="button b-orange">Save</a>
 
-        <button style="border:none;" onload="test()" id="saveAndNew" onclick="addCategory() " class="button b-blue">Save and new</button>
+        <button style="border:none;" onload="test()" id="saveAndNew" onclick="addCategory() " class="button b-orange">Save and new</button>
         <a href="category" class="button b-red">Anuleaza</a>
     </form>
 
