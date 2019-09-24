@@ -1,7 +1,6 @@
-﻿@using Kendo.Mvc.UI
-@*@model IEnumerable<iWasHere.Domain.Models.TouristAttraction>*@
-@model iWasHere.Domain.Models.TouristAttraction
-
+﻿
+@model IEnumerable<iWasHere.Domain.DTOs.TouristAttractionsDTO>
+@using Kendo.Mvc.UI
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -44,21 +43,21 @@
                             .Content("Clear Filter"))
         </p>
     </div>
-    @(Html.Kendo().Grid<iWasHere.Domain.Models.TouristAttraction>()
+    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.TouristAttractionsDTO>()
                   .Name("GridTouristAttractions")
                   .Columns(columns =>
                   {
                       columns.Bound(c => c.TouristAttractionId).Width(140).Title("Id").Hidden();
                       columns.Bound(c => c.Name).Width(200).Title("Nume");
                       columns.Bound(c => c.Description).Width(200).Title("Descriere");
-                      columns.Bound(c => c.Category.DictionaryCategoryName).Width(200).Title("Nume categorie");
-                      columns.Bound(c => c.City.DictionaryCityName).Width(150).Title("Nume oras");
-                      columns.Bound(c => c.Landmark.DictionaryItemName).Width(200).Title("Nume landmark");
+                      columns.Bound(c => c.CategoryName).Width(200).Title("Nume categorie");
+                      columns.Bound(c => c.CityName).Width(150).Title("Nume oras");
+                      columns.Bound(c => c.LandmarkName).Width(200).Title("Nume landmark");
                       columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
                       columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
                       columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>")
                       .Width(150);
-                      columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/Details?id=#=TouristAttractionId# '> Detalii </a>")
+                      columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/Details?Id=#=TouristAttractionId# '> Detalii </a>")
                       .Width(150);
                       columns.Command(command =>
                       {
@@ -79,9 +78,9 @@
                           .Ajax()
                           .Read(read => read.Action("TouristAttractionsGrid", "TouristAttractions").Data("FilterByName"))
                           .PageSize(20)
+                          .Model(model => model.Id(p => p.TouristAttractionId))
                           .Destroy(update => update.Action("DestroyTouristAttractions", "TouristAttractions"))
                           .Events(events => events.Error("ErrorHandler"))
-                          .Model(model => model.Id(p => p.TouristAttractionId))
                           .Update(update => update.Action("UpdateTouristAttractions", "TouristAttractions"))
     )
     )
@@ -91,19 +90,16 @@
 
         $(iconFilterReset).click(function () {
             document.getElementById('TxtFilterName').value = "";
-            $("#GridCurrency").data("kendoGrid").dataSource.read();
-            $("#GridCurrency").data("kendoGrid").dataSource.page(1);
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
         });
 
         $(iconFilter).click(function () {
-            //alert(document.getElementById("TxtFilterName").value);
-            $("#GridCurrency").data("kendoGrid").dataSource.read();
-            $("#GridCurrency").data("kendoGrid").dataSource.page(1);
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
         });
     });
     function FilterByName() {
-        //var cId = document.getElementById("TxtFilterName").value;
-        //alert(cId);
         return {
             txtFilterName: document.getElementById("TxtFilterName").value
         }
