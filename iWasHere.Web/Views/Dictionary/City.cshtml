@@ -23,12 +23,14 @@
             .Name("kTextBox").
             HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
         )
-    <label for="Judet">Judet:</label> @(Html.Kendo().ComboBox()
+    <label for="Judet">J444udet:</label> @(Html.Kendo().ComboBox()
             .Name("counties")
             .DataTextField("CountyName")
             .DataValueField("CountyId")
             .HtmlAttributes(new { style = "width:60%; id='counties'" })
             .Filter("StartsWith")
+            .MinLength(1)
+            .AutoBind(false)
             .DataSource(source =>
             {
             source.Read(read =>
