@@ -294,24 +294,7 @@ namespace iWasHere.Domain.Service
             return dictionaryLCountries;
         }
 
-        public List<DictionaryCountyModel> Filter_GetCounties(string text)
-        {
-            var a = _dbContext.DictionaryCounty.Select(c => new DictionaryCountyModel()
-            {
-                CountyId = c.DictionaryCountyId,
-                CountyName = c.DictionaryCountyName
-
-            });
-            if (!string.IsNullOrEmpty(text))
-            {
-                a = a.Where(p => p.CountyName.StartsWith(text));
-            }
-            List<DictionaryCountyModel> countyListModels = a.Take(50).ToList();
-
-            return countyListModels;
-
-        }
-
+   
         public DictionaryCityModel GetCity(int id)
         {
 
@@ -349,7 +332,23 @@ namespace iWasHere.Domain.Service
                 return "Exista un obiectiv turistic in acest oras.Nu poate fi sters.";
             }
         }
+        public List<DictionaryCountyModel> Filter_GetCounties(string text)
+        {
+            var a = _dbContext.DictionaryCounty.Select(c => new DictionaryCountyModel()
+            {
+                CountyId = c.DictionaryCountyId,
+                CountyName = c.DictionaryCountyName
 
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                a = a.Where(p => p.CountyName.StartsWith(text));
+            }
+            List<DictionaryCountyModel> countyListModels = a.Take(50).ToList();
+
+            return countyListModels;
+
+        }
         public int TestTotal(string categoryName)
         {
             if (string.IsNullOrEmpty(categoryName))

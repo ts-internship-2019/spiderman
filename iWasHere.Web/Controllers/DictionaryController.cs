@@ -309,7 +309,10 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.Filter_GetCountries(text));
         }
 
-    
+        public ActionResult FilterGetCounties(string text)
+        {
+            return Json(_dictionaryService.Filter_GetCounties(text));
+        }
 
         public ActionResult Process_DestroyCounty([DataSourceRequest] DataSourceRequest request, DictionaryCountyTypeModel dictionaryCountyType)
         {
