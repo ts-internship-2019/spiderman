@@ -1,4 +1,5 @@
-﻿@model iWasHere.Domain.Models.TouristAttraction
+﻿@model iWasHere.Domain.DTOs.TouristAttractionsDTOEdit
+@Html.HiddenFor(a => a.TouristAttractionId)
 @{
     ViewData["Title"] = "CreateEdit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,7 +7,7 @@
 
 <div>
     <h1 class="title" align="center">Adauga obiectiv turistic</h1>
-    <form action="Save" method="post"enctype="multipart/form-data">
+    <form action="Save" method="post" enctype="multipart/form-data">
 
 
         <input type="hidden" asp-for="TouristAttractionId" /><br />
@@ -20,7 +21,6 @@
 
         <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
 
-        @Html.HiddenFor(a => a.TouristAttractionId)
 
 
         @(Html.Kendo().ComboBoxFor(model => model.CategoryId)
@@ -75,8 +75,8 @@
         <input type="text" asp-for="Longtitudine" /><br /><br />
         <br />
         <br />
-        <input type="file"  name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
-       
+        <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
+
 
         <br />
         <br /><div class="gallery" id="gal"></div>
