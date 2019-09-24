@@ -9,7 +9,7 @@
 
     <form style="margin:20px;margin-left:-4px">
         <label for="category"></label>
-        <input type="text" id="category" name="category" placeholder="Enter category name...">
+        <input type="text" id="category" name="category" placeholder="Enter category name..."  maxlength="20">
         <a href="category" onclick="addCategory()" class="button btn btn-outline-danger">Save</a>
 
         <button onload="test()" id="saveAndNew" onclick="addCategory() " class="button btn btn-outline-danger">Save and new</button>
@@ -40,7 +40,6 @@
         cache: false,
         success: function(d) {
             if (d.result) {
-                console.log("Shit")
                 document.getElementById('category').value = d.result[0].DictionaryCategoryName
             }
             else {
