@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 using iWasHere.Domain.DTOs;
 using Microsoft.AspNetCore.Hosting;
 using iWasHere.Domain.Service;
+using Kendo.Mvc.UI;
+using Kendo.Mvc.Extensions;
 
 namespace iWasHere.Controllers
 {
@@ -23,7 +25,14 @@ namespace iWasHere.Controllers
         private readonly DictionaryService _dictionaryService;
         private readonly DatabaseContext _context;
 
-      
+        public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult TouristAttractions()
+        {
+            return View();
+        }
         public TouristAttractionsController(DatabaseContext context,IHostingEnvironment hostingEnvironmentt,DictionaryService service)
         {
             hostingEnvironment = hostingEnvironmentt;
@@ -31,213 +40,208 @@ namespace iWasHere.Controllers
             _dictionaryService = service;
         }
 
-        // GET: TouristAttractions
-        public async Task<IActionResult> Index()
+      
+        public IActionResult TouristAttractionsGrid([DataSourceRequest] DataSourceRequest request, string txtFilterName)
         {
-            var databaseContext = _context.TouristAttraction.Include(t => t.Category).Include(t => t.City).Include(t => t.Landmark);
-            return View(await databaseContext.ToListAsync());
+            List<TouristAttraction> myList = _dictionaryService.GetTouristAttractionsModel(request.Page, request.PageSize, txtFilterName);
+            var v2 = new DataSourceResult();
+            v2.Data = myList;
+            v2.Total = _dictionaryService.GetCountTouristAttraction(txtFilterName);
+            return Json(v2);
         }
 
-        // GET: TouristAttractions/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        public ActionResult DestroyTouristAttractions([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
         {
-            if (id == null)
+            if (currency != null)
             {
-                return NotFound();
-            }
-
-            var touristAttraction = await _context.TouristAttraction
-                .Include(t => t.Category)
-                .Include(t => t.City)
-                .Include(t => t.Landmark)
-                .FirstOrDefaultAsync(m => m.TouristAttractionId == id);
-            if (touristAttraction == null)
-            {
-                return NotFound();
-            }
-
-            return View(touristAttraction);
-        }
-
-        // GET: TouristAttractions/Create
-        public IActionResult Create()
-        {
-            ViewData["CategoryId"] = new SelectList(_context.DictionaryCategory, "DictionaryCategoryId", "DictionaryCategoryName");
-            ViewData["CityId"] = new SelectList(_context.DictionaryCity, "DictionaryCityId", "DictionaryCityName");
-            ViewData["LandmarkId"] = new SelectList(_context.DictionaryLandmarkType, "DictionaryItemId", "DictionaryItemCode");
-            return View();
-        }
-
-        // POST: TouristAttractions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TouristAttractionId,Name,Description,CategoryId,CityId,LandmarkId,Longtitudine,Latitudine")] TouristAttraction touristAttraction)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(touristAttraction);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.DictionaryCategory, "DictionaryCategoryId", "DictionaryCategoryName", touristAttraction.CategoryId);
-            ViewData["CityId"] = new SelectList(_context.DictionaryCity, "DictionaryCityId", "DictionaryCityName", touristAttraction.CityId);
-            ViewData["LandmarkId"] = new SelectList(_context.DictionaryLandmarkType, "DictionaryItemId", "DictionaryItemCode", touristAttraction.LandmarkId);
-            return View(touristAttraction);
-        }
-
-        // GET: TouristAttractions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var touristAttraction = await _context.TouristAttraction.FindAsync(id);
-            if (touristAttraction == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(_context.DictionaryCategory, "DictionaryCategoryId", "DictionaryCategoryName", touristAttraction.CategoryId);
-            ViewData["CityId"] = new SelectList(_context.DictionaryCity, "DictionaryCityId", "DictionaryCityName", touristAttraction.CityId);
-            ViewData["LandmarkId"] = new SelectList(_context.DictionaryLandmarkType, "DictionaryItemId", "DictionaryItemCode", touristAttraction.LandmarkId);
-            return View(touristAttraction);
-        }
-
-        // POST: TouristAttractions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TouristAttractionId,Name,Description,CategoryId,CityId,LandmarkId,Longtitudine,Latitudine")] TouristAttraction touristAttraction)
-        {
-            if (id != touristAttraction.TouristAttractionId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                string errorMessage = _dictionaryService.DeleteCurrency(currency.DictionaryItemId);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
-                    _context.Update(touristAttraction);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("a", errorMessage);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TouristAttractionExists(touristAttraction.TouristAttractionId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.DictionaryCategory, "DictionaryCategoryId", "DictionaryCategoryName", touristAttraction.CategoryId);
-            ViewData["CityId"] = new SelectList(_context.DictionaryCity, "DictionaryCityId", "DictionaryCityName", touristAttraction.CityId);
-            ViewData["LandmarkId"] = new SelectList(_context.DictionaryLandmarkType, "DictionaryItemId", "DictionaryItemCode", touristAttraction.LandmarkId);
-            return View(touristAttraction);
+
+
+            return Json(ModelState.ToDataSourceResult());
         }
 
-        // GET: TouristAttractions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+
+        public ActionResult UpdateTouristAttractions([DataSourceRequest] DataSourceRequest request, DictionaryCurrencyModel currency)
         {
-            if (id == null)
+            //TO DO
+            //if (currency != null)
+            //{
+            //    string errorMessage = _dictionaryService.DeleteCurrency(currency.DictionaryItemId);
+            //    if (!string.IsNullOrWhiteSpace(errorMessage))
+            //    {
+            //        ModelState.AddModelError("a", errorMessage);
+            //    }
+            //}
+            return Json(ModelState.ToDataSourceResult());
+        }
+        public IActionResult CreateEdit(int Id)
+        {
+            if (Convert.ToInt32(Id) == 0)
             {
-                return NotFound();
+                return View();
             }
-
-            var touristAttraction = await _context.TouristAttraction
-                .Include(t => t.Category)
-                .Include(t => t.City)
-                .Include(t => t.Landmark)
-                .FirstOrDefaultAsync(m => m.TouristAttractionId == id);
-            if (touristAttraction == null)
+            else
             {
-                return NotFound();
+                TouristAttraction touristAttraction = _dictionaryService.GetTouristAttractions(Id);
+                touristAttraction.TouristAttractionId = Id;
+                touristAttraction.Category = _dictionaryService.GetDictionaryCategory(touristAttraction.CategoryId);
+                touristAttraction.City = _dictionaryService.GetDictionaryCity(touristAttraction.CityId);
+                touristAttraction.Landmark = _dictionaryService.GetLandmark(touristAttraction.LandmarkId);
+                return View(touristAttraction);
+                //return View();
             }
-
-            return View(touristAttraction);
         }
-
-        // POST: TouristAttractions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public ActionResult GetCategory()
         {
-            var touristAttraction = await _context.TouristAttraction.FindAsync(id);
-            _context.TouristAttraction.Remove(touristAttraction);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(_dictionaryService.GetTouristAttractionsCategory());
         }
-
-        private bool TouristAttractionExists(int id)
+        public ActionResult GetSchedule()
         {
-            return _context.TouristAttraction.Any(e => e.TouristAttractionId == id);
+            return Json(_dictionaryService.GetTouristAttractionsSchedule());
         }
-        [HttpGet]
-        public ActionResult Image()
+        public ActionResult GetCity(string txtName)
         {
-            return View();
+            return Json(_dictionaryService.GetTouristAttractionsCity(txtName));
         }
         [HttpPost]
-        public IActionResult Image(ImageModel model)
+        public ActionResult Save([DataSourceRequest] DataSourceRequest request, TouristAttractionScheduleModel tA, string submitValue, IFormFile[] photos)
         {
-            if (ModelState.IsValid)
+            if (tA.TouristAttractionId <= 0)
             {
-                string uniqueFileName = null;
-
-                // If the Photo property on the incoming model object is not null, then the user
-                // has selected an image to upload.
-                if (model.Photo != null)
+                if (submitValue == "save")
                 {
-                    // The image must be uploaded to the images folder in wwwroot
-                    // To get the path of the wwwroot folder we are using the inject
-                    // HostingEnvironment service provided by ASP.NET Core
-                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                    // To make sure the file name is unique we are appending a new
-                    // GUID value and and an underscore to the file name
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    // Use CopyTo() method provided by IFormFile interface to
-                    // copy the file to wwwroot/images folder
-                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                    TouristAttraction touristAttraction = new TouristAttraction();
+                    touristAttraction.TouristAttractionId = tA.TouristAttractionId;
+                    touristAttraction.Name = tA.Name;
+                    touristAttraction.Description = tA.Description;
+                    touristAttraction.Longtitudine = tA.Longtitudine;
+                    touristAttraction.Latitudine = tA.Latitudine;
+                    touristAttraction.CityId = tA.CityId;
+                    touristAttraction.LandmarkId = tA.LandmarkId;
+                    touristAttraction.CategoryId = tA.CategoryId;
+                    touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
+                    touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
+                    touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
+                    touristAttraction.CityId = 1;
+                    touristAttraction.CategoryId = 1;
+                    touristAttraction.LandmarkId = 4;
+
+                    int touristAttractionId = _dictionaryService.AddTouristAttractions(touristAttraction);
+                    AddImg(photos, touristAttractionId);
+                    return View("Index");
                 }
-
-                Image img = new Image
+                else if (submitValue == "cancel")
                 {
-                 TouristAttractionId=2,
-                    Path = uniqueFileName
-                };
+                    return View("Index");
+                }
+                else
+                {
+                    TouristAttraction touristAttraction = new TouristAttraction();
+                    touristAttraction.TouristAttractionId = tA.TouristAttractionId;
+                    touristAttraction.Name = tA.Name;
+                    touristAttraction.Description = tA.Description;
+                    touristAttraction.Longtitudine = tA.Longtitudine;
+                    touristAttraction.Latitudine = tA.Latitudine;
+                    touristAttraction.CityId = tA.CityId;
+                    touristAttraction.LandmarkId = tA.LandmarkId;
+                    touristAttraction.CategoryId = tA.CategoryId;
+                    touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
+                    touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
+                    touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
+                    touristAttraction.CityId = 1;
+                    touristAttraction.CategoryId = 1;
+                    touristAttraction.LandmarkId = 4;
+                    int touristAttractionId=_dictionaryService.AddTouristAttractions(touristAttraction);
+                    AddImg(photos,touristAttractionId);
+                    ModelState.Clear();
+                    return View("CreateEdit");
+                }
+            }
+            else
+            {
+                if (submitValue == "save")
+                {
+                    TouristAttraction touristAttraction = new TouristAttraction();
+                    touristAttraction.TouristAttractionId = tA.TouristAttractionId;
+                    touristAttraction.Name = tA.Name;
+                    touristAttraction.Description = tA.Description;
+                    touristAttraction.Longtitudine = tA.Longtitudine;
+                    touristAttraction.Latitudine = tA.Latitudine;
+                    touristAttraction.CityId = tA.CityId;
+                    touristAttraction.LandmarkId = tA.LandmarkId;
+                    touristAttraction.CategoryId = tA.CategoryId;
+                    touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
+                    touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
+                    touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
 
-                _dictionaryService.AddImage(img);
+                    _dictionaryService.EditTouristAttractions(touristAttraction);
+                    return View("Index");
+                }
+                else
+                {
+                    return View("Index");
+                }
+            }
+
+        }
+        //[HttpGet]
+        //public ActionResult Image()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult Image(ImageModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        string uniqueFileName = null;
+
+        //        // If the Photo property on the incoming model object is not null, then the user
+        //        // has selected an image to upload.
+        //        if (model.Photo != null)
+        //        {
+        //            // The image must be uploaded to the images folder in wwwroot
+        //            // To get the path of the wwwroot folder we are using the inject
+        //            // HostingEnvironment service provided by ASP.NET Core
+        //            string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+        //            // To make sure the file name is unique we are appending a new
+        //            // GUID value and and an underscore to the file name
+        //            uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+        //            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        //            // Use CopyTo() method provided by IFormFile interface to
+        //            // copy the file to wwwroot/images folder
+        //            model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+        //        }
+
+        //        Image img = new Image
+        //        {
+        //         TouristAttractionId=2,
+        //            Path = uniqueFileName
+        //        };
+
+        //        _dictionaryService.AddImage(img);
                 
-            }
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
         [HttpGet]
         public ActionResult AddImages()
         {
             return View();
         }
 
-
-      
+       
         [HttpPost]
         public IActionResult AddImages(IFormFile[] photos)
         {
-            if (photos == null || photos.Length == 0)
-            {
-                return Content("File(s) not selected");
-            }
-            else
-            {
+          
           
                 foreach (IFormFile photo in photos)
                 {
@@ -258,9 +262,38 @@ namespace iWasHere.Controllers
                     };
                     _dictionaryService.AddImage(img);
                 }
-            }
+            
            
             return View();
         }
+      
+         public void AddImg(IFormFile[] photos,int id)
+        {
+
+
+            foreach (IFormFile photo in photos)
+            {
+                string uniqueFileName = null;
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                // Use CopyTo() method provided by IFormFile interface to
+                // copy the file to wwwroot/images folder
+                photo.CopyTo(new FileStream(filePath, FileMode.Create));
+
+
+                Image img = new Image
+                {
+                    TouristAttractionId = id,
+                    Path = uniqueFileName
+                };
+                _dictionaryService.AddImage(img);
+            }
+
+
+          
+        }
     }
+    
 }

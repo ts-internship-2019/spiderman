@@ -52,50 +52,7 @@
 
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    @section Scripts {
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script>
-           
-                // Multiple images preview in browser
-                var imagesPreview = function (input, placeToInsertImagePreview) {
-
-                    if (input.files) {
-                        var filesAmount = input.files.length;
-
-                        for (i = 0; i < filesAmount; i++) {
-                            var reader = new FileReader();
-
-                            reader.onload = function (event) {
-                                $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-                            }
-
-                            reader.readAsDataURL(input.files[i]);
-                        }
-                    }
-
-                };
-
-            $('#gallery-photo-add').on('change', function () {
-                $("#gal").html("");
-
-                 $('#gal').empty();
-                     $("#gal").children().remove();
-                    imagesPreview(this, 'div.gallery');
-                });
-            });
-        </script>
-    <script>
-        function clear() {
-
-    var node = document.getElementsById("gallery-photo-add");
-   while (node.firstChild) {
-    myNode.removeChild(node.firstChild);
-  }
-}
-
-    </script>
-    }
+  
 </form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>

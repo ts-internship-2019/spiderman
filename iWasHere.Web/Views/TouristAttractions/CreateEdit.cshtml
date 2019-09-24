@@ -7,7 +7,7 @@
 
 <div>
     <h1 class="title" align="center">Adauga obiectiv turistic</h1>
-    <form action="Save" method="post">
+    <form action="Save" method="post"enctype="multipart/form-data">
 
 
         <input type="hidden" asp-for="TouristAttractionId" /><br />
@@ -15,13 +15,7 @@
         <input type="text" asp-for="Name" /><br />
         <h6>Descriere</h6>
         <input type="text" asp-for="Description" /><br /><br />
-        <p>
-            @(Html.Kendo().Button()
-                            .Name("textButton")
-                            .HtmlAttributes(new { type = "button", style = "" })
-                            .Content("<a href='#'>Adauga poza</a>")
-            )
-        </p>
+
         <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
         <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
 
@@ -110,7 +104,13 @@
         <input type="text" asp-for="Latitudine" /><br />
         <h6>Longitudine</h6>
         <input type="text" asp-for="Longtitudine" /><br /><br />
+        <br />
+        <br />
+        <input type="file"  name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
+       
 
+        <br />
+        <br /><div class="gallery" id="gal"></div>
 
         <button class="btn btn-danger btn-lg"
                 name="submitValue"
@@ -134,6 +134,7 @@
                 style="margin-right: 2em;margin-top: 2em;float: right;">
             Salveaza
         </button>
+
         <br /><br /><br />
     </form>
 
@@ -147,7 +148,7 @@
 <script>
     $(document).ready(function () {
     });
-    
+
     document.getElementById('CheckBoxId').onclick = function () {
         debugger;
         if (this.checked) {
@@ -168,3 +169,48 @@
 
 </script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+    $(function () {
+        // Multiple images preview in browser
+        var imagesPreview = function (input, placeToInsertImagePreview) {
+
+            if (input.files) {
+                var filesAmount = input.files.length;
+
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+
+        };
+
+        $('#gallery-photo-add').on('change', function () {
+            var div = document.getElementById('gallery-photo-add');
+            while (div.firstChild)
+                div.removeChild(div.firstChild);
+            $("#gal").html("");
+
+            $('#gal').empty();
+            $("#gal").children().remove();
+            imagesPreview(this, 'div.gallery');
+        });
+    });
+</script>
+<script>
+    function clear() {
+
+        var node = document.getElementsById("gallery-photo-add");
+        while (node.firstChild) {
+            myNode.removeChild(node.firstChild);
+        }
+    }
+
+</script>      
