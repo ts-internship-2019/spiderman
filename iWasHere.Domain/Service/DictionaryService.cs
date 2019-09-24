@@ -115,7 +115,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCategoryTypeModels;
         }
-    
+
         public List<DictionaryCategory> GetSelectedCategory(int id)
         {
             var categoryName = _dbContext.DictionaryCategory.Where(categ => categ.DictionaryCategoryId == id);
@@ -263,14 +263,22 @@ namespace iWasHere.Domain.Service
 
 
         }
-        public List<DictionaryCountyModel> GetDictionaryCountiesCB()
+        public List<DictionaryCountyModel> GetDictionaryCountiesCB(string text)
         {
-            List<DictionaryCountyModel> dictionaryLCounties = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
+            List<DictionaryCountyModel> dictionaryLCounties = null;
+
+            IQueryable<DictionaryCounty> query = _dbContext.DictionaryCounty;
+
+            if (!string.IsNullOrWhiteSpace(text))
+                query = query.Where(a => a.DictionaryCountyName.Contains(text));
+
+            dictionaryLCounties = query.Select(a => new DictionaryCountyModel()
             {
                 CountyId = a.DictionaryCountyId,
                 CountyName = a.DictionaryCountyName
 
-            }).ToList();
+            }).Take(20).ToList();
+
 
             return dictionaryLCounties;
         }
@@ -784,11 +792,11 @@ namespace iWasHere.Domain.Service
                 }
             return null;
         }
-        public void  AddImage(Image image)
+        public void AddImage(Image image)
         {
-                    _dbContext.Add(image);
-                    _dbContext.SaveChanges();
-              
+            _dbContext.Add(image);
+            _dbContext.SaveChanges();
+
         }
 
         public string InsertNewCounty(DictionaryCountyTypeModel dictionaryCounty)
@@ -1000,6 +1008,10 @@ namespace iWasHere.Domain.Service
             }).ToList();
             return dc;
         }
+
+
+
+
         public List<DictionaryCity> GetTouristAttractionsCity(string text)
         {
             if ((string.IsNullOrEmpty(text) || String.IsNullOrWhiteSpace(text)))
@@ -1042,5 +1054,22 @@ namespace iWasHere.Domain.Service
             _dbContext.TouristAttraction.Update(dict);
             _dbContext.SaveChanges();
         }
+        public ICollection<Image> GetImages(int id)
+        {
+            IQueryable<Image> query = _dbContext.Image;
+
+            query = query.Where(a => a.TouristAttractionId == id);
+
+            ICollection<Image> imageList = query.Select(a => new Image()
+            {
+                ImageId = a.ImageId,
+                TouristAttractionId = a.TouristAttractionId,
+                Path = a.Path
+
+
+            }).ToList();
+            return imageList;
+        }
     }
+
 }

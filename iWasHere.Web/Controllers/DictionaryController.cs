@@ -74,9 +74,9 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public JsonResult CountyData()
+        public JsonResult CountyData(string text)
         {
-            var JsonVariable = _dictionaryService.GetDictionaryCountiesCB();
+            var JsonVariable = _dictionaryService.GetDictionaryCountiesCB(text);
 
             return Json(JsonVariable);
 

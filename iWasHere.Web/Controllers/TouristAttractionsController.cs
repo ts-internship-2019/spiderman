@@ -93,6 +93,7 @@ namespace iWasHere.Controllers
                 touristAttraction.Category = _dictionaryService.GetDictionaryCategory(touristAttraction.CategoryId);
                 touristAttraction.City = _dictionaryService.GetDictionaryCity(touristAttraction.CityId);
                 touristAttraction.Landmark = _dictionaryService.GetLandmark(touristAttraction.LandmarkId);
+                touristAttraction.Image = _dictionaryService.GetImages(Id);
                 return View(touristAttraction);
                 //return View();
             }
@@ -128,10 +129,6 @@ namespace iWasHere.Controllers
                     touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
                     touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
                     touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
-                    touristAttraction.CityId = 1;
-                    touristAttraction.CategoryId = 1;
-                    touristAttraction.LandmarkId = 4;
-
                     int touristAttractionId = _dictionaryService.AddTouristAttractions(touristAttraction);
                     AddImg(photos, touristAttractionId);
                     return View("Index");
@@ -154,9 +151,7 @@ namespace iWasHere.Controllers
                     touristAttraction.City = _dictionaryService.GetDictionaryCity(tA.CityId);
                     touristAttraction.Category = _dictionaryService.GetDictionaryCategory(tA.CategoryId);
                     touristAttraction.Landmark = _dictionaryService.GetLandmark(tA.LandmarkId);
-                    touristAttraction.CityId = 1;
-                    touristAttraction.CategoryId = 1;
-                    touristAttraction.LandmarkId = 4;
+             
                     int touristAttractionId=_dictionaryService.AddTouristAttractions(touristAttraction);
                     AddImg(photos,touristAttractionId);
                     ModelState.Clear();
