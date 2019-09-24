@@ -5,47 +5,92 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>AddCategory</h1>
-@(Html.Kendo().Button()
-    .Name("Save")
-    .Enable(true)
-    .Content("Disabled button")
-    .HtmlAttributes(new { type = "button" })
-    .Events(ev => ev.Click("onClick")))
 
 
-@*@(Html.Kendo().ComboBoxFor(model => model.Id)
-                .DataTextField("Name")
-                .DataValueField("Id")
-                .HtmlAttributes(new { style = "width:60%; id='county'" })
-                .Filter("StartsWith")
+    <form style="margin:20px;margin-left:-4px">
+        <label for="category"></label>
+        <input type="text" id="category" name="category" placeholder="Enter category name...">
+        <a href="category" onclick="addCategory()" class="button btn btn-outline-danger">Save</a>
 
-                .DataSource(source =>
-                {
-                    source.Read(read =>
-                    {
-                        read.Action("CategoryComboBox_Read", "Dictionary").Data("categoryName");
+        <button onload="test()" id="saveAndNew" onclick="addCategory() " class="button btn btn-outline-danger">Save and new</button>
+        <a href="category" class="button btn btn-outline-danger">Anuleaza</a>
+    </form>
 
-                    });
-                    source.Read(read =>
-                    {
-
-                    })
-                 .ServerFiltering(true);
-
-                })
-    )*@
-
-<form style="margin:20px;margin-left:-4px">
-    <label for="category"></label>
-    <input type="text" id="category" name="category" placeholder="Enter category name...">
-</form>
-
-<a href="category" onclick="categoryName()" class="button btn btn-outline-danger">Save</a>
-<button class="button btn btn-outline-danger">Save and new</button>
-<a href="category" class="button btn btn-outline-danger">Anuleaza</a>
 
 <script>
+    window.onload=function(){update()}
+
+    function update() {
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        let id = url.searchParams.get("Id");
+        if (id !== null) {
+            document.getElementById("saveAndNew").remove();
+        }
+        var dataT = {
+            Id: id
+        }
+
+        $.ajax({
+        type: "GET",
+        url: "@Url.Action("GetSelectedCategory", "Dictionary")",
+        content: "application/json; charset=utf-8",
+        dataType: "json",
+        data: dataT,
+        cache: false,
+        success: function(d) {
+            if (d.result) {
+                console.log("Shit")
+                document.getElementById('category').value = d.result[0].DictionaryCategoryName
+            }
+            else {
+                alert("Error");
+            }
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            // TODO: Show error
+        }
+    });
+    }
+    
+    function addCategory() {
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        let id = url.searchParams.get("Id");
+        let checkInput = $('#category').val();
+     
+        if (checkInput.length === 0) {
+            alert("You havent' entered a category. Bye! ")
+        } else {
+            var dataT = {
+                Name: $('#category').val(),
+                Id: id
+        }
+        
+        $.ajax({
+        type: "PUT",
+        url: "@Url.Action("AddCategoryController", "Dictionary")",
+        content: "application/json; charset=utf-8",
+        dataType: "json",
+        data: dataT,
+        cache: false,
+        success: function(d) {
+            if (d.result) {
+                console.log("Shit")
+                alert(d.result);
+            }
+                
+            else {
+                alert("Error");
+            }
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            // TODO: Show error
+        }
+    });
+        }
+    }
+
     function categoryName() {
         let obj = {}
         obj['abc'] = document.getElementsByName("Id_input")[0].value;

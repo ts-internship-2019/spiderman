@@ -11,14 +11,15 @@
 
 
 <div class="demo-section k-content">
-    <p>
-        @(Html.Kendo().Button()
-            .Name("textButton")
-            .Content("Adauga")
-            .HtmlAttributes(new { type = "button" })
-             .Content("<a href='/dictionary/AddSchedule'>Adauga</span>"))
-    </p>
-
+    <div>
+        <p>
+            @(Html.Kendo().Button()
+                .Name("textButton")
+                .Content("Adauga")
+                .HtmlAttributes(new { type = "button" })
+                 .Content("<a href='/dictionary/AddSchedule'>Adauga</a>"))
+        </p>
+    </div>
 
 </div>
 
@@ -63,21 +64,18 @@
        .Columns(columns =>
        {
            columns.Bound(p => p.ScheduleId).Visible(true);
+           columns.Bound(p => p.SeasonId).Visible(false);
+           columns.Bound(p => p.Season).Title("Sezon").Width(130);
            columns.Bound(p => p.Day).Title("Ziua").Width(130);
            columns.Bound(p => p.StartHour).Title("Ora de inceput").Width(130);
            columns.Bound(p => p.EndHour).Title("Ora inchidere").Width(130);
-           columns.Bound(p => p.TouristAttractionName).Width(130);
+           columns.Bound(p => p.TouristAttractionName).Title("Obiectiv turistic").Width(130);
+            columns.Template("<a class='k-button' href='/Dictionary/AddSchedule?Id=#=ScheduleId# '> Editeaza </a>").Width(150);
            columns.Command(command =>
            {
-               command.Edit()
-                  .Text("Edit")
-                  .UpdateText("Edit")
-                  .CancelText("Cancel");
                command.Destroy().Text("Delete");
            });
-           //columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' /> ").Width(74);
-           //columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' method='delete' /> ").Width(74);
-           // columns.Command(command => command.Custom("ViewDetails").Click("showDetails"));
+          
 
        })
        .HtmlAttributes(new { style = "height: 550px;" })
@@ -87,16 +85,16 @@
        .Pageable(pageable => pageable
            .Refresh(true)
            .PageSizes(true)
-           
-           .ButtonCount(5))
+
+           .ButtonCount(1))
            .DataSource(dataSource => dataSource
            .Ajax()
            .Read(read => read.Action("ScheduleData", "Dictionary").Data("FilterSchedule"))
            .Events(events => events.Error("error_handler"))
             .Model(model => model.Id(p => p.ScheduleId))
             .Destroy(update => update.Action("Process_Destroy", "Dictionary"))
-           
-          
+
+
            .PageSize(20)
        )
 )
@@ -106,9 +104,15 @@
     $(document).ready(function () {
         $(kendoIconTextButton).click(function () {
             document.getElementById('kTextBox').value = "";
+              $("#grid").data("kendoGrid").dataSource.read();
+           $("#grid").data("kendoGrid").dataSource.page(1);
         });
 
-
+     $(iconButton).click(function () {
+            //alert(document.getElementById("TxtFilterName").value);
+            $("#grid").data("kendoGrid").dataSource.read();
+            $("#grid").data("kendoGrid").dataSource.page(1);
+        });
 
         $(iconTextButton).click(function () {
 
@@ -132,6 +136,7 @@
             $.each(value.errors, function () {
                 message += this + "\n";
             });
+
         }
     });
     alert(message);

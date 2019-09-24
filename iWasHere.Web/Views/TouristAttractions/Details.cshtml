@@ -2,34 +2,60 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@{
-    Layout = null;
-}
+<h1>Details</h1>
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Success</title>
-</head>
-<body>
-
-    <h3>Product Info</h3>
-    <table cellpadding="2" cellspacing="2" border="1">
-  
-        <tr>
-            <td>Photo(s)</td>
-            <td>
-                @foreach (var photo in ViewBag.product.Photos)
-                {
-                    <img src="~/images/@photo" width="120" />
-                }
-            </td>
-        </tr>
-    </table>
-
-</body>
-</html>
+<div>
+    <h4>TouristAttraction</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Longtitudine)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Longtitudine)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Latitudine)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Latitudine)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Category.DictionaryCategoryName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.City.DictionaryCityName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Landmark)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Landmark.DictionaryItemCode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TouristAttractionId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

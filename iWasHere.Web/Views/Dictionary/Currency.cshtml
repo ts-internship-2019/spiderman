@@ -6,14 +6,13 @@
 
 <h1>Currency</h1>
 
-@*@(Html.Kendo().Grid<Kendo.Mvc.Examples.Models.Customer>()
-        .Name("grid")
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyModel>()
+        .Name("Currency")
         .Columns(columns =>
         {
-            columns.Bound(c => c.ContactName).Width(140);
-            columns.Bound(c => c.ContactTitle).Width(190);
-            columns.Bound(c => c.CompanyName);
-            columns.Bound(c => c.Country).Width(110);
+            columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id");
+            columns.Bound(c => c.DictionaryItemCode).Width(190).Title("Code");
+            columns.Bound(c => c.DictionaryItemName).Width(190).Title("Nume");
         })
         .HtmlAttributes(new { style = "height: 380px;" })
         .Scrollable()
@@ -25,6 +24,7 @@
             .ButtonCount(5))
         .DataSource(dataSource => dataSource
             .Ajax()
-            .Read(read => read.Action("Customers_Read", "Grid"))
+            .Read(read => read.Action("DictionaryCurrency", "Home"))
+            .PageSize(20)
         )
-)*@
+)
