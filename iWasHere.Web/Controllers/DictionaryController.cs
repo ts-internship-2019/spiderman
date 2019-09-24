@@ -74,9 +74,9 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public JsonResult CountyData()
+        public JsonResult CountyData(string text)
         {
-            var JsonVariable = _dictionaryService.GetDictionaryCountiesCB();
+            var JsonVariable = _dictionaryService.GetDictionaryCountiesCB(text);
 
             return Json(JsonVariable);
 
@@ -309,7 +309,10 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.Filter_GetCountries(text));
         }
 
-    
+        public ActionResult FilterGetCounties(string text)
+        {
+            return Json(_dictionaryService.Filter_GetCounties(text));
+        }
 
         public ActionResult Process_DestroyCounty([DataSourceRequest] DataSourceRequest request, DictionaryCountyTypeModel dictionaryCountyType)
         {
