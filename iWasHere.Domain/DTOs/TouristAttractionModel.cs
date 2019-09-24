@@ -13,6 +13,8 @@ namespace iWasHere.Domain.DTOs
         public string Longtitudine { get; set; }
         public string Latitudine { get; set; }
 
+        public IEnumerable<string> Image { get; set; }
+
         public string  CategoryName { get; set; }
         public string  CityName { get; set; }
         public string  LandmarkTypeName { get; set; }

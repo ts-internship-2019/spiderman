@@ -31,6 +31,7 @@ namespace iWasHere.Domain.Service
                 .Include(a => a.City)
                 .Include(a => a.Category)
                 .Include(a=> a.Landmark)
+                .Include(a => a.Image)
                 .Where(categ => categ.TouristAttractionId == id)
                 .Select(a=> new TouristAttractionModel() {
                     CategoryName = a.Category.DictionaryCategoryName,
@@ -39,14 +40,13 @@ namespace iWasHere.Domain.Service
                     Latitudine = a.Latitudine,
                     Longtitudine = a.Longtitudine,
                     Description = a.Description,
+                    Image = a.Image.Select(b => b.Path),
                     Name = a.Name
                 });
             List<TouristAttractionModel> categoryListModel = categoryName.Take(1).ToList();
-
-          
-
+                
             return categoryListModel;
-
+                
             //return touristAttraction;
         }
     }
