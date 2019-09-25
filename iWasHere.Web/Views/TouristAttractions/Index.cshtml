@@ -57,10 +57,16 @@
                           columns.Bound(c => c.CategoryName).Width(200).Title("Nume categorie");
                           columns.Bound(c => c.CityName).Width(150).Title("Nume oras");
                           columns.Bound(c => c.LandmarkName).Width(200).Title("Nume landmark");
-                          columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
-                          columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
+                          //columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
+                          //columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
                           columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>")
                           .Width(150);
+                          columns.Template("<input type=\"button\" value=\"Save on Pc\" onclick='SaveDownload(#=TouristAttractionId#)' />").Width(150);
+                          //columns.Command(command =>
+                          //{
+                          //    Html.ActionLink("Save Data", "SaveDataInWord", new { example = "TestID2" });
+                          //    command.Edit().Text("Save");
+                          //}).Width(150);
                           columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttraction/Details?Id=#=TouristAttractionId# '> Detalii </a>")
                           .Width(150);
                           columns.Command(command =>
@@ -89,36 +95,41 @@
         )
         )
     </div>
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
-        $(iconFilterReset).click(function () {
-            document.getElementById('TxtFilterName').value = "";
-            $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
-            $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
-        });
-
-        $(iconFilter).click(function () {
-            $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
-            $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
-        });
-    });
-    function FilterByName() {
-        return {
-            txtFilterName: document.getElementById("TxtFilterName").value
-        }
-    }
-    function ErrorHandler(e) {
-        if (e.errors) {
-            var message = "Errors:\n";
-            $.each(e.errors, function (key, value) {
-                if ('errors' in value) {
-                    $.each(value.errors, function () {
-                        message += this + "\n";
-                    });
-                }
+            $(iconFilterReset).click(function () {
+                document.getElementById('TxtFilterName').value = "";
+                $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
+                $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
             });
-            alert(message);
+
+            $(iconFilter).click(function () {
+                $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
+                $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
+            });
+        });
+        function FilterByName() {
+            return {
+                txtFilterName: document.getElementById("TxtFilterName").value
+            }
         }
-    }
+        function ErrorHandler(e) {
+            if (e.errors) {
+                var message = "Errors:\n";
+                $.each(e.errors, function (key, value) {
+                    if ('errors' in value) {
+                        $.each(value.errors, function () {
+                            message += this + "\n";
+                        });
+                    }
+                });
+                alert(message);
+            }
+        }
+        function SaveDownload(TouristAttractionId) {
+            debugger;
+            window.location.href = "@Url.Action("SaveDataInWord", "TouristAttractions")?Id=" + TouristAttractionId;
+        }
+        
 </script>

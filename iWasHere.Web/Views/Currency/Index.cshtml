@@ -42,42 +42,42 @@
                             .Icon("filter-clear")
                             .Content("Clear Filter"))
         </p>
-        </div>
-        @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyModel>()
-                      .Name("GridCurrency")
-                      .Columns(columns =>
+    </div>
+    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyModel>()
+                  .Name("GridCurrency")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id").Hidden();
+                      columns.Bound(c => c.DictionaryItemCode).Width(300).Title("Code");
+                      columns.Bound(c => c.DictionaryItemName).Width(300).Title("Nume");
+                      //columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' method='delete'/> ").Width(75);
+                      //columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' method='delete' /> ").Width(75);
+                      columns.Template("<a class='k-button' style =\"color: blue\" href='/Currency/Add?id=#=DictionaryItemId# '> Editeaza </a>").Width(150);
+                      columns.Command(command =>
                       {
-                          columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id").Hidden();
-                          columns.Bound(c => c.DictionaryItemCode).Width(300).Title("Code");
-                          columns.Bound(c => c.DictionaryItemName).Width(300).Title("Nume");
-                          //columns.Template(" <input type='button' class='k-button info' name='info' value='Editeaza' method='delete'/> ").Width(75);
-                          //columns.Template(" <input type='button' class='k-button info' name='info' value='Sterge' method='delete' /> ").Width(75);
-                          columns.Template("<a class='k-button' style =\"color: blue\" href='/Currency/Add?id=#=DictionaryItemId# '> Editeaza </a>").Width(150);
-                          columns.Command(command =>
-                          {
-                              command.Destroy().Text("Sterge");
-                              //.Template(" <p style=\" color: red; font-family: \"Times New Roman\";\">Sterge</p>");
-                              //.Template(" <a class = 'ceva' href='' style=\"color: red;\">Delete</a> ");
-                          }).HtmlAttributes(new { style = "width: 60%;color: red;font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";" });
+                          command.Destroy().Text("Sterge");
+                          //.Template(" <p style=\" color: red; font-family: \"Times New Roman\";\">Sterge</p>");
+                          //.Template(" <a class = 'ceva' href='' style=\"color: red;\">Delete</a> ");
+                      }).HtmlAttributes(new { style = "width: 60%;color: red;font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";" });
 
-                      })
-                      .HtmlAttributes(new { style = "height: 500px; width: 92%;" })
-                      .Scrollable()
-                      .Sortable()
-                      .Pageable(pageable => pageable
-                          .Refresh(true)
-                          .PageSizes(true)
-                          .ButtonCount(1))
-                      .DataSource(dataSource => dataSource
-                          .Ajax()
-                          .Read(read => read.Action("DictionaryCurrency", "Currency").Data("FilterByName"))
-                          .PageSize(20)
-                          .Destroy(update => update.Action("DestroyCurrency", "Currency"))
-                          .Events(events => events.Error("ErrorHandler"))
-                          .Model(model => model.Id(p => p.DictionaryItemId))
-                          .Update(update => update.Action("UpdateCurrency", "Currency"))
-        )
-        )
+                  })
+                  .HtmlAttributes(new { style = "height: 500px; width: 92%;" })
+                  .Scrollable()
+                  .Sortable()
+                  .Pageable(pageable => pageable
+                      .Refresh(true)
+                      .PageSizes(true)
+                      .ButtonCount(1))
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .Read(read => read.Action("DictionaryCurrency", "Currency").Data("FilterByName"))
+                      .PageSize(20)
+                      .Destroy(update => update.Action("DestroyCurrency", "Currency"))
+                      .Events(events => events.Error("ErrorHandler"))
+                      .Model(model => model.Id(p => p.DictionaryItemId))
+                      .Update(update => update.Action("UpdateCurrency", "Currency"))
+    )
+    )
 </div>
 
 <style>

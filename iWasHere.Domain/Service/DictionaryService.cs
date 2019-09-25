@@ -4,18 +4,26 @@ using iWasHere.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Hosting;
+using A = DocumentFormat.OpenXml.Drawing;
+using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
+using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 
 namespace iWasHere.Domain.Service
 {
     public class DictionaryService
     {
         private readonly DatabaseContext _dbContext;
-        public DictionaryService(DatabaseContext databaseContext)
+        private IHostingEnvironment _environment;
+        public DictionaryService(DatabaseContext databaseContext, IHostingEnvironment environment)
         {
             _dbContext = databaseContext;
+            _environment = environment;
         }
 
         public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkTypeModels()
@@ -294,7 +302,7 @@ namespace iWasHere.Domain.Service
             return dictionaryLCountries;
         }
 
-   
+
         public DictionaryCityModel GetCity(int id)
         {
 
@@ -901,7 +909,7 @@ namespace iWasHere.Domain.Service
         {
             if (!string.IsNullOrEmpty(txtFilterName))
             {
-                List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction.Include(a=>a.Category).Include(a=>a.City).Include(a=>a.Landmark).
+                List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction.Include(a => a.Category).Include(a => a.City).Include(a => a.Landmark).
                     Where(a => a.Name.Contains(txtFilterName))
                     //Where(a => a.DictionaryCurrencyName == txtFilterName)
                     .Select(a => new TouristAttractionsDTO()
@@ -935,7 +943,7 @@ namespace iWasHere.Domain.Service
         }
         public TouristAttraction GetTouristAttractions(int id)
         {
-            return _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == id).FirstOrDefault();
+            return _dbContext.TouristAttraction.Include(a => a.Category).Include(a => a.City).Include(a => a.Landmark).Where(a => a.TouristAttractionId == id).FirstOrDefault();
         }
         public int AddTouristAttractions(TouristAttraction touristAttraction)
         {
@@ -1049,7 +1057,7 @@ namespace iWasHere.Domain.Service
             }).ToList();
             return imageList;
         }
-        
+
         public List<DictionaryLandmarkType> GetTouristAttractionsLandmark(string text)
         {
             if (!string.IsNullOrEmpty(text))
@@ -1067,13 +1075,13 @@ namespace iWasHere.Domain.Service
             {
                 List<DictionaryLandmarkType> dL = _dbContext.DictionaryLandmarkType.Where(p => p.DictionaryItemName.Contains(text))
                     .Select(a => new DictionaryLandmarkType()
-                {
-                    DictionaryItemId = a.DictionaryItemId,
-                    DictionaryItemCode = a.DictionaryItemCode,
-                    DictionaryItemName = a.DictionaryItemName,
-                    Description = a.Description,
-                    TouristAttraction = a.TouristAttraction
-                }).ToList();
+                    {
+                        DictionaryItemId = a.DictionaryItemId,
+                        DictionaryItemCode = a.DictionaryItemCode,
+                        DictionaryItemName = a.DictionaryItemName,
+                        Description = a.Description,
+                        TouristAttraction = a.TouristAttraction
+                    }).ToList();
                 return dL;
             }
         }
@@ -1104,6 +1112,162 @@ namespace iWasHere.Domain.Service
                 return null;
             }
         }
+        public DictionaryCounty GetCounty(int id)
+        {
+            DictionaryCounty dictionaryCounty = _dbContext.DictionaryCounty.Include(a => a.DictionaryCountry).Where(a => a.DictionaryCountyId == id).FirstOrDefault();
+            return dictionaryCounty;
+        }
+
+        public Stream SaveDataInWord(TouristAttraction tA)
+        {
+            string photoWord = null;
+            List<ReviewModel> reviewModel = new List<ReviewModel>();
+            if (_dbContext.Review.Where(a => a.TouristAttractionId == tA.TouristAttractionId).Count() > 0)
+            {
+                reviewModel = _dbContext.Review.Where(a => a.TouristAttractionId == tA.TouristAttractionId).Select(a => new ReviewModel()
+                {
+                    ReviewId = a.ReviewId,
+                    UserName = a.UserName,
+                    Comment = a.Comment,
+                    Rating = a.Rating
+                }).ToList();
+            }
+            if (_dbContext.Image.Where(a => a.TouristAttractionId == tA.TouristAttractionId).Count() > 0)
+            {
+                Image photo = _dbContext.Image.First(a => a.TouristAttractionId == tA.TouristAttractionId);
+                photoWord = photo.Path;
+            }
+            var stream = new MemoryStream();
+
+            using (WordprocessingDocument doc = WordprocessingDocument.Create(stream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true))
+
+            {
+                MainDocumentPart mainPart = doc.AddMainDocumentPart();
+
+                new DocumentFormat.OpenXml.Wordprocessing.Document(new Body()).Save(mainPart);
+                if (photoWord != null)
+                {
+                    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+
+                    using (FileStream imgstream = new FileStream(_environment.WebRootPath + "\\images\\" + photoWord.Substring(1), FileMode.Open))
+                    //using (FileStream imgstream = new FileStream("images/" + photoWord.Substring(1), FileMode.Open))
+                    {
+                        imagePart.FeedData(imgstream);
+                    }
+                    AddImageToBody(doc, mainPart.GetIdOfPart(imagePart));
+                }
+                Body body = mainPart.Document.Body;
+                body.Append(
+                      new Body(
+                      new Paragraph(
+                        new Run(
+                          new Text("Numele obiectivului: " + tA.Name))),
+                      new Paragraph(
+                        new Run(
+                          new Text("\n Descriere: " + tA.Description))),
+
+                      new Paragraph(
+                        new Run(
+                              new Text("\n Orasul: " + tA.City.DictionaryCityName))),
+
+                      new Paragraph(
+                        new Run(
+                              new Text("\n Judetul: " + tA.City.DictionaryCounty.DictionaryCountyName))),
+                      new Paragraph(
+                        new Run(
+                              new Text("\n Tara: " + tA.City.DictionaryCounty.DictionaryCountry.DictionaryCountryName)))
+                            ));
+                int sum = 0;
+                if (reviewModel.Count() > 0)
+                {
+                    foreach (ReviewModel reviewM in reviewModel)
+                    {
+                        sum = sum + reviewM.Rating;
+                        body.Append(new Paragraph(
+                            new Run(
+                              new Text("Comentarii: " + reviewM.Comment))));
+                    }
+                    body.Append(new Paragraph(
+                           new Run(
+                             new Text("Medie rating: " + sum / reviewModel.Count()))));
+                }
+                mainPart.Document.Save();
+                doc.Save();
+                doc.Close();
+            }
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
+        }
+        private static void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId)
+        {
+            // Define the reference of the image.
+            var element =
+                 new Drawing(
+                     new DW.Inline(
+                         new DW.Extent() { Cx = 990000L, Cy = 792000L },
+                         new DW.EffectExtent()
+                         {
+                             LeftEdge = 0L,
+                             TopEdge = 0L,
+                             RightEdge = 0L,
+                             BottomEdge = 0L
+                         },
+                         new DW.DocProperties()
+                         {
+                             Id = (UInt32Value)1U,
+                             Name = "Picture 1"
+                         },
+                         new DW.NonVisualGraphicFrameDrawingProperties(
+                             new A.GraphicFrameLocks() { NoChangeAspect = true }),
+                         new A.Graphic(
+                             new A.GraphicData(
+                                 new PIC.Picture(
+                                     new PIC.NonVisualPictureProperties(
+                                         new PIC.NonVisualDrawingProperties()
+                                         {
+                                             Id = (UInt32Value)0U,
+                                             Name = "New Bitmap Image.jpg"
+                                         },
+                                         new PIC.NonVisualPictureDrawingProperties()),
+                                     new PIC.BlipFill(
+                                         new A.Blip(
+                                             new A.BlipExtensionList(
+                                                 new A.BlipExtension()
+                                                 {
+                                                     Uri =
+                                                        "{28A0092B-C50C-407E-A947-70E740481C1C}"
+                                                 })
+                                         )
+                                         {
+                                             Embed = relationshipId,
+                                             CompressionState =
+                                             A.BlipCompressionValues.Print
+                                         },
+                                         new A.Stretch(
+                                             new A.FillRectangle())),
+                                     new PIC.ShapeProperties(
+                                         new A.Transform2D(
+                                             new A.Offset() { X = 0L, Y = 0L },
+                                             new A.Extents() { Cx = 990000L, Cy = 792000L }),
+                                         new A.PresetGeometry(
+                                             new A.AdjustValueList()
+                                         )
+                                         { Preset = A.ShapeTypeValues.Rectangle }))
+                             )
+                             { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
+                     )
+                     {
+                         DistanceFromTop = (UInt32Value)0U,
+                         DistanceFromBottom = (UInt32Value)0U,
+                         DistanceFromLeft = (UInt32Value)0U,
+                         DistanceFromRight = (UInt32Value)0U,
+                         EditId = "50D07946"
+                     });
+
+            // Append the reference to body, the element should be in a Run.
+            wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
+        }
+
     }
 
 }

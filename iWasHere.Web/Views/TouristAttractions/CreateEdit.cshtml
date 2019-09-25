@@ -1,4 +1,5 @@
 ﻿@model iWasHere.Domain.DTOs.TouristAttractionsDTOEdit
+@Html.ValidationSummary(true)
 @Html.HiddenFor(a => a.TouristAttractionId)
 @{
     ViewData["Title"] = "CreateEdit";
@@ -8,23 +9,11 @@
 <div>
     <h1 class="title" align="center">Adauga obiectiv turistic</h1>
     <form action="Save" method="post" enctype="multipart/form-data">
-
-
         <input type="hidden" asp-for="TouristAttractionId" /><br />
-        <h6>Nume</h6>
-        <input type="text" asp-for="Name" /><br />
-        <h6>Descriere</h6>
-        <input type="text" asp-for="Description" /><br /><br />
-
-        <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
-        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
-
-        <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
-
-
-
+        <h6>Nume*</h6>
+        <input type="text" asp-for="Name" id="txtName" /><br /><br />
         @(Html.Kendo().ComboBoxFor(model => model.CategoryId)
-                         .Placeholder("Tip atractie")
+                         .Placeholder("Tip atractie*")
                          .DataTextField("Name")
                          .DataValueField("Id")
                          .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
@@ -40,7 +29,7 @@
         <br />
         <br />
         @(Html.Kendo().ComboBoxFor(model => model.LandmarkId)
-                         .Placeholder("Landmark")
+                         .Placeholder("Landmark*")
                          .DataTextField("DictionaryItemName")
                          .DataValueField("DictionaryItemId")
                          .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
@@ -56,7 +45,7 @@
         <br />
         <br />
         @(Html.Kendo().ComboBoxFor(model => model.CityId)
-                         .Placeholder("Alege oras")
+                         .Placeholder("Alege oras*")
                          .DataTextField("DictionaryCityName")
                          .DataValueField("DictionaryCityId")
                          .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
@@ -69,10 +58,16 @@
                              });
                          })
         )
-        <h6>Latitudine</h6>
+        <br /><h6>Latitudine*</h6>
         <input type="text" asp-for="Latitudine" /><br />
-        <h6>Longitudine</h6>
-        <input type="text" asp-for="Longtitudine" /><br /><br />
+        <h6>Longitudine*</h6>
+        <input type="text" asp-for="Longtitudine" /><br />
+        <h6>Descriere*</h6>
+        <input type="text" asp-for="Description" /><br /><br />
+        <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
+        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
+        <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
+
         <br />
         <br />
         <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
@@ -92,6 +87,7 @@
             <button class="btn btn-primary btn-lg disable"
                     type="submit"
                     name="submitValue"
+                    id="saveNew"
                     value="saveNew"
                     style="margin-right: 2em;margin-top: 2em;float: right;">
                 Salveaza si nou
@@ -99,6 +95,7 @@
         <button class="btn btn-success btn-lg"
                 type="submit"
                 name="submitValue"
+                id="save"
                 value="save"
                 style="margin-right: 2em;margin-top: 2em;float: right;">
             Salveaza
@@ -181,5 +178,18 @@
             myNode.removeChild(node.firstChild);
         }
     }
-
+    //$(document).ready(function () {
+    //    $("#save").click(function () {
+    //        if ($("#txtName").val() == "") {
+    //            alert("Completeaza campul \"Nume\"");
+    //        }
+    //    });
+    //});
+    //$(document).ready(function () {
+    //    $("#saveNew").click(function () {
+    //        if ($("#txtName").val() == "") {
+    //            alert("Completeaza campul \"Nume\"");
+    //        }
+    //    });
+    //});
 </script>      

@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using iWasHere.Domain.Model;
 using iWasHere.Domain.Models;
 using System.IO;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using iWasHere.Domain.DTOs;
 using Microsoft.AspNetCore.Hosting;
 using iWasHere.Domain.Service;
 using Kendo.Mvc.UI;
 using Kendo.Mvc.Extensions;
+using System.Text;
+using System.Diagnostics;
+using System.Xml;
+using System.Reflection.Metadata;
 
 namespace iWasHere.Controllers
 {
     public class TouristAttractionsController : Controller
     {
         private readonly IHostingEnvironment hostingEnvironment;
-     
+
         private readonly DictionaryService _dictionaryService;
         private readonly DatabaseContext _context;
 
@@ -33,14 +32,14 @@ namespace iWasHere.Controllers
         {
             return View();
         }
-        public TouristAttractionsController(DatabaseContext context,IHostingEnvironment hostingEnvironmentt,DictionaryService service)
+        public TouristAttractionsController(DatabaseContext context, IHostingEnvironment hostingEnvironmentt, DictionaryService service)
         {
             hostingEnvironment = hostingEnvironmentt;
             _context = context;
             _dictionaryService = service;
         }
 
-      
+
         public IActionResult TouristAttractionsGrid([DataSourceRequest] DataSourceRequest request, string txtFilterName)
         {
             List<TouristAttractionsDTO> myList = _dictionaryService.GetTouristAttractionsModel(request.Page, request.PageSize, txtFilterName);
@@ -108,12 +107,120 @@ namespace iWasHere.Controllers
             {
                 if (submitValue == "save")
                 {
+                    string errorMessage = "";
+                    string errorMessageNumber = "";
+                    string errorMessageLength = "";
+                    bool statusError = false;
                     TouristAttraction touristAttraction = new TouristAttraction();
+                    if (String.IsNullOrEmpty(tA.Name) || string.IsNullOrWhiteSpace(tA.Name))
+                    {
+                        errorMessage += "\"Nume\"";
+                        statusError = true;
+                    }
+                    else if (!(tA.Name.Length < 22))
+                    {
+                        errorMessageLength += "\"Nume(22)\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.Name = tA.Name;
+                    if (String.IsNullOrEmpty(tA.Description) || string.IsNullOrWhiteSpace(tA.Description))
+                    {
+                        errorMessage += "\"Descriere\"";
+                        statusError = true;
+                    }
+                    else if (!(tA.Description.Length < 220))
+                    {
+                        errorMessageLength += "\"Descriere(220)\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.Description = tA.Description;
+                    if (tA.CategoryId == 0)
+                    {
+                        errorMessage += "\"Categorie\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.CategoryId = tA.CategoryId;
+                    if (tA.LandmarkId == 0)
+                    {
+                        errorMessage += "\"Landmark\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.LandmarkId = tA.LandmarkId;
+                    if (tA.CityId == 0)
+                    {
+                        errorMessage += "\"Oras\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.CityId = tA.CityId;
+
+                    if (String.IsNullOrEmpty(tA.Longtitudine) || string.IsNullOrWhiteSpace(tA.Longtitudine))
+                    {
+                        errorMessage += "\"Longitudine\"";
+                        statusError = true;
+                    }
+                    else if (!float.TryParse(tA.Longtitudine, out _))
+                    {
+                        errorMessageNumber += "\"Longitudine\"";
+                        statusError = true;
+                    }
+                    else if (!(tA.Longtitudine.Length < 22))
+                    {
+                        errorMessageLength += "\"Longitutine(22)\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.Longtitudine = tA.Longtitudine;
+
+                    if (String.IsNullOrEmpty(tA.Latitudine) || string.IsNullOrWhiteSpace(tA.Latitudine))
+                    {
+                        errorMessage += "\"Latitudine\"";
+                        statusError = true;
+                    }
+                    else if (!float.TryParse(tA.Latitudine, out _))
+                    {
+                        errorMessageNumber += "\"Latitudine\"";
+                        statusError = true;
+                    }
+                    else if (!(tA.Latitudine.Length < 22))
+                    {
+                        errorMessageLength += "\"Latitudine(22)\"";
+                        statusError = true;
+                    }
+                    else
+                        touristAttraction.Latitudine = tA.Latitudine;
+
+                    if (statusError == true)
+                    {
+                        if (!errorMessageLength.Equals(""))
+                        {
+                            errorMessageLength = errorMessageLength.Replace("\"\"", "\", \"");
+                            errorMessageLength = "Va rugam respectati dimensiunea la " + errorMessageLength + ".";
+                        }
+                        if (!errorMessage.Equals(""))
+                        {
+                            errorMessage = errorMessage.Replace("\"\"", "\", \"");
+                            errorMessage = "Va rugam completati " + errorMessage + ".";
+                        }
+                        if (!errorMessageNumber.Equals(""))
+                        {
+                            errorMessageNumber = errorMessageNumber.Replace("\"\"", "\", \"");
+                            errorMessageNumber = "Va rugam completati cu valori numerice " + errorMessageNumber + ".";
+                        }
+                        ModelState.AddModelError(string.Empty, errorMessage);
+                        ModelState.AddModelError(string.Empty, errorMessageNumber);
+                        ModelState.AddModelError(string.Empty, errorMessageLength);
+                        return View("CreateEdit");
+                    }
+
                     touristAttraction.TouristAttractionId = tA.TouristAttractionId;
-                    touristAttraction.Name = tA.Name;
-                    touristAttraction.Description = tA.Description;
-                    touristAttraction.Longtitudine = tA.Longtitudine;
-                    touristAttraction.Latitudine = tA.Latitudine;
+                    //touristAttraction.Description = tA.Description;
+                    //touristAttraction.Longtitudine = tA.Longtitudine;
+                    //touristAttraction.Latitudine = tA.Latitudine;
                     touristAttraction.CityId = tA.CityId;
                     touristAttraction.LandmarkId = tA.LandmarkId;
                     touristAttraction.CategoryId = tA.CategoryId;
@@ -138,8 +245,8 @@ namespace iWasHere.Controllers
                     touristAttraction.LandmarkId = tA.LandmarkId;
                     touristAttraction.CategoryId = tA.CategoryId;
 
-                    int touristAttractionId=_dictionaryService.AddTouristAttractions(touristAttraction);
-                    AddImg(photos,touristAttractionId);
+                    int touristAttractionId = _dictionaryService.AddTouristAttractions(touristAttraction);
+                    AddImg(photos, touristAttractionId);
                     ModelState.Clear();
                     return View("CreateEdit");
                 }
@@ -167,6 +274,10 @@ namespace iWasHere.Controllers
                 }
             }
 
+        }
+        public bool IsNumeric(string input)
+        {
+            return int.TryParse(input, out int test);
         }
         //[HttpGet]
         //public ActionResult Image()
@@ -204,7 +315,7 @@ namespace iWasHere.Controllers
         //        };
 
         //        _dictionaryService.AddImage(img);
-                
+
         //    }
 
         //    return View();
@@ -215,37 +326,37 @@ namespace iWasHere.Controllers
             return View();
         }
 
-       
+
         [HttpPost]
         public IActionResult AddImages(IFormFile[] photos)
         {
-          
-          
-                foreach (IFormFile photo in photos)
-                {
-                    string uniqueFileName = null;
-                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                 
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    // Use CopyTo() method provided by IFormFile interface to
-                    // copy the file to wwwroot/images folder
-                   photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                    
 
-                    Image img = new Image
-                    {
-                        TouristAttractionId = 2,
-                        Path = uniqueFileName
-                    };
-                    _dictionaryService.AddImage(img);
-                }
-            
-           
+
+            foreach (IFormFile photo in photos)
+            {
+                string uniqueFileName = null;
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                // Use CopyTo() method provided by IFormFile interface to
+                // copy the file to wwwroot/images folder
+                photo.CopyTo(new FileStream(filePath, FileMode.Create));
+
+
+                Image img = new Image
+                {
+                    TouristAttractionId = 2,
+                    Path = uniqueFileName
+                };
+                _dictionaryService.AddImage(img);
+            }
+
+
             return View();
         }
-      
-         public void AddImg(IFormFile[] photos,int id)
+
+        public void AddImg(IFormFile[] photos, int id)
         {
 
 
@@ -288,6 +399,15 @@ namespace iWasHere.Controllers
 
             return Json(ModelState.ToDataSourceResult());
         }
+        public IActionResult SaveDataInWord(int Id)
+        {
+            TouristAttraction touristAttraction = _dictionaryService.GetTouristAttractions(Id);
+            touristAttraction.City.DictionaryCounty = _dictionaryService.GetCounty(touristAttraction.City.DictionaryCountyId);
+
+            Stream stream = _dictionaryService.SaveDataInWord(touristAttraction);
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "TouristAttraction.docx");
+        }
     }
-    
+
 }
