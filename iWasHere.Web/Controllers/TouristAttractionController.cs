@@ -58,7 +58,7 @@ namespace iWasHere.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddReview(ReviewModel model, string btn, int Id)
+        public IActionResult AddReview(TouristAttractionMapsModel model, string btn, int Id)
         {
             if (model != null)
             {

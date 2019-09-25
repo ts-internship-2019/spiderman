@@ -819,18 +819,19 @@ namespace iWasHere.Domain.Service
             return scheduleTouristAttractionModel;
         }
 
-        public string InsertReview(ReviewModel model)
+        public string InsertReview(TouristAttractionMapsModel model)
         {
             _dbContext.Review.Add(new Review
             {
 
-                UserName = model.User,
-                Rating = model.RatingValue,
-                Comment = model.Comment,
-                Title = model.Title,
-                TouristAttractionId = model.TouristAttractionId,
+                UserName = model.Review.User,
+                Rating = model.Review.RatingValue,
+                Comment = model.Review.Comment,
+                Title = model.Review.Title,
+                TouristAttractionId = model.Review.TouristAttractionId,
             });
             _dbContext.SaveChanges();
+
             return null;
 
         }
@@ -848,6 +849,7 @@ namespace iWasHere.Domain.Service
             return dictionaryCountyTypeModel;
 
         }
+
         public string UpdateCategory(DictionaryCategoryTypeModel dictionaryCategoryTypeModel)
         {
             try
