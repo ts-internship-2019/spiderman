@@ -16,6 +16,7 @@
 
 
 @*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
     body {
@@ -70,6 +71,7 @@
         border-radius: 12px;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
     }
+
     .carousel {
         width: 300px;
     }
@@ -80,10 +82,10 @@
         height: 500px;
         width: 600px;
     }
-    #carouselExampleControls{
-        width:600px;
-        height:500px;
-       
+
+    #carouselExampleControls {
+        width: 600px;
+        height: 500px;
     }
 </style>
 
@@ -181,51 +183,60 @@
     }
 </style>
 
+<br />
+<hr />
 
+<h3> Adauga un comentariu </h3>
 
 @using (Html.BeginForm("AddReview", "TouristAttraction", FormMethod.Post))
 {
 
-
-
     @Html.HiddenFor(a => a.TouristAttractionId)
 
     <div>
-            <h6> UserName </h6>
-            <input type="text" asp-for="Review.User" id="user" />
-        </div>
-        <div>
-            <h6> Titlu Comentariu</h6>
-            <input type="text" asp-for="Review.Title" id="title" />
-        </div>
-
-        <div>
-            <h6> Comentariu </h6>
-            <input type="text" asp-for="Review.Comment" id="comment" />
-        </div>
-
-    <input type="text" hidden asp-for="TouristAttractionId" />
-
-    <div class="rating">
-        <span><input type="radio" name="review.RatingValue" id="str1" value="1"><label for="str1"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str2" value="2"><label for="str2"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str3" value="3"><label for="str3"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str4" value="4"><label for="str4"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str5" value="5"><label for="str5"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str6" value="6"><label for="str6"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str7" value="7"><label for="str7"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str8" value="8"><label for="str8"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str9" value="9"><label for="str9"></label></span>
-        <span><input type="radio" name="review.RatingValue" id="str10" value="10"><label for="str10"></label></span>
-
+        <label><b>Utilizator anonim</b>&emsp;&emsp;&emsp;&emsp;</label>
+        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
+        <label id="lblCostTicket" style="display:none"><b>Utilizator anonim&emsp;</b></label>
+        <input id="inputCostTicket" type="text" style="display:none" />
     </div>
-
 
     <div>
-        <button class="k-button k-primary" style="margin-top: 2em" name="btn" value="save">Salveaza</button>
-
-        <button class="k-button k-primary" style="margin-top: 2em" name="btn" value="cancel">Anuleaza</button>
+        <h6> UserName </h6>
+        <input type="text" asp-for="Review.User" id="user" />
     </div>
+
+    <div>
+        <h6> Titlu Comentariu</h6>
+        <input type="text" asp-for="Review.Title" id="title" />
+    </div>
+    <div>
+        <h6> Comentariu </h6>
+        <input type="text" asp-for="Review.Comment" id="comment" />
+    </div>
+
+    //<input type="text" hidden asp-for="Review.TouristAttractionId" />
+    <br />
+    <h6> Rating </h6>
+
+    <div class="rate">
+        <input type="radio" id="str9" name="Review.RatingValue" value="9" />        <label for="str9" title="10 stele">9 stars</label>
+        <input type="radio" id="str8" name="Review.RatingValue" value="8" />        <label for="str8" title="9 stele">8 stars</label>
+        <input type="radio" id="str7" name="Review.RatingValue" value="7" />        <label for="str7" title="8 stele">7 stars</label>
+        <input type="radio" id="str6" name="Review.RatingValue" value="6" />        <label for="str6" title="7 stele">6 star</label>
+        <input type="radio" id="str5" name="Review.RatingValue" value="5" />        <label for="str5" title="6 stele">5 stars</label>
+        <input type="radio" id="str4" name="Review.RatingValue" value="4" />        <label for="str4" title="5 stele">4 stars</label>
+        <input type="radio" id="str3" name="Review.RatingValue" value="3" />        <label for="str3" title="4 stele">3 stars</label>
+        <input type="radio" id="str2" name="Review.RatingValue" value="2" />        <label for="str2" title="3 stele">2 stars</label>
+        <input type="radio" id="str1" name="Review.RatingValue" value="1" />        <label for="str1" title="2 stele">1 star</label>
+        <input type="radio" id="str0" name="Review.RatingValue" value="0" />        <label for="str0" title="1 stea">0 stars</label>
+    </div>
+    <div>
+        <button class="k-button k-primary" style="margin-top: 2em" name="submit" value="save">Salveaza</button>
+        <button class="k-button k-primary" style="margin-top: 2em" name="submit" value="cancel">Anuleaza</button>
+    </div>
+    <br />
+    <hr />
+    <h3> Comentarii asociate obiectivului </h3>
     <div>
         @foreach (var review in Model.Reviews)
         {
@@ -234,7 +245,17 @@
                 <b>Nume utilizator: </b> @review.User<br />
                 <b>Titlu Comentariu: </b>@review.Title<br />
                 <b>Comentariu: </b>@review.Comment<br />
-                <b>Rating: </b>@review.RatingValue/10<br />
+                <b>Nota </b>
+                @for (int i = 0; i < @review.RatingValue; i++)
+                {
+                    <span class="fa fa-star checked"></span>
+                }
+                @for (int i = 0; i < 10 - @review.RatingValue; i++)
+                {
+                    <span class="fa fa-star"></span>
+                }
+
+                <br />
             </span>
             <br />
         }
@@ -252,16 +273,65 @@
             });
             $('input:radio').change();
         });
+
+        $(':radio').change(function () {
+            console.log('New star rating: ' + this.value);
+        });
     </script>
 
+<style>
 
 
+    .checked {
+        color: orange;
+    }
+
+
+    .rate {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+    }
+
+        .rate:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rate:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+            .rate:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+</style>
 
 }
 
-
-
-<div id="objective-images">
 
 
 <script>
@@ -307,7 +377,7 @@ window.onload=function(){update()}
                              image.classList.add("w-100");
                             image.src = "/images/" + img;
                             activeDiv.append(image);
-          
+
                             $('#objective-images').append(activeDiv);
                         } else {
                             activeDiv.classList.add("carousel-item");
@@ -315,7 +385,7 @@ window.onload=function(){update()}
                             image.classList.add("w-100");
                             image.src = "/images/" + img;
                             activeDiv.append(image);
-          
+
                             $('#objective-images').append(activeDiv);
                         }
                     })

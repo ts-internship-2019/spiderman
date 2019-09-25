@@ -806,7 +806,7 @@ namespace iWasHere.Domain.Service
                    Longitude = a.Longtitudine,
                    Reviews = _dbContext.Review.Where(b => b.TouristAttractionId == Id).Select(x => new ReviewModel()
                    {
-                       RatingValue = x.Rating,
+                       RatingValue = x.Rating + 1,
                        Comment = x.Comment,
                        Title = x.Title,
                        User = x.UserName,
@@ -819,20 +819,28 @@ namespace iWasHere.Domain.Service
             return scheduleTouristAttractionModel;
         }
 
-        public string InsertReview(TouristAttractionMapsModel model)
+        public string InsertReview(ReviewModel model)
         {
-            _dbContext.Review.Add(new Review
+            try
             {
+                Review review = new Review();
+                review.UserId = "6492e4c6-bef2-4617-922e-bf54e5f4efe8";
+                review.UserName = model.User;
+                review.TouristAttractionId = model.TouristAttractionId;
+                review.Comment = model.Comment;
+                review.Rating = model.RatingValue;
+                review.Title = model.Title;
 
-                UserName = model.Review.User,
-                Rating = model.Review.RatingValue,
-                Comment = model.Review.Comment,
-                Title = model.Review.Title,
-                TouristAttractionId = model.Review.TouristAttractionId,
-            });
-            _dbContext.SaveChanges();
+                _dbContext.Review.Add(review);
+                _dbContext.SaveChanges();
 
-            return null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                return "nu a mers";
+            }
+
 
         }
 
