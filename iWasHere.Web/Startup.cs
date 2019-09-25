@@ -81,7 +81,7 @@ namespace iWasHere.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=touristattractions}/{action=Index}/{id?}");
+                    template: "{controller=home}/{action=Index}/{id?}");
             });
         }
 
