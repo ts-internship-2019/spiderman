@@ -320,6 +320,8 @@ namespace iWasHere.Domain.Service
             return dictionaryCity;
         }
 
+        
+
         public int TotalCity()
         {
             int i = _dbContext.DictionaryCity.Count();
@@ -1193,6 +1195,42 @@ namespace iWasHere.Domain.Service
             {
                 return "Trebuie sa completati campurile";
             }
+        }
+            public List<TouristAttractionsDTO> GetTouristAttractionsByCountry(int id,int page, int pageSize)
+        {
+
+            List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction
+                .Include(a => a.City)
+                .ThenInclude(a => a.DictionaryCounty)
+                .ThenInclude(a => a.DictionaryCountry)
+                .Include(a => a.Category)
+                .Include(a => a.Landmark)
+                .Include(a => a.Image)
+                .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id)
+                .Select(a => new TouristAttractionsDTO()
+                {
+                 
+                        TouristAttractionId = a.TouristAttractionId,
+                        Name = a.Name,
+                        Description = a.Description,
+                        Longtitudine = a.Longtitudine,
+                        Latitudine = a.Latitudine,
+                        CityName = a.City.DictionaryCityName,
+                        LandmarkName = a.Landmark.DictionaryItemName,
+                        CategoryName = a.Category.DictionaryCategoryName,
+                         FirstPhotoPath= (a.Image.ToList())[0].Path,
+                }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                    return touristAttraction;
+                }
+
+        public int TouristAttractionsbyCountryCount(int id) {
+            return _dbContext.TouristAttraction.Include(a => a.City)
+                .ThenInclude(a => a.DictionaryCounty)
+                .ThenInclude(a => a.DictionaryCountry)
+                .Include(a => a.Category)
+                .Include(a => a.Landmark)
+                .Include(a => a.Image)
+                .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id).Count();
         }
 
     }

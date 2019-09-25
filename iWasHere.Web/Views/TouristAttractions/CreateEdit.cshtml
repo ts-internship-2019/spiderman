@@ -84,10 +84,10 @@
             <label for="newimg">Imagini obiectiv</label>
             <table>
                 @{int i = 0;
-                    foreach (string image in images)
-                    {
-                        if (i == 0)
+                    if (images != null) { foreach (string image in images)
                         {
+                            if (i == 0)
+                            {
                             @:<tr>
                             }
 
@@ -98,10 +98,10 @@
                                 i = 0;
                             @:</tr>
                         }
-                        ++i;
+                                ++i;
 
+                            } }
                     }
-                }
             </table>
             <label for="newimg">Noile imagini</label>
             <div class="gallery" id="gal"></div>
