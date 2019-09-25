@@ -46,9 +46,9 @@ namespace iWasHere.Controllers
             }
             else
             {
-                ReviewModel reviewModel = new ReviewModel();
+                TouristAttractionMapsModel reviewModel = new TouristAttractionMapsModel();
                 {
-                    reviewModel.TouristAttractionId = Convert.ToInt32(Id);
+                    reviewModel.review.TouristAttractionId= Convert.ToInt32(Id);
                 }
 
                 return View(reviewModel);
@@ -58,7 +58,7 @@ namespace iWasHere.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddReview(ReviewModel model, string btn, int Id)
+        public IActionResult AddReview(TouristAttractionMapsModel model, string btn, int Id)
         {
             if (model != null)
             {

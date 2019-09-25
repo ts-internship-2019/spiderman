@@ -803,16 +803,16 @@ namespace iWasHere.Domain.Service
          return scheduleTouristAttractionModel;
         }
 
-        public string InsertReview(ReviewModel reviewModel)
+        public string InsertReview(TouristAttractionMapsModel model)
         {
             try
             {
                 Review review = new Review();
-                review.UserName = reviewModel.User;
-                review.Rating = reviewModel.RatingValue;
-                review.Comment = reviewModel.Comment;
-                review.Title = reviewModel.Title;
-                review.TouristAttractionId = reviewModel.TouristAttractionId;
+                review.UserName = model.review.User;
+                review.Rating = model.review.RatingValue;
+                review.Comment = model.review.Comment;
+                review.Title = model.review.Title;
+                review.TouristAttractionId = model.review.TouristAttractionId;
                 _dbContext.Review.Add(review);
                 _dbContext.SaveChanges();
                 return null;
@@ -987,8 +987,6 @@ namespace iWasHere.Domain.Service
         }
 
 
-
-
         public List<DictionaryCity> GetTouristAttractionsCity(string text)
         {
             if ((string.IsNullOrEmpty(text) || String.IsNullOrWhiteSpace(text)))
@@ -1104,8 +1102,6 @@ namespace iWasHere.Domain.Service
         }
     
 
-
-
         public List<ReviewModel> GetReviews(int touristAttractionId)
         {
             List<ReviewModel> reviews = _dbContext.Review.Where(a => a.TouristAttractionId == touristAttractionId).Select(a => new ReviewModel()
@@ -1157,7 +1153,6 @@ namespace iWasHere.Domain.Service
 
             }
 
-
             message = null;
             return true;
         }
@@ -1166,10 +1161,8 @@ namespace iWasHere.Domain.Service
         {
             _dbContext.Add(image);
             _dbContext.SaveChanges();
+       }
 
-
-
-        }
         public DictionaryCategoryTypeModel getCategoryIdUpdate(int id)
         {
             DictionaryCategoryTypeModel dictionaryCountyTypeModel = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryId == id)
@@ -1197,9 +1190,6 @@ namespace iWasHere.Domain.Service
                 return "Trebuie sa completati campurile";
             }
         }
-
-
-
 
     }
 }

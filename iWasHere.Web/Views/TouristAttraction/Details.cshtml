@@ -14,34 +14,6 @@
 
 
 
-<script>
-    var map;
-    function initMap() {
-        debugger;
-        var Latitude = parseFloat($("#Latitude").val());
-        var Longitude = parseFloat($("#Longitude").val());
-
-        var location = { lat: Latitude, lng: Longitude };
-
-        var map = new google.maps.Map(
-            document.getElementById('map'), { zoom: 15, center: location });
-
-        var marker = new google.maps.Marker({ position: location, map: map });
-    }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVxnhhEH_WDFhXv_PWaJNXztPWKLBO81Y&callback=initMap" async defer></script>
-
-
-
-
-
-
-<style>
-    #map {
-        height: 400px;
-        width: 700px;
-    }
-</style>
 
 
 
@@ -154,11 +126,37 @@
 
 }
 
+<script>
+    var map;
+    function initMap() {
+        debugger;
+        var Latitude = parseFloat($("#Latitude").val());
+        var Longitude = parseFloat($("#Longitude").val());
+
+        var location = { lat: Latitude, lng: Longitude };
+
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 15, center: location });
+
+        var marker = new google.maps.Marker({ position: location, map: map });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVxnhhEH_WDFhXv_PWaJNXztPWKLBO81Y&callback=initMap" async defer></script>
+
+
+<style>
+    #map {
+        height: 400px;
+        width: 700px;
+    }
+</style>
+
+
 
 @using (Html.BeginForm("AddReview", "TouristAttraction", FormMethod.Post))
 {
 
-    // <input type="text" hidden asp-for="TouristAttractionId" />
+    
 
     @Html.HiddenFor(a => a.TouristAttractionId)
 
@@ -175,6 +173,8 @@
         <h6> Comentariu </h6>
         <input type="text" asp-for="review.Comment" id="comment" />
     </div>
+
+     <input type="text" hidden asp-for="review.TouristAttractionId" />
 
     <div class="rating">
         <span><input type="radio" name="RatingValue" id="str1" value="1"><label for="str1"></label></span>

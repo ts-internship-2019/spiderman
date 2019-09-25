@@ -10,7 +10,7 @@ namespace iWasHere.Domain.DTOs
     public   int TouristAttractionId { get; set; }
       public  string Latitude { get; set; }
 
-    public   string Longitude { get; set; }
+     public   string Longitude { get; set; }
 
         public ReviewModel review { get; set; }
     }
