@@ -20,7 +20,8 @@
 
 <style>
     body {
-        background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);
+        /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
+        /*background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);*/
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -136,7 +137,7 @@
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="country">Country</label></div>
-        <div class="col-lg-6"><input class="details" type="text" id="country" name="country" value="Country" readonly="readonly" /></div>
+        <div onclick="window.location.href='/TouristAttractionsByCountry?Id='+getCountryId()" class="col-lg-6"><input class="details" type="text" id="country" name="country" value="Country" readonly="readonly" /></div>
     </div>
 </div>
 
@@ -263,8 +264,10 @@
 
 <script>
 
-
-
+    let countryId;
+    function getCountryId() {
+        return countryId;
+    }
 window.onload=function(){update()}
 
     function update() {
@@ -296,9 +299,8 @@ window.onload=function(){update()}
                 document.getElementById('landmark').value = d.result[0].LandmarkTypeName;
                 document.getElementById('county').value = d.result[0].CountyName;
                 document.getElementById('country').value = d.result[0].CountryName;
+                countryId = d.result[0].CountryId;
                 console.log(th.length)
-                
-                
                 
                 if (th.length > 6 && th.length < 50) {
                     $('#description').css("height", th.length * 2 + "px");

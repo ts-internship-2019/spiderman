@@ -41,6 +41,7 @@ namespace iWasHere.Domain.Service
                     CityName = a.City.DictionaryCityName,
                     CountyName = a.City.DictionaryCounty.DictionaryCountyName,
                     CountryName=a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryName,
+                    CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId,
                     LandmarkTypeName = a.Landmark.DictionaryItemName,
                     Latitudine = a.Latitudine,
                     Longtitudine = a.Longtitudine,
