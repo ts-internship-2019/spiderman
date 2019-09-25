@@ -1,10 +1,28 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+    <style>
+        #imageBck{
+            background:url('https://media.giphy.com/media/SF9Z0shNT07T2/source.gif');
+            background-position:center;
+            background-repeat:no-repeat;
+            background-size:cover;
+            width:100%;
+            height:100vh;
+        }
+        h1{
+            
+            color:red;
+             font-family: 'Courgette', cursive;
+            border-radius:12px;
+        }
+    </style>
     <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        
+        <h1 class="display-4">Spiderman Team</h1>
+        <div id="imageBck">
+
+        </div>
         @*@(Html.Kendo().ComboBox()
              .Name("fabric")
              .Filter(FilterType.Contains)
