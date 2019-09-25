@@ -344,7 +344,10 @@
 
 <script>
 window.onload=function(){update()}
-
+    let countryId;
+    function getCountryId() {
+        return countryId;
+    }
     function update() {
         var url_string = window.location.href; //window.location.href
         var url = new URL(url_string);
