@@ -12,15 +12,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 
 
 @*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
 
 <style>
     body {
-        background-image: linear-gradient(to right top, #af71f2, #a661f2, #9c4ff2, #913cf2, #8624f2);
-        background-color: black;
+        background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -32,7 +32,7 @@
         color: white;
         font-size: 18px;
         border-radius: 8px;
-        background-color: #2A0537;
+        background-color: #051937;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
         text-align: center;
         width: 500px;
@@ -41,6 +41,7 @@
 
     label {
         width: 100px;
+        font-family: 'Source Code Pro', sans-serif;
     }
 
     input:hover {
@@ -59,17 +60,18 @@
         cursor: default;
     }
 
-    h1, h3 {
-        color: white;
+    h1{
+         color:navajowhite;
+         font-size:50px;
+        font-family: 'Courgette', cursive;
     }
-
 
     .parent {
         color: white;
         font-size: 22px;
         border-radius: 12px;
-        /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
     }
+
     .carousel {
         width: 300px;
     }
@@ -80,15 +82,22 @@
         height: 500px;
         width: 600px;
     }
-    #carouselExampleControls{
-        width:600px;
-        height:500px;
-       
+
+    #carouselExampleControls {
+        width: 100%;
+        height: 500px;
+        background-color: transparent;
+        margin-bottom: 30px;
     }
+
+    #description {
+        /*overflow:hidden;*/
+    }
+   
 </style>
 
 <h1>Details</h1>
-<h3>Tourist Attraction</h3>
+
 <hr style="background:white;" />
 
 
@@ -99,8 +108,7 @@
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"> <label for="description">Description</label></div>
-        @* <div class="col-lg-6"><input type="text" id="description" name="description" value="Description" readonly="readonly" /></div>*@
-        <div class="col-lg-6"><textarea class="details" id="description" name="description" value="Description" readonly="readonly"></textarea></div>
+        <div class="col-lg-6"><textarea extMode="MultiLine" class="details" id="description" name="description" value="Description" readonly="readonly"></textarea></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"> <label for="longitude">Longitude</label> </div>
@@ -185,24 +193,21 @@
 
 @using (Html.BeginForm("AddReview", "TouristAttraction", FormMethod.Post))
 {
-
-
-
     @Html.HiddenFor(a => a.TouristAttractionId)
 
     <div>
-            <h6> UserName </h6>
-            <input type="text" asp-for="Review.User" id="user" />
-        </div>
-        <div>
-            <h6> Titlu Comentariu</h6>
-            <input type="text" asp-for="Review.Title" id="title" />
-        </div>
+        <h6> UserName </h6>
+        <input type="text" asp-for="Review.User" id="user" />
+    </div>
+    <div>
+        <h6> Titlu Comentariu</h6>
+        <input type="text" asp-for="Review.Title" id="title" />
+    </div>
 
-        <div>
-            <h6> Comentariu </h6>
-            <input type="text" asp-for="Review.Comment" id="comment" />
-        </div>
+    <div>
+        <h6> Comentariu </h6>
+        <input type="text" asp-for="Review.Comment" id="comment" />
+    </div>
 
     <input type="text" hidden asp-for="TouristAttractionId" />
 
@@ -253,18 +258,13 @@
             $('input:radio').change();
         });
     </script>
-
-
-
-
 }
 
 
-
-<div id="objective-images">
-
-
 <script>
+
+
+
 window.onload=function(){update()}
 
     function update() {
@@ -287,7 +287,8 @@ window.onload=function(){update()}
             success: function (d) {
             if (d.result) {
                 document.getElementById('name').value = d.result[0].Name;
-                document.getElementById('description').value = d.result[0].Description;
+                //document.getElementById('description').value = d.result[0].Description;
+                let th = document.getElementById('description').value = d.result[0].Description;
                 document.getElementById('longitude').value = d.result[0].Longtitudine;
                 document.getElementById('latitude').value = d.result[0].Latitudine;
                 document.getElementById('category').value = d.result[0].CategoryName;
@@ -295,6 +296,13 @@ window.onload=function(){update()}
                 document.getElementById('landmark').value = d.result[0].LandmarkTypeName;
                 document.getElementById('county').value = d.result[0].CountyName;
                 document.getElementById('country').value = d.result[0].CountryName;
+                console.log(th.length)
+                if (th.length > 6 && th.length < 50) {
+                    $('#description').css("height", th.length * 2 + "px");
+                }
+                else {
+                    $('#description').css("height", th.length / 2 + "px");
+                }
                 if (d.result[0].Image.length > 0) {
                     let image;
                     d.result[0].Image.map((img, index) => {
@@ -307,7 +315,7 @@ window.onload=function(){update()}
                              image.classList.add("w-100");
                             image.src = "/images/" + img;
                             activeDiv.append(image);
-          
+
                             $('#objective-images').append(activeDiv);
                         } else {
                             activeDiv.classList.add("carousel-item");
@@ -315,7 +323,7 @@ window.onload=function(){update()}
                             image.classList.add("w-100");
                             image.src = "/images/" + img;
                             activeDiv.append(image);
-          
+
                             $('#objective-images').append(activeDiv);
                         }
                     })
