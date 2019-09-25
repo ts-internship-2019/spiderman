@@ -88,7 +88,7 @@
         .Read(read => read.Action("CityData", "Dictionary").Data("onAdditionalDataTextBoxCity"))
         .Events(events => events.Error("error_handler"))
            .Model(model => model.Id(p => p.CityId))
-           .Destroy(update => update.Action("CityData", "Dictionary"))
+           .Destroy(update => update.Action("DeleteCityData", "Dictionary"))
 
 
         .PageSize(20)

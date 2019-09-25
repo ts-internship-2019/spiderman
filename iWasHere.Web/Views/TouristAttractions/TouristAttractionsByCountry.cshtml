@@ -1,0 +1,63 @@
+﻿@model iWasHere.Domain.DTOs.TouristAttractionsDTO
+@using Kendo.Mvc.UI
+@{
+    ViewData["Title"] = "TouristAttractionsByCountry";
+    // int? Id = ViewData["CountryId"] as int?;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int Id = Model.CountryId;
+}
+
+
+
+
+
+    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.TouristAttractionsDTO>()
+                      .Name("GridTouristAttractions")
+                      .Columns(columns =>
+                      { 
+                        columns.Bound(c => c.FirstPhotoPath).ClientTemplate("<img src='" + Url.Content("~/Images/") + "#=FirstPhotoPath#'/>").Title("Image").Width(190);
+                          columns.Bound(c => c.TouristAttractionId).Width(140).Title("Id").Hidden();
+                          columns.Bound(c => c.Name).Width(200).Title("Nume");
+                          columns.Bound(c => c.Description).Width(200).Title("Descriere");
+                          columns.Bound(c => c.CategoryName).Width(200).Title("Nume categorie");
+                          columns.Bound(c => c.CityName).Width(150).Title("Nume oras");
+                          columns.Bound(c => c.LandmarkName).Width(200).Title("Nume landmark");
+                          columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
+                          columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
+                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>")
+                          .Width(150);
+                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttraction/Details?Id=#=TouristAttractionId# '> Detalii </a>")
+                          .Width(150);
+                          columns.Command(command =>
+                          {
+                              command.Destroy().Text("Sterge");
+                          }).HtmlAttributes(new { style = "width: 60%;color: red;font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";" })
+                          .Width(150);
+
+                      })
+                          .HtmlAttributes(new { style = "height: 500px; width: 100%;" })
+                          .Scrollable()
+                          .Sortable()
+                          .Pageable(pageable => pageable
+                              .Refresh(true)
+                              .PageSizes(true)
+                              .ButtonCount(1))
+                          .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .Read(read => read.Action("TouristAttractionsByCountryData", "TouristAttractions").Data("getId"))
+                              .PageSize(20)
+     
+
+        )
+    )
+<script>
+
+    var Idv = @Id;
+
+
+    function getId() {
+        return {
+            idcountry: Idv,
+        };
+    }
+</script>

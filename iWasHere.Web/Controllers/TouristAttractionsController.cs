@@ -246,6 +246,7 @@ namespace iWasHere.Controllers
             return View();
         }
       
+       
          public void AddImg(IFormFile[] photos,int id)
         {
 
@@ -289,6 +290,21 @@ namespace iWasHere.Controllers
 
             return Json(ModelState.ToDataSourceResult());
         }
+        public IActionResult TouristAttractionsByCountry(int Id) {
+            TouristAttractionsDTO dto = new TouristAttractionsDTO();
+            dto.CountryId = Id;
+           // ViewData["CountryId"] = Id;
+            return View(dto);
+        }
+        public IActionResult TouristAttractionsByCountryData([DataSourceRequest] DataSourceRequest request, int idcountry)
+        {
+            List<TouristAttractionsDTO> myList = _dictionaryService.GetTouristAttractionsByCountry(idcountry,request.Page, request.PageSize);
+            DataSourceResult v2 = new DataSourceResult();
+            v2.Data = myList;
+            v2.Total = _dictionaryService.TouristAttractionsbyCountryCount(idcountry);
+            return Json(v2);
+        }
+
     }
-    
+
 }

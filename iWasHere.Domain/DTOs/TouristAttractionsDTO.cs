@@ -25,5 +25,7 @@ namespace iWasHere.Domain.DTOs
         public string CityName { get; set; }
         public string LandmarkName { get; set; }
         public string CategoryName { get; set; }
+        public string FirstPhotoPath { get; set; }
+        public int CountryId { get; set; }
     }
 }
