@@ -192,6 +192,7 @@ namespace iWasHere.Domain.Service
             _dbContext.DictionaryCategory.Add(dictionary);
             _dbContext.SaveChanges();
         }
+
         public int FilterTotalCategory(string name)
         {
             int i = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryName.StartsWith(name)).Count();
@@ -203,6 +204,7 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCategory.Count();
             return i;
         }
+
         public List<DictionaryCityModel> GetDictionaryCityData(int page, int pageSize, string name, int countyId)
         {
             IQueryable<DictionaryCity> query = _dbContext.DictionaryCity;
@@ -266,6 +268,7 @@ namespace iWasHere.Domain.Service
 
 
         }
+
         public List<DictionaryCountyModel> GetDictionaryCountiesCB(string text)
         {
             List<DictionaryCountyModel> dictionaryLCounties = null;
@@ -492,6 +495,7 @@ namespace iWasHere.Domain.Service
                 return "Trebuie sa completati campurile!";
             }
         }
+
         public string DeleteCounty(int id)
         {
             try
@@ -543,7 +547,7 @@ namespace iWasHere.Domain.Service
                 return scheduleTouristAttractions;
 
             }
-       }
+         }
 
         public string DeleteSchedule(int id)
         {
@@ -565,6 +569,7 @@ namespace iWasHere.Domain.Service
         {
             return _dbContext.Schedule.Count();
         }
+
         public int GetItemsOfSchedule(string searchText)
         {
 
@@ -649,6 +654,7 @@ namespace iWasHere.Domain.Service
             int i = _dbContext.DictionaryCountry.Where(a => a.DictionaryCountryName == name).Count();
             return i;
         }
+
         public string DeleteCountry(int id)
         {
             try
@@ -662,17 +668,6 @@ namespace iWasHere.Domain.Service
                 return " Aceasta tara nu poate fi stearsa!Exista un judet in aceasta tara.";
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
         public List<DictionaryCurrencyModel> GetDictionaryCurrencyModel()
@@ -1107,9 +1102,9 @@ namespace iWasHere.Domain.Service
                 return null;
             }
         }
-    }
+    
 
-}
+
 
         public List<ReviewModel> GetReviews(int touristAttractionId)
         {
@@ -1166,5 +1161,45 @@ namespace iWasHere.Domain.Service
             message = null;
             return true;
         }
+
+        public void AddImage(Image image)
+        {
+            _dbContext.Add(image);
+            _dbContext.SaveChanges();
+
+
+
+        }
+        public DictionaryCategoryTypeModel getCategoryIdUpdate(int id)
+        {
+            DictionaryCategoryTypeModel dictionaryCountyTypeModel = _dbContext.DictionaryCategory.Where(a => a.DictionaryCategoryId == id)
+                .Select(a => new DictionaryCategoryTypeModel()
+                {
+                    Id = a.DictionaryCategoryId,
+                    Name = a.DictionaryCategoryName,
+                }).First();
+            return dictionaryCountyTypeModel;
+        }
+
+        public string InsertNewCounty(DictionaryCountyTypeModel dictionaryCounty)
+        {
+            try
+            {
+                DictionaryCounty dic = new DictionaryCounty();
+                dic.DictionaryCountyName = dictionaryCounty.Name;
+                dic.DictionaryCountryId = dictionaryCounty.CountryId;
+                _dbContext.DictionaryCounty.Add(dic);
+                _dbContext.SaveChanges();
+                return null;
+            }
+            catch (Exception e)
+            {
+                return "Trebuie sa completati campurile";
+            }
+        }
+
+
+
+
     }
 }

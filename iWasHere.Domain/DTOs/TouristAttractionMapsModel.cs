@@ -11,5 +11,7 @@ namespace iWasHere.Domain.DTOs
       public  string Latitude { get; set; }
 
     public   string Longitude { get; set; }
+
+        public ReviewModel review { get; set; }
     }
 }

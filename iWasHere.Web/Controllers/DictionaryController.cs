@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
-using iWasHere.Domain.Models;
 using iWasHere.Domain.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
-using iWasHere.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using iWasHere.Domain.Service;
 
 namespace iWasHere.Web.Controllers
 {
@@ -45,7 +40,7 @@ namespace iWasHere.Web.Controllers
             v3.Total = _dictionaryService.GetItemsOfSchedule(txtFilterName);
             return Json(v3);
 
-        }
+    }
         public IActionResult Currency()
         {
             List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dictionaryService.GetDictionaryCurrencyModel();
@@ -321,15 +316,7 @@ namespace iWasHere.Web.Controllers
 
         }
 
-            var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
-            DataSourceResult result = new DataSourceResult()
-            {
-                Data = jsonVar,
-                Total = _dictionaryService.GetItemsOfSchedule()
-            };
-            return Json(result);
-
-        }
+           
 
         public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
         {
@@ -539,3 +526,15 @@ namespace iWasHere.Web.Controllers
         }
     }
 }
+
+
+
+//var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
+//DataSourceResult result = new DataSourceResult()
+//{
+//    Data = jsonVar,
+//    Total = _dictionaryService.GetItemsOfSchedule()
+//};
+//            return Json(result);
+
+//        }
