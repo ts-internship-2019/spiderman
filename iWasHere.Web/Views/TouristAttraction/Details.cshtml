@@ -297,11 +297,19 @@ window.onload=function(){update()}
                 document.getElementById('county').value = d.result[0].CountyName;
                 document.getElementById('country').value = d.result[0].CountryName;
                 console.log(th.length)
+                
+                
+                
                 if (th.length > 6 && th.length < 50) {
                     $('#description').css("height", th.length * 2 + "px");
                 }
                 else {
-                    $('#description').css("height", th.length / 2 + "px");
+                    if (th.length <= 4) {
+                        $('#description').css("height", th.length * 20 + "px");
+                    } else {
+                        $('#description').css("height", th.length / 2 + "px");
+                    }
+                   
                 }
                 if (d.result[0].Image.length > 0) {
                     let image;
