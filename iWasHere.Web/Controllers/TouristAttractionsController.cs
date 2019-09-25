@@ -85,6 +85,7 @@ namespace iWasHere.Controllers
                 touristAttractionsDTOEdit.CategoryId = touristAttraction.CategoryId;
                 touristAttractionsDTOEdit.LandmarkId = touristAttraction.LandmarkId;
                 touristAttractionsDTOEdit.TouristAttractionId = Id;
+                ViewData["Images"] = _dictionaryService.GetImages(Id);
                 return View(touristAttractionsDTOEdit);
                 //return View();
             }
@@ -159,6 +160,7 @@ namespace iWasHere.Controllers
                     touristAttraction.CategoryId = tA.CategoryId;
 
                     _dictionaryService.EditTouristAttractions(touristAttraction);
+                    AddImg(photos, touristAttraction.TouristAttractionId);
                     return View("Index");
                 }
                 else

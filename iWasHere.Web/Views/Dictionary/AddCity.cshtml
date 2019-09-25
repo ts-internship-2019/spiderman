@@ -2,55 +2,55 @@
 @{
     ViewData["Title"] = "AddCity";
 }
-
-
-    <div>
-        <h2 align="center">Adauga informatii despre  un oras</h2>
-        <img style=" height:200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQEhNtGxZfcNJq-XA7UBHaPwnY2BPifYNr8mFQW5sUQQ8qReQ7" alt="Alternate Text" />
-        @using (Html.BeginForm("NewCity", "Dictionary", FormMethod.Post))
-        {
-            @Html.HiddenFor(a => a.CityId)
-            <label for="Oras">
-                Oras:
-            </label>
-            <br />
-            <input type="text" asp-for="CityName" id="city" />
-            <br />
-            <br />
-            <label for="Judet">
-                Judet:
-            </label>
-            <br />
-            @(Html.Kendo().ComboBoxFor(model => model.CountyId)
-              .DataValueField("CountyId")
-              .DataTextField("CountyName")
-              .Placeholder("Selecteaza un judet...")
-              .HtmlAttributes(new { style = "align:left; width:60%; id='counties'" })
-              .Filter("StartsWith")
-              .DataSource(source =>
+@Html.ValidationSummary(true)
+ 
+<div>
+    <h2 align="center">Adauga informatii despre  un oras</h2>
+    <img style=" height:200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQEhNtGxZfcNJq-XA7UBHaPwnY2BPifYNr8mFQW5sUQQ8qReQ7" alt="Alternate Text" />
+    @using (Html.BeginForm("NewCity", "Dictionary", FormMethod.Post))
+    {
+        @Html.HiddenFor(a => a.CityId)
+        <label for="Oras">
+            Oras:
+        </label>
+        <br />
+        <input type="text" asp-for="CityName" id="city" />
+        <br />
+        <br />
+        <label for="Judet">
+            Judet:
+        </label>
+        <br />
+        @(Html.Kendo().ComboBoxFor(model => model.CountyId)
+          .DataValueField("CountyId")
+          .DataTextField("CountyName")
+          .Placeholder("Selecteaza un judet...")
+          .HtmlAttributes(new { style = "align:left; width:60%; id='counties'" })
+          .Filter("StartsWith")
+          .DataSource(source =>
+          {
+              source.Read(read =>
               {
-                  source.Read(read =>
-                  {
-                      read.Action("FilterGetCounties", "Dictionary");
-                  })
-                  .ServerFiltering(true);
+                  read.Action("FilterGetCounties", "Dictionary");
               })
-            )
-            <br />
-            <button onclick="validate()" class="btn btn-outline-info " id="save" name="submit" style="margin-top: 2em; float: left;">Salveaza</button>
+              .ServerFiltering(true);
+          })
+        )
+        <br />
+        <button onclick="validate()" class="btn btn-outline-info " id="save" name="submit" style="margin-top: 2em; float: left;">Salveaza</button>
 
-            @if (Model == null)
-            {
-                <button onclick="validate()"
-                        class="btn btn-outline-info "
-                        value="savenew" name="submit"
-                        style="margin-top: 2em; float: left;">
-                    Salveaza si nou
-                </button>
-            }
-            <a class="btn btn-outline-danger " href="/dictionary/City" name="submit" style="margin-top: 2em; float: left;">Anuleaza</a>
+        @if (Model == null)
+        {
+            <button onclick="validate()"
+                    class="btn btn-outline-info "
+                    value="savenew" name="submit"
+                    style="margin-top: 2em; float: left;">
+                Salveaza si nou
+            </button>
         }
-    </div>
+        <a class="btn btn-outline-danger " href="/dictionary/City" name="submit" style="margin-top: 2em; float: left;">Anuleaza</a>
+    }
+</div>
 
 <style>
     .btn {
@@ -62,12 +62,12 @@
         if (invalid($('#city').val())) {
             alert("Trebuie sa introduceti numele orasului");
         }
-       
-        var co = $('#counties');
-        if (co.val() == undefined) {
-            alert("Selecteaza un judet!");
-            $('#co').focus();
-        }
+
+        //var co = $('#counties');
+        //if (co.val() == undefined) {
+        //    alert("Selecteaza un judet!");
+        //    $('#co').focus();
+        //}
         //var combo = $find('<%=counties.CountyId %>');
         //if (combo.get_selectedIndex() == undefined) {
         //    alert("Selecteaza un judet!");

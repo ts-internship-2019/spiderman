@@ -330,13 +330,14 @@ namespace iWasHere.Domain.Service
             try
             {
                 _dbContext.Remove(_dbContext.DictionaryCity.Single(a => a.DictionaryCityId == id));
-                _dbContext.SaveChanges();
-                return null;
+               
             }
             catch (Exception ex)
             {
                 return "Exista un obiectiv turistic in acest oras.Nu poate fi sters.";
             }
+            _dbContext.SaveChanges();
+            return null;
         }
         public List<DictionaryCountyModel> Filter_GetCounties(string text)
         {
@@ -667,6 +668,12 @@ namespace iWasHere.Domain.Service
             {
                 return " Aceasta tara nu poate fi stearsa!Exista un judet in aceasta tara.";
             }
+        }
+
+        public int countAtractionsonCity(int id)
+        {
+            int i = _dbContext.TouristAttraction.Where(a => a.CityId == id).Count();
+            return i;
         }
 
 
@@ -1029,21 +1036,18 @@ namespace iWasHere.Domain.Service
             _dbContext.TouristAttraction.Update(dict);
             _dbContext.SaveChanges();
         }
-        public ICollection<Image> GetImages(int id)
+        public List<String> GetImages(int id)
         {
-            IQueryable<Image> query = _dbContext.Image;
-
-            query = query.Where(a => a.TouristAttractionId == id);
-
-            ICollection<Image> imageList = query.Select(a => new Image()
+            List<Image> imagini = _dbContext.Image.Where(a => a.TouristAttractionId == id).Select(a => new Image()
             {
-                ImageId = a.ImageId,
-                TouristAttractionId = a.TouristAttractionId,
-                Path = a.Path
 
-
+                Path = a.Path,
             }).ToList();
-            return imageList;
+            List<String> img = new List<String>();
+            for (int i = 0; i < imagini.Count; i++) {
+                img.Add(imagini[i].Path);
+            }
+            return img;
         }
         
         public List<DictionaryLandmarkType> GetTouristAttractionsLandmark(string text)

@@ -150,7 +150,7 @@ namespace iWasHere.Web.Controllers
             }
             if (model.CountyId == 0 )
             {
-                ModelState.AddModelError("a", "Trebuie sa inserati judetul");
+                ModelState.AddModelError(string.Empty, "Trebuie sa inserati judetul");
                 return View("AddCity");
 
             }
@@ -300,15 +300,24 @@ namespace iWasHere.Web.Controllers
         {
             if (model!= null)
             {
-                string errorMessage = _dictionaryService.DeleteCity(model.CityId);
-                if (string.IsNullOrWhiteSpace(errorMessage))
+
+
+                if (_dictionaryService.countAtractionsonCity(model.CityId) == 0)
                 {
-                    return Json(ModelState.ToDataSourceResult());
+                    string errorMessage = _dictionaryService.DeleteCity(model.CityId);
+                    if (string.IsNullOrWhiteSpace(errorMessage))
+                    {
+                        return Json(ModelState.ToDataSourceResult());
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("a", errorMessage);
+                        return Json(ModelState.ToDataSourceResult());
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError("a", errorMessage);
-                    return Json(ModelState.ToDataSourceResult());
+                else {
+                    ModelState.AddModelError("a","Nu se poate sterge intrucat are asociat un obiectiv turistic");
+
                 }
             }
 

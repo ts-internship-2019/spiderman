@@ -2,6 +2,7 @@
 @Html.HiddenFor(a => a.TouristAttractionId)
 @{
     ViewData["Title"] = "CreateEdit";
+    List<String> images = ViewData["Images"] as List<String>;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,16 +11,16 @@
     <form action="Save" method="post" enctype="multipart/form-data">
 
 
-        <input type="hidden" asp-for="TouristAttractionId" /><br />
-        <h6>Nume</h6>
-        <input type="text" asp-for="Name" /><br />
-        <h6>Descriere</h6>
-        <input type="text" asp-for="Description" /><br /><br />
+            <input type="hidden" asp-for="TouristAttractionId" /><br />
+            <h6>Nume</h6>
+            <input type="text" asp-for="Name" /><br />
+            <h6>Descriere</h6>
+            <input type="text" asp-for="Description" /><br /><br />
 
-        <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
-        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
+            <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
+            <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
 
-        <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
+            <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
 
 
 
@@ -78,36 +79,60 @@
         <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
 
 
-        <br />
-        <br /><div class="gallery" id="gal"></div>
+            <br />
+            <br />
+            <label for="newimg">Imagini obiectiv</label>
+            <table>
+                @{int i = 0;
+                    foreach (string image in images)
+                    {
+                        if (i == 0)
+                        {
+                            @:<tr>
+                            }
 
-        <button class="btn btn-danger btn-lg"
-                name="submitValue"
-                value="cancel"
-                style="margin-right: 2em;margin-top: 2em;float: right;">
-            Anuleaza
-        </button>
-        @if (Model == null)
-        {
-            <button class="btn btn-primary btn-lg disable"
+                            <td><img src="~/images/@Url.Content(image)" class=" img-fluid" /></td>
+
+                            if (i == 3)
+                            {
+                                i = 0;
+                            @:</tr>
+                        }
+                        ++i;
+
+                    }
+                }
+            </table>
+            <label for="newimg">Noile imagini</label>
+            <div class="gallery" id="gal"></div>
+
+            <button class="btn btn-danger btn-lg"
+                    name="submitValue"
+                    value="cancel"
+                    style="margin-right: 2em;margin-top: 2em;float: right;">
+                Anuleaza
+            </button>
+            @if (Model == null)
+            {
+                <button class="btn btn-primary btn-lg disable"
+                        type="submit"
+                        name="submitValue"
+                        value="saveNew"
+                        style="margin-right: 2em;margin-top: 2em;float: right;">
+                    Salveaza si nou
+                </button>}
+            <button class="btn btn-success btn-lg"
                     type="submit"
                     name="submitValue"
-                    value="saveNew"
+                    value="save"
                     style="margin-right: 2em;margin-top: 2em;float: right;">
-                Salveaza si nou
-            </button>}
-        <button class="btn btn-success btn-lg"
-                type="submit"
-                name="submitValue"
-                value="save"
-                style="margin-right: 2em;margin-top: 2em;float: right;">
-            Salveaza
-        </button>
+                Salveaza
+            </button>
 
-        <br /><br /><br />
-    </form>
-
-</div>
+            <br /><br /><br />
+        </form>
+        
+    </div>
 <style>
     .title {
         vertical-align: middle;
