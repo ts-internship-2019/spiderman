@@ -12,20 +12,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
-
-
-
-
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 
 
 @*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
     body {
-        background-image: linear-gradient(to right top, #af71f2, #a661f2, #9c4ff2, #913cf2, #8624f2);
-        background-color: black;
+        /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
+        /*background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);*/
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -37,7 +34,7 @@
         color: white;
         font-size: 18px;
         border-radius: 8px;
-        background-color: #2A0537;
+        background-color: #051937;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
         text-align: center;
         width: 500px;
@@ -46,6 +43,7 @@
 
     label {
         width: 100px;
+        font-family: 'Source Code Pro', sans-serif;
     }
 
     input:hover {
@@ -64,21 +62,44 @@
         cursor: default;
     }
 
-    h1, h3 {
-        color: white;
+    h1{
+         color:navajowhite;
+         font-size:50px;
+        font-family: 'Courgette', cursive;
     }
-
 
     .parent {
         color: white;
         font-size: 22px;
         border-radius: 12px;
-        /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
     }
+
+    .carousel {
+        width: 300px;
+    }
+
+    .carousel-item img {
+        object-fit: contain;
+        object-position: center;
+        height: 500px;
+        width: 600px;
+    }
+
+    #carouselExampleControls {
+        width: 100%;
+        height: 500px;
+        background-color: transparent;
+        margin-bottom: 30px;
+    }
+
+    #description {
+        /*overflow:hidden;*/
+    }
+   
 </style>
 
 <h1>Details</h1>
-<h3>Tourist Attraction</h3>
+
 <hr style="background:white;" />
 
 
@@ -89,8 +110,7 @@
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"> <label for="description">Description</label></div>
-        @* <div class="col-lg-6"><input type="text" id="description" name="description" value="Description" readonly="readonly" /></div>*@
-        <div class="col-lg-6"><textarea class="details" id="description" name="description" value="Description" readonly="readonly"></textarea></div>
+        <div class="col-lg-6"><textarea extMode="MultiLine" class="details" id="description" name="description" value="Description" readonly="readonly"></textarea></div>
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"> <label for="longitude">Longitude</label> </div>
@@ -118,21 +138,12 @@
     </div>
     <div class="row highligh mb-2">
         <div class="col-lg-6"><label for="country">Country</label></div>
-        <div class="col-lg-6"><input class="details" type="text" id="country" name="country" value="Country" readonly="readonly" /></div>
+        <div onclick="window.location.href='/TouristAttractionsByCountry?Id='+getCountryId()" class="col-lg-6"><input class="details" type="text" id="country" name="country" value="Country" readonly="readonly" /></div>
     </div>
 </div>
 
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        @*<div class="carousel-item active">
-            <img class="d-block w-100" src="" alt="First slide">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="" alt="Second slide">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="" alt="Third slide">
-        </div>*@
+    <div id="objective-images" class="carousel-inner">
     </div>
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -180,49 +191,83 @@
     }
 </style>
 
+<br />
+<hr />
 
+<h3> Adauga un comentariu </h3>
 
 @using (Html.BeginForm("AddReview", "TouristAttraction", FormMethod.Post))
 {
 
-    
-
     @Html.HiddenFor(a => a.TouristAttractionId)
 
     <div>
-        <h6> UserName </h6>
-        <input type="text" asp-for="review.User" id="user" />
+        <label><b>Utilizator anonim</b>&emsp;&emsp;&emsp;&emsp;</label>
+        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
+        <label id="lblCostTicket" style="display:none"><b>Utilizator anonim&emsp;</b></label>
+        <input id="inputCostTicket" type="text" style="display:none" />
     </div>
+
+    <div>
+        <h6> UserName </h6>
+        <input type="text" asp-for="Review.User" id="user" />
+    </div>
+
     <div>
         <h6> Titlu Comentariu</h6>
-        <input type="text" asp-for="review.Title" id="title" />
+        <input type="text" asp-for="Review.Title" id="title" />
     </div>
-
     <div>
         <h6> Comentariu </h6>
-        <input type="text" asp-for="review.Comment" id="comment" />
+        <input type="text" asp-for="Review.Comment" id="comment" />
     </div>
 
-     <input type="text" hidden asp-for="review.TouristAttractionId" />
+    //<input type="text" hidden asp-for="Review.TouristAttractionId" />
+    <br />
+    <h6> Rating </h6>
 
-    <div class="rating">
-        <span><input type="radio" name="RatingValue" id="str1" value="1"><label for="str1"></label></span>
-        <span><input type="radio" name="RatingValue" id="str2" value="2"><label for="str2"></label></span>
-        <span><input type="radio" name="RatingValue" id="str3" value="3"><label for="str3"></label></span>
-        <span><input type="radio" name="RatingValue" id="str4" value="4"><label for="str4"></label></span>
-        <span><input type="radio" name="RatingValue" id="str5" value="5"><label for="str5"></label></span>
-        <span><input type="radio" name="RatingValue" id="str6" value="6"><label for="str6"></label></span>
-        <span><input type="radio" name="RatingValue" id="str7" value="7"><label for="str7"></label></span>
-        <span><input type="radio" name="RatingValue" id="str8" value="8"><label for="str8"></label></span>
-        <span><input type="radio" name="RatingValue" id="str9" value="9"><label for="str9"></label></span>
-        <span><input type="radio" name="RatingValue" id="str10" value="10"><label for="str10"></label></span>
-
+    <div class="rate">
+        <input type="radio" id="str9" name="Review.RatingValue" value="9" />        <label for="str9" title="10 stele">9 stars</label>
+        <input type="radio" id="str8" name="Review.RatingValue" value="8" />        <label for="str8" title="9 stele">8 stars</label>
+        <input type="radio" id="str7" name="Review.RatingValue" value="7" />        <label for="str7" title="8 stele">7 stars</label>
+        <input type="radio" id="str6" name="Review.RatingValue" value="6" />        <label for="str6" title="7 stele">6 star</label>
+        <input type="radio" id="str5" name="Review.RatingValue" value="5" />        <label for="str5" title="6 stele">5 stars</label>
+        <input type="radio" id="str4" name="Review.RatingValue" value="4" />        <label for="str4" title="5 stele">4 stars</label>
+        <input type="radio" id="str3" name="Review.RatingValue" value="3" />        <label for="str3" title="4 stele">3 stars</label>
+        <input type="radio" id="str2" name="Review.RatingValue" value="2" />        <label for="str2" title="3 stele">2 stars</label>
+        <input type="radio" id="str1" name="Review.RatingValue" value="1" />        <label for="str1" title="2 stele">1 star</label>
+        <input type="radio" id="str0" name="Review.RatingValue" value="0" />        <label for="str0" title="1 stea">0 stars</label>
     </div>
-
     <div>
-        <button class="k-button k-primary" style="margin-top: 2em" name="btn" value="save">Salveaza</button>
+        <button class="k-button k-primary" style="margin-top: 2em" name="submit" value="save">Salveaza</button>
+        <button class="k-button k-primary" style="margin-top: 2em" name="submit" value="cancel">Anuleaza</button>
+    </div>
+    <br />
+    <hr />
+    <h3> Comentarii asociate obiectivului </h3>
+    <div>
+        @foreach (var review in Model.Reviews)
+        {
 
-        <button class="k-button k-primary" style="margin-top: 2em" name="btn" value="cancel">Anuleaza</button>
+            <span class="rounded-sm">
+                <b>Nume utilizator: </b> @review.User<br />
+                <b>Titlu Comentariu: </b>@review.Title<br />
+                <b>Comentariu: </b>@review.Comment<br />
+                <b>Nota </b>
+                @for (int i = 0; i < @review.RatingValue; i++)
+                {
+                    <span class="fa fa-star checked"></span>
+                }
+                @for (int i = 0; i < 10 - @review.RatingValue; i++)
+                {
+                    <span class="fa fa-star"></span>
+                }
+
+                <br />
+            </span>
+            <br />
+        }
+
     </div>
 
 
@@ -236,13 +281,64 @@
             });
             $('input:radio').change();
         });
+
+        $(':radio').change(function () {
+            console.log('New star rating: ' + this.value);
+        });
     </script>
 
+<style>
+
+
+    .checked {
+        color: orange;
+    }
+
+
+    .rate {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+    }
+
+        .rate:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rate:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+            .rate:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+</style>
 
 }
-<div id="objective-images">
-
-</div>
 
 
 
@@ -268,9 +364,9 @@ window.onload=function(){update()}
         cache: false,
             success: function (d) {
             if (d.result) {
-                //console.log(d);
                 document.getElementById('name').value = d.result[0].Name;
-                document.getElementById('description').value = d.result[0].Description;
+                //document.getElementById('description').value = d.result[0].Description;
+                let th = document.getElementById('description').value = d.result[0].Description;
                 document.getElementById('longitude').value = d.result[0].Longtitudine;
                 document.getElementById('latitude').value = d.result[0].Latitudine;
                 document.getElementById('category').value = d.result[0].CategoryName;
@@ -278,6 +374,20 @@ window.onload=function(){update()}
                 document.getElementById('landmark').value = d.result[0].LandmarkTypeName;
                 document.getElementById('county').value = d.result[0].CountyName;
                 document.getElementById('country').value = d.result[0].CountryName;
+                countryId = d.result[0].CountryId;
+                console.log(th.length)
+                
+                if (th.length > 6 && th.length < 50) {
+                    $('#description').css("height", th.length * 2 + "px");
+                }
+                else {
+                    if (th.length <= 4) {
+                        $('#description').css("height", th.length * 20 + "px");
+                    } else {
+                        $('#description').css("height", th.length / 2 + "px");
+                    }
+                   
+                }
                 if (d.result[0].Image.length > 0) {
                     let image;
                     d.result[0].Image.map((img, index) => {
@@ -287,21 +397,20 @@ window.onload=function(){update()}
                             activeDiv.classList.add("carousel-item");
                             activeDiv.classList.add("active");
                             image.classList.add("d-block");
+                             image.classList.add("w-100");
                             image.src = "/images/" + img;
-                            $('.active').append(image);
-                            $('.carousel-inner').append(activeDiv);
-                            console.log($('.carousel-inner'));
+                            activeDiv.append(image);
+
+                            $('#objective-images').append(activeDiv);
                         } else {
-                            activeDiv.classList.remove('active');
                             activeDiv.classList.add("carousel-item");
-                             image.classList.add("d-block");
-                            image.src = "/images/"+img; 
-                            $('carousel-item').append(image);
-                                $('.carousel-inner').append(activeDiv);
-                        
+                            image.classList.add("d-block");
+                            image.classList.add("w-100");
+                            image.src = "/images/" + img;
+                            activeDiv.append(image);
+
+                            $('#objective-images').append(activeDiv);
                         }
-                  
-                         
                     })
                 }
             }
@@ -319,67 +428,3 @@ window.onload=function(){update()}
     }
 
 </script>
-
-@* Animation script *@
-@*<script>
-        var colors = new Array(
-            [62, 35, 255],
-            [60, 255, 60],
-            [5, 25, 55],
-            [45, 175, 230],
-            [18, 84, 97],
-            [255, 128, 0]);
-
-        var step = 0;
-        //color table indices for:
-        // current color left
-        // next color left
-        // current color right
-        // next color right
-        var colorIndices = [0, 1, 2, 3];
-
-        //transition speed
-        var gradientSpeed = 0.002;
-
-        function updateGradient() {
-
-            if ($ === undefined) return;
-
-            var c0_0 = colors[colorIndices[0]];
-            var c0_1 = colors[colorIndices[1]];
-            var c1_0 = colors[colorIndices[2]];
-            var c1_1 = colors[colorIndices[3]];
-
-            var istep = 1 - step;
-            var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
-            var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
-            var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
-            var color1 = "rgb(" + r1 + "," + g1 + "," + b1 + ")";
-
-            var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
-            var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);
-            var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
-            var color2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
-
-            $('#gradient').css({
-                background: "-webkit-gradient(linear, left top, right top, from(" + color1 + "), to(" + color2 + "))"
-            }).css({
-                background: "-moz-linear-gradient(left, " + color1 + " 0%, " + color2 + " 100%)"
-            });
-
-            step += gradientSpeed;
-            if (step >= 1) {
-                step %= 1;
-                colorIndices[0] = colorIndices[1];
-                colorIndices[2] = colorIndices[3];
-
-                //pick two new target color indices
-                //do not pick the same as the current one
-                colorIndices[1] = (colorIndices[1] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length;
-                colorIndices[3] = (colorIndices[3] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length;
-
-            }
-        }
-
-        setInterval(updateGradient, 10);
-    </script>*@
