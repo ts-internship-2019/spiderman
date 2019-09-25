@@ -29,6 +29,8 @@ namespace iWasHere.Domain.Service
 
             var categoryName = _dbContext.TouristAttraction
                 .Include(a => a.City)
+                .ThenInclude(a=>a.DictionaryCounty)
+                .ThenInclude(a=>a.DictionaryCountry)
                 .Include(a => a.Category)
                 .Include(a=> a.Landmark)
                 .Include(a => a.Image)
@@ -36,6 +38,8 @@ namespace iWasHere.Domain.Service
                 .Select(a=> new TouristAttractionModel() {
                     CategoryName = a.Category.DictionaryCategoryName,
                     CityName = a.City.DictionaryCityName,
+                    CountyName = a.City.DictionaryCounty.DictionaryCountyName,
+                    CountryName=a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryName,
                     LandmarkTypeName = a.Landmark.DictionaryItemName,
                     Latitudine = a.Latitudine,
                     Longtitudine = a.Longtitudine,
