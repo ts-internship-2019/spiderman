@@ -221,8 +221,7 @@ namespace iWasHere.Controllers
         [HttpPost]
         public IActionResult AddImages(IFormFile[] photos)
         {
-          
-          
+                 
                 foreach (IFormFile photo in photos)
                 {
                     string uniqueFileName = null;

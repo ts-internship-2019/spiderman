@@ -63,13 +63,13 @@
        .Name("grid")
        .Columns(columns =>
        {
-           columns.Bound(p => p.ScheduleId).Visible(true);
+           columns.Bound(p => p.ScheduleId).Visible(false);
            columns.Bound(p => p.SeasonId).Visible(false);
-           columns.Bound(p => p.Season).Title("Sezon").Width(130);
-           columns.Bound(p => p.Day).Title("Ziua").Width(130);
-           columns.Bound(p => p.StartHour).Title("Ora de inceput").Width(130);
-           columns.Bound(p => p.EndHour).Title("Ora inchidere").Width(130);
-           columns.Bound(p => p.TouristAttractionName).Title("Obiectiv turistic").Width(130);
+           columns.Bound(p => p.Season).Title("Sezon").Width(140);
+           columns.Bound(p => p.Day).Title("Ziua").Width(140);
+           columns.Bound(p => p.StartHour).Title("Ora de inceput").Width(140);
+           columns.Bound(p => p.EndHour).Title("Ora inchidere").Width(140);
+           columns.Bound(p => p.TouristAttractionName).Title("Obiectiv turistic").Width(150);
             columns.Template("<a class='k-button' href='/Dictionary/AddSchedule?Id=#=ScheduleId# '> Editeaza </a>").Width(150);
            columns.Command(command =>
            {
@@ -80,7 +80,7 @@
        })
        .HtmlAttributes(new { style = "height: 550px;" })
        .Scrollable()
-       .Groupable()
+       //.Groupable()
        .Sortable()
        .Pageable(pageable => pageable
            .Refresh(true)
@@ -136,6 +136,9 @@
             $.each(value.errors, function () {
                 message += this + "\n";
             });
+
+            $("#grid").data("kendoGrid").dataSource.read();
+            $("#grid").data("kendoGrid").dataSource.page(1);
 
         }
     });

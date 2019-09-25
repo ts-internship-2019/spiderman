@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
-using iWasHere.Domain.Models;
 using iWasHere.Domain.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
-using iWasHere.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using iWasHere.Domain.Service;
 
 namespace iWasHere.Web.Controllers
 {
@@ -20,9 +15,8 @@ namespace iWasHere.Web.Controllers
 
         public DictionaryController(DictionaryService dictionaryService)
         {
-
+            // throw new Exception("bau");
             _dictionaryService = dictionaryService;
-
         }
 
         public IActionResult Index()
@@ -31,8 +25,6 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
-
-
 
         public IActionResult Schedule()
         {
@@ -48,7 +40,7 @@ namespace iWasHere.Web.Controllers
             v3.Total = _dictionaryService.GetItemsOfSchedule(txtFilterName);
             return Json(v3);
 
-        }
+    }
         public IActionResult Currency()
         {
             List<DictionaryCurrencyModel> dictionaryCurrencyModel = _dictionaryService.GetDictionaryCurrencyModel();
@@ -119,7 +111,6 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
-       
 
         public JsonResult GetJsonCountryData()
         {
@@ -263,42 +254,14 @@ namespace iWasHere.Web.Controllers
 
             return Json(result);
 
-
-            //if (string.IsNullOrEmpty(categoryName))
-            //{
-            //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
-
-            //    DataSourceResult result = new DataSourceResult()
-            //    {
-            //        Data = jsonVariable,
-            //        Total = _dictionaryService.Total()
-            //    };
-
-            //    return Json(result);
-            //}
-            //else
-            //{
-            //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
-
-            //    DataSourceResult result = new DataSourceResult()
-            //    {
-            //        Data = jsonVariable,
-            //        Total = _dictionaryService.FilterTotalCategory(categoryName)
-            //    };
-
-            //    return Json(result);
-            //}
-
         }
-
-
+      
         public IActionResult SearchCountyName()
         {
             return View();
 
         }
-
-
+     
         public IActionResult ClientFiltering()
         {
             return View();
@@ -362,59 +325,21 @@ namespace iWasHere.Web.Controllers
 
         }
 
-    //    public JsonResult ScheduleFilteredDataSource([DataSourceRequest]DataSourceRequest request, ScheduleTouristAttractionModel model)
-    //    {
-    //        if (ModelState.IsValid)
-    //        {
-    //            var filter = model.TouristAttractionName;
-    //        }
+           
 
+        public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
+        {
+            int rows;
+            var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
+            DataSourceResult dataSource = new DataSourceResult
+            {
+                Data = x,
+                Total = rows
+            };
 
+            return Json(dataSource);
 
-
-            
-
-    //public IActionResult GetCountryData([DataSourceRequest] DataSourceRequest request, string abc)
-    //{
-    //    int rows;
-    //    var x = _dictionaryService.GetCountryModel(request.Page, request.PageSize, out rows, abc);
-    //    DataSourceResult dataSource = new DataSourceResult
-    //    {
-    //        Data = x,
-    //        Total = rows
-    //    };
-
-    //        //return Json(result);
-
-
-    //        //if (string.IsNullOrEmpty(categoryName))
-    //        //{
-    //        //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeModel(request.Page, request.PageSize);
-
-    //        //    DataSourceResult result = new DataSourceResult()
-    //        //    {
-    //        //        Data = jsonVariable,
-    //        //        Total = _dictionaryService.Total()
-    //        //    };
-
-    //        //    return Json(result);
-    //        //}
-    //        //else
-    //        //{
-    //        //    var jsonVariable = _dictionaryService.GetDictionaryCategoryTypeFilter(request.Page, request.PageSize, categoryName);
-
-    //        //    DataSourceResult result = new DataSourceResult()
-    //        //    {
-    //        //        Data = jsonVariable,
-    //        //        Total = _dictionaryService.FilterTotalCategory(categoryName)
-    //        //    };
-
-    //        //    return Json(result);
-    //        //}
-
-    //        return Json(dataSource);
-
-    //    }
+        }
 
         public ActionResult Process_Destroy([DataSourceRequest] DataSourceRequest request, ScheduleTouristAttractionModel schedule)
         {
@@ -432,11 +357,7 @@ namespace iWasHere.Web.Controllers
                 }
             }
 
-
-
-            return Json(ModelState.ToDataSourceResult());
-
-
+           return Json(ModelState.ToDataSourceResult());
 
         }
         public ActionResult DestroyCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountryModel country)
@@ -452,19 +373,7 @@ namespace iWasHere.Web.Controllers
             return Json(ModelState.ToDataSourceResult());
         }
 
-    //public IActionResult AddEditCountry()
-    //{
-    //    return View();
-    //}
-
-    //public ActionResult AddEditCountry(DictionaryCountry cm)
-    //{
-    //    if (ModelState.IsValid && cm != null)
-    //    {
-    //        _dictionaryService.AddDictionaryCountry(cm);
-    //    }
-    //    return View();
-    //}
+        
 
     public IActionResult AddEditCountry()
     {
@@ -485,6 +394,12 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.GetTouristAttractionsSeasonSchedule());
 
         }
+        public ActionResult GetTouristAttraction()
+        {
+            return Json(_dictionaryService.GetTouristAttraction());
+
+        }
+
 
         public IActionResult AddSchedule(int Id)
         {
@@ -574,8 +489,6 @@ namespace iWasHere.Web.Controllers
                 return View("Schedule");
             }
 
-
-
             if (scheduleTouristAttractionModel != null)
             {
                 string errorMessageForInsertSchedule;
@@ -596,7 +509,7 @@ namespace iWasHere.Web.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("a", errorMessageForInsertSchedule);
+                        ModelState.AddModelError(string.Empty, errorMessageForInsertSchedule);
                         return View("AddSchedule");
                     }
                 }
@@ -623,3 +536,14 @@ namespace iWasHere.Web.Controllers
     }
 }
 
+
+
+//var jsonVar = _dictionaryService.GetDictionaryScheduleFiltred(request.Page, request.PageSize, model.TouristAttractionName);
+//DataSourceResult result = new DataSourceResult()
+//{
+//    Data = jsonVar,
+//    Total = _dictionaryService.GetItemsOfSchedule()
+//};
+//            return Json(result);
+
+//        }
