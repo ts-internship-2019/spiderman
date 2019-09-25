@@ -324,13 +324,14 @@ namespace iWasHere.Domain.Service
             try
             {
                 _dbContext.Remove(_dbContext.DictionaryCity.Single(a => a.DictionaryCityId == id));
-                _dbContext.SaveChanges();
-                return null;
+               
             }
             catch (Exception ex)
             {
                 return "Exista un obiectiv turistic in acest oras.Nu poate fi sters.";
             }
+            _dbContext.SaveChanges();
+            return null;
         }
         public List<DictionaryCountyModel> Filter_GetCounties(string text)
         {
@@ -667,6 +668,12 @@ namespace iWasHere.Domain.Service
             {
                 return " Aceasta tara nu poate fi stearsa!Exista un judet in aceasta tara.";
             }
+        }
+
+        public int countAtractionsonCity(int id)
+        {
+            int i = _dbContext.TouristAttraction.Where(a => a.CityId == id).Count();
+            return i;
         }
 
 
