@@ -320,6 +320,8 @@ namespace iWasHere.Domain.Service
             return dictionaryCity;
         }
 
+        
+
         public int TotalCity()
         {
             int i = _dbContext.DictionaryCity.Count();
@@ -806,7 +808,7 @@ namespace iWasHere.Domain.Service
                    Longitude = a.Longtitudine,
                    Reviews = _dbContext.Review.Where(b => b.TouristAttractionId == Id).Select(x => new ReviewModel()
                    {
-                       RatingValue = x.Rating,
+                       RatingValue = x.Rating + 1,
                        Comment = x.Comment,
                        Title = x.Title,
                        User = x.UserName,
@@ -819,20 +821,28 @@ namespace iWasHere.Domain.Service
             return scheduleTouristAttractionModel;
         }
 
-        public string InsertReview(TouristAttractionMapsModel model)
+        public string InsertReview(ReviewModel model)
         {
-            _dbContext.Review.Add(new Review
+            try
             {
+                Review review = new Review();
+                review.UserId = "6492e4c6-bef2-4617-922e-bf54e5f4efe8";
+                review.UserName = model.User;
+                review.TouristAttractionId = model.TouristAttractionId;
+                review.Comment = model.Comment;
+                review.Rating = model.RatingValue;
+                review.Title = model.Title;
 
-                UserName = model.Review.User,
-                Rating = model.Review.RatingValue,
-                Comment = model.Review.Comment,
-                Title = model.Review.Title,
-                TouristAttractionId = model.Review.TouristAttractionId,
-            });
-            _dbContext.SaveChanges();
+                _dbContext.Review.Add(review);
+                _dbContext.SaveChanges();
 
-            return null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                return "nu a mers";
+            }
+
 
         }
 
@@ -1187,6 +1197,42 @@ namespace iWasHere.Domain.Service
             {
                 return "Trebuie sa completati campurile";
             }
+        }
+            public List<TouristAttractionsDTO> GetTouristAttractionsByCountry(int id,int page, int pageSize)
+        {
+
+            List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction
+                .Include(a => a.City)
+                .ThenInclude(a => a.DictionaryCounty)
+                .ThenInclude(a => a.DictionaryCountry)
+                .Include(a => a.Category)
+                .Include(a => a.Landmark)
+                .Include(a => a.Image)
+                .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id)
+                .Select(a => new TouristAttractionsDTO()
+                {
+                 
+                        TouristAttractionId = a.TouristAttractionId,
+                        Name = a.Name,
+                        Description = a.Description,
+                        Longtitudine = a.Longtitudine,
+                        Latitudine = a.Latitudine,
+                        CityName = a.City.DictionaryCityName,
+                        LandmarkName = a.Landmark.DictionaryItemName,
+                        CategoryName = a.Category.DictionaryCategoryName,
+                         FirstPhotoPath= (a.Image.ToList())[0].Path,
+                }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                    return touristAttraction;
+                }
+
+        public int TouristAttractionsbyCountryCount(int id) {
+            return _dbContext.TouristAttraction.Include(a => a.City)
+                .ThenInclude(a => a.DictionaryCounty)
+                .ThenInclude(a => a.DictionaryCountry)
+                .Include(a => a.Category)
+                .Include(a => a.Landmark)
+                .Include(a => a.Image)
+                .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id).Count();
         }
 
       
