@@ -1,109 +1,109 @@
-﻿@using Kendo.Mvc.UI
-@*@model IEnumerable<iWasHere.Domain.Models.TouristAttraction>*@
-@model iWasHere.Domain.Models.TouristAttraction
-
+﻿
+@model IEnumerable<iWasHere.Domain.DTOs.TouristAttractionsDTO>
+@using Kendo.Mvc.UI
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="demo-section k-content">
-    <h1 align="center">Obiective Turistice</h1>
-    <br />
-    <br />
-    <br />
-    <div>
-        <h6>Adauga obiectiv turistic</h6>
-        <p>
+    <div class="demo-section k-content">
+        <h1 align="center">Lista Obiective Turistice</h1>
+        <br />
+        <br />
+        <br />
+        <span>
             @(Html.Kendo().Button()
                             .Name("textButton")
-                            .HtmlAttributes(new { type = "button", style = "" })
+                            .HtmlAttributes(new { type = "button", style = "width: display:inline" })
                             .Content("<a class = 'ceva' href='/TouristAttractions/CreateEdit'>Adauga</a>")
             )
-        </p>
-    </div>
-    <div class="demo-section k-content">
-        <h6>Nume</h6>
-        @(Html.Kendo().MaskedTextBox()
-                          .Name("TxtFilterName")
-                          .Events(events => events.Change("changeTextBox"))
-                          .HtmlAttributes(new { style = "width: 22%" })
-        )
-        <p>
+        </span>
+
+        <span style="float:right;display:inline">
+            <label align="right"><b>Filtru nume</b></label>
+            <br />
+            @(Html.Kendo().MaskedTextBox()
+                               .Name("TxtFilterName")
+                               .Events(events => events.Change("changeTextBox"))
+                               .HtmlAttributes(new { style = "width: 234px; float:right" })
+            )
+            <br />
+            @(Html.Kendo().Button()
+                            .Name("iconFilterReset")
+                            .Tag("a")
+                            .Icon("filter-clear")
+                            .Content("Clear Filter")
+                          .HtmlAttributes(new { style = " float:right" })
+            )
             @(Html.Kendo().Button()
                             .Name("iconFilter")
                             .Tag("a")
                             .Icon("filter")
                             .Content("Filter")
+                          .HtmlAttributes(new { style = " float:right" })
             )
-
-            @(Html.Kendo().Button()
-                            .Name("iconFilterReset")
-                            .Tag("a")
-                            .Icon("filter-clear")
-                            .Content("Clear Filter"))
-        </p>
-    </div>
-    @(Html.Kendo().Grid<iWasHere.Domain.Models.TouristAttraction>()
-                  .Name("GridTouristAttractions")
-                  .Columns(columns =>
-                  {
-                      columns.Bound(c => c.TouristAttractionId).Width(140).Title("Id").Hidden();
-                      columns.Bound(c => c.Name).Width(200).Title("Nume");
-                      columns.Bound(c => c.Description).Width(200).Title("Descriere");
-                      columns.Bound(c => c.Category.DictionaryCategoryName).Width(200).Title("Nume categorie");
-                      columns.Bound(c => c.City.DictionaryCityName).Width(150).Title("Nume oras");
-                      columns.Bound(c => c.Landmark.DictionaryItemName).Width(200).Title("Nume landmark");
-                      columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
-                      columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
-                      columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>")
-                      .Width(150);
-                      columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/Details?id=#=TouristAttractionId# '> Detalii </a>")
-                      .Width(150);
-                      columns.Command(command =>
+        </span>
+        <br />
+        <br />
+        <br />
+        <br />
+        @(Html.Kendo().Grid<iWasHere.Domain.DTOs.TouristAttractionsDTO>()
+                      .Name("GridTouristAttractions")
+                      .Columns(columns =>
                       {
-                          command.Destroy().Text("Sterge");
-                      }).HtmlAttributes(new { style = "width: 60%;color: red;font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";" })
-                      .Width(150);
+                          columns.Bound(c => c.TouristAttractionId).Width(140).Title("Id").Hidden();
+                          columns.Bound(c => c.Name).Width(200).Title("Nume");
+                          columns.Bound(c => c.Description).Width(200).Title("Descriere");
+                          columns.Bound(c => c.CategoryName).Width(200).Title("Nume categorie");
+                          columns.Bound(c => c.CityName).Width(150).Title("Nume oras");
+                          columns.Bound(c => c.LandmarkName).Width(200).Title("Nume landmark");
+                          columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
+                          columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
+                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>")
+                          .Width(150);
+                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttraction/Details?Id=#=TouristAttractionId# '> Detalii </a>")
+                          .Width(150);
+                          columns.Command(command =>
+                          {
+                              command.Destroy().Text("Sterge");
+                          }).HtmlAttributes(new { style = "width: 60%;color: red;font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";" })
+                          .Width(150);
 
-                  })
-                      .HtmlAttributes(new { style = "height: 500px; width: 100%;" })
-                      .Scrollable()
-                      .Groupable()
-                      .Sortable()
-                      .Pageable(pageable => pageable
-                          .Refresh(true)
-                          .PageSizes(true)
-                          .ButtonCount(1))
-                      .DataSource(dataSource => dataSource
-                          .Ajax()
-                          .Read(read => read.Action("TouristAttractionsGrid", "TouristAttractions").Data("FilterByName"))
-                          .PageSize(20)
-                          .Destroy(update => update.Action("DestroyTouristAttractions", "TouristAttractions"))
-                          .Events(events => events.Error("ErrorHandler"))
-                          .Model(model => model.Id(p => p.TouristAttractionId))
-                          .Update(update => update.Action("UpdateTouristAttractions", "TouristAttractions"))
-    )
-    )
-</div>
+                      })
+                          .HtmlAttributes(new { style = "height: 500px; width: 100%;" })
+                          .Scrollable()
+                          .Sortable()
+                          .Pageable(pageable => pageable
+                              .Refresh(true)
+                              .PageSizes(true)
+                              .ButtonCount(1))
+                          .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .Read(read => read.Action("TouristAttractionsGrid", "TouristAttractions").Data("FilterByName"))
+                              .PageSize(20)
+                              .Model(model => model.Id(p => p.TouristAttractionId))
+                              .Destroy(update => update.Action("DestroyTouristAttractions", "TouristAttractions"))
+                              .Events(events => events.Error("ErrorHandler"))
+                              .Update(update => update.Action("UpdateTouristAttractions", "TouristAttractions"))
+
+        )
+        )
+    </div>
 <script>
     $(document).ready(function () {
 
         $(iconFilterReset).click(function () {
             document.getElementById('TxtFilterName').value = "";
-            $("#GridCurrency").data("kendoGrid").dataSource.read();
-            $("#GridCurrency").data("kendoGrid").dataSource.page(1);
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
         });
 
         $(iconFilter).click(function () {
-            //alert(document.getElementById("TxtFilterName").value);
-            $("#GridCurrency").data("kendoGrid").dataSource.read();
-            $("#GridCurrency").data("kendoGrid").dataSource.page(1);
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.read();
+            $("#GridTouristAttractions").data("kendoGrid").dataSource.page(1);
         });
     });
     function FilterByName() {
-        //var cId = document.getElementById("TxtFilterName").value;
-        //alert(cId);
         return {
             txtFilterName: document.getElementById("TxtFilterName").value
         }

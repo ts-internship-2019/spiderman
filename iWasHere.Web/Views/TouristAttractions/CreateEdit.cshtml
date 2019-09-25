@@ -1,25 +1,28 @@
-﻿@model iWasHere.Domain.Models.TouristAttraction
+﻿@model iWasHere.Domain.DTOs.TouristAttractionsDTOEdit
 @Html.HiddenFor(a => a.TouristAttractionId)
 @{
     ViewData["Title"] = "CreateEdit";
+    List<String> images = ViewData["Images"] as List<String>;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
     <h1 class="title" align="center">Adauga obiectiv turistic</h1>
-    <form action="Save" method="post"enctype="multipart/form-data">
+    <form action="Save" method="post" enctype="multipart/form-data">
 
 
-        <input type="hidden" asp-for="TouristAttractionId" /><br />
-        <h6>Nume</h6>
-        <input type="text" asp-for="Name" /><br />
-        <h6>Descriere</h6>
-        <input type="text" asp-for="Description" /><br /><br />
+            <input type="hidden" asp-for="TouristAttractionId" /><br />
+            <h6>Nume</h6>
+            <input type="text" asp-for="Name" /><br />
+            <h6>Descriere</h6>
+            <input type="text" asp-for="Description" /><br /><br />
 
-        <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
-        <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
+            <label><b>Cu bilet de intrare</b>&emsp;&emsp;&emsp;&emsp;</label>
+            <input type="checkbox" id="CheckBoxId" name="CheckBoxName" /><br />
 
-        <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
+            <label id="lblCostTicket" style="display:none"><b>Costul biletului de acces&emsp;</b></label><input id="inputCostTicket" type="text" style="display:none" /><br />
+
+
 
         @(Html.Kendo().ComboBoxFor(model => model.CategoryId)
                          .Placeholder("Tip atractie")
@@ -37,10 +40,26 @@
         )
         <br />
         <br />
+        @(Html.Kendo().ComboBoxFor(model => model.LandmarkId)
+                         .Placeholder("Landmark")
+                         .DataTextField("DictionaryItemName")
+                         .DataValueField("DictionaryItemId")
+                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
+                         .Filter(FilterType.Contains)
+                         .DataSource(source =>
+                         {
+                             source.Read(read =>
+                             {
+                                 read.Action("GetLandmark", "TouristAttractions");
+                             });
+                         })
+        )
+        <br />
+        <br />
         @(Html.Kendo().ComboBoxFor(model => model.CityId)
                          .Placeholder("Alege oras")
                          .DataTextField("DictionaryCityName")
-                         .DataValueField("Id")
+                         .DataValueField("DictionaryCityId")
                          .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
                          .Filter(FilterType.Contains)
                          .DataSource(source =>
@@ -51,94 +70,69 @@
                              });
                          })
         )
-        @*@(Html.Kendo().ComboBoxFor(model => model.Schedule.TouristAttractionId)
-                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
-                         .Placeholder("Start rogram")
-                         .DataTextField(Model.Schedule.StartHour.ToString())
-                         .DataValueField("ScheduleId")
-                         .Filter(FilterType.Contains)
-                         .DataSource(source =>
-                         {
-                             source.Read(read =>
-                             {
-                                 read.Action("GetSchedule", "TouristAttractions");
-                             });
-                         })
-        )
-        @(Html.Kendo().ComboBoxFor(model => model.Schedule.TouristAttractionId)
-                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
-                         .Placeholder("Sfarsit program")
-                         .DataTextField(Model.Schedule.EndHour.ToString())
-                         .DataValueField("ScheduleId")
-                         .Filter(FilterType.Contains)
-                         .DataSource(source =>
-                         {
-                             source.Read(read =>
-                             {
-                                 read.Action("GetSchedule", "TouristAttractions");
-                             });
-                         })
-        )*@
-        @*<p>
-            <h6>Ora de inceput </h6>
-            @(Html.Kendo().TimePickerFor(model => model.StartHour)
-
-               .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
-                 .Format("HH:mm:ss")
-               .DateInput()
-
-            )
-        </p>
-        <p>
-            <h6>Ora de sfarsit </h6>
-            @(Html.Kendo().TimePickerFor(model => model.EndHour)
-
-              .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
-              .Format("HH:mm:ss")
-
-
-              .DateInput()
-            )
-        </p>*@
         <h6>Latitudine</h6>
         <input type="text" asp-for="Latitudine" /><br />
         <h6>Longitudine</h6>
         <input type="text" asp-for="Longtitudine" /><br /><br />
         <br />
         <br />
-        <input type="file"  name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
-       
+        <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
 
-        <br />
-        <br /><div class="gallery" id="gal"></div>
 
-        <button class="btn btn-danger btn-lg"
-                name="submitValue"
-                value="cancel"
-                style="margin-right: 2em;margin-top: 2em;float: right;">
-            Anuleaza
-        </button>
-        @if (Model == null)
-        {
-            <button class="btn btn-primary btn-lg disable"
+            <br />
+            <br />
+            <label for="newimg">Imagini obiectiv</label>
+            <table>
+                @{int i = 0;
+                    foreach (string image in images)
+                    {
+                        if (i == 0)
+                        {
+                            @:<tr>
+                            }
+
+                            <td><img src="~/images/@Url.Content(image)" class=" img-fluid" /></td>
+
+                            if (i == 3)
+                            {
+                                i = 0;
+                            @:</tr>
+                        }
+                        ++i;
+
+                    }
+                }
+            </table>
+            <label for="newimg">Noile imagini</label>
+            <div class="gallery" id="gal"></div>
+
+            <button class="btn btn-danger btn-lg"
+                    name="submitValue"
+                    value="cancel"
+                    style="margin-right: 2em;margin-top: 2em;float: right;">
+                Anuleaza
+            </button>
+            @if (Model == null)
+            {
+                <button class="btn btn-primary btn-lg disable"
+                        type="submit"
+                        name="submitValue"
+                        value="saveNew"
+                        style="margin-right: 2em;margin-top: 2em;float: right;">
+                    Salveaza si nou
+                </button>}
+            <button class="btn btn-success btn-lg"
                     type="submit"
                     name="submitValue"
-                    value="saveNew"
+                    value="save"
                     style="margin-right: 2em;margin-top: 2em;float: right;">
-                Salveaza si nou
-            </button>}
-        <button class="btn btn-success btn-lg"
-                type="submit"
-                name="submitValue"
-                value="save"
-                style="margin-right: 2em;margin-top: 2em;float: right;">
-            Salveaza
-        </button>
+                Salveaza
+            </button>
 
-        <br /><br /><br />
-    </form>
-
-</div>
+            <br /><br /><br />
+        </form>
+        
+    </div>
 <style>
     .title {
         vertical-align: middle;

@@ -1,32 +1,48 @@
-﻿
+﻿@model iWasHere.Domain.DTOs.TouristAttractionMapsModel
+
+
+
+@{
+    ViewData["Title"] = "TouristAttraction";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    @*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
+
+
+
+
+
+
+
+
+@*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
 
 <style>
-    body{
+    body {
         background-image: linear-gradient(to right top, #af71f2, #a661f2, #9c4ff2, #913cf2, #8624f2);
-        background-color:black;
-       
-        background-position:center;
-        background-size:cover;
-        background-repeat:no-repeat;
-        box-sizing:border-box;
+        background-color: black;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        box-sizing: border-box;
     }
+
     .details {
         border: 1px solid purple;
         color: white;
         font-size: 18px;
         border-radius: 8px;
-        background-color:#2A0537;
+        background-color: #2A0537;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
         text-align: center;
-        width:500px;
+        width: 500px;
     }
-    
+
 
     label {
         width: 100px;
@@ -39,27 +55,31 @@
     input:focus {
         outline: none;
     }
-    textarea:focus{
-        outline:none;    }
-    textarea:hover{
-         cursor: default;
+
+    textarea:focus {
+        outline: none;
     }
-    h1,h3{
-        color:white;
+
+    textarea:hover {
+        cursor: default;
+    }
+
+    h1, h3 {
+        color: white;
     }
 
 
     .parent {
         color: white;
         font-size: 22px;
-        border-radius:12px;
+        border-radius: 12px;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
     }
 </style>
 
 <h1>Details</h1>
 <h3>Tourist Attraction</h3>
-<hr style="background:white;"/>
+<hr style="background:white;" />
 
 
 <div class="parent" id="gradient">
@@ -124,9 +144,106 @@
     </a>
 </div>
 
-@*<div id="objective-images">
-   
-</div>*@
+@using (Html.BeginForm("GetTouristAttractionMapsValues", "TouristAttraction", FormMethod.Post))
+{
+    @Html.HiddenFor(a => a.TouristAttractionId)
+    <input type="text" asp-for="Latitude" hidden id="Latitude" />
+
+    <input type="text" asp-for="Longitude" hidden id="Longitude" />
+
+    <div id="map"></div>
+
+}
+
+<script>
+    var map;
+    function initMap() {
+        debugger;
+        var Latitude = parseFloat($("#Latitude").val());
+        var Longitude = parseFloat($("#Longitude").val());
+
+        var location = { lat: Latitude, lng: Longitude };
+
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 15, center: location });
+
+        var marker = new google.maps.Marker({ position: location, map: map });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVxnhhEH_WDFhXv_PWaJNXztPWKLBO81Y&callback=initMap" async defer></script>
+
+
+<style>
+    #map {
+        height: 400px;
+        width: 700px;
+    }
+</style>
+
+
+
+@using (Html.BeginForm("AddReview", "TouristAttraction", FormMethod.Post))
+{
+
+    
+
+    @Html.HiddenFor(a => a.TouristAttractionId)
+
+    <div>
+        <h6> UserName </h6>
+        <input type="text" asp-for="review.User" id="user" />
+    </div>
+    <div>
+        <h6> Titlu Comentariu</h6>
+        <input type="text" asp-for="review.Title" id="title" />
+    </div>
+
+    <div>
+        <h6> Comentariu </h6>
+        <input type="text" asp-for="review.Comment" id="comment" />
+    </div>
+
+     <input type="text" hidden asp-for="review.TouristAttractionId" />
+
+    <div class="rating">
+        <span><input type="radio" name="RatingValue" id="str1" value="1"><label for="str1"></label></span>
+        <span><input type="radio" name="RatingValue" id="str2" value="2"><label for="str2"></label></span>
+        <span><input type="radio" name="RatingValue" id="str3" value="3"><label for="str3"></label></span>
+        <span><input type="radio" name="RatingValue" id="str4" value="4"><label for="str4"></label></span>
+        <span><input type="radio" name="RatingValue" id="str5" value="5"><label for="str5"></label></span>
+        <span><input type="radio" name="RatingValue" id="str6" value="6"><label for="str6"></label></span>
+        <span><input type="radio" name="RatingValue" id="str7" value="7"><label for="str7"></label></span>
+        <span><input type="radio" name="RatingValue" id="str8" value="8"><label for="str8"></label></span>
+        <span><input type="radio" name="RatingValue" id="str9" value="9"><label for="str9"></label></span>
+        <span><input type="radio" name="RatingValue" id="str10" value="10"><label for="str10"></label></span>
+
+    </div>
+
+    <div>
+        <button class="k-button k-primary" style="margin-top: 2em" name="btn" value="save">Salveaza</button>
+
+        <button class="k-button k-primary" style="margin-top: 2em" name="btn" value="cancel">Anuleaza</button>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $(".rating input:radio").attr("checked", false);
+
+            $('.rating input').click(function () {
+                $(".rating span").removeClass('checked');
+                $(this).parent().addClass('checked');
+            });
+            $('input:radio').change();
+        });
+    </script>
+
+
+}
+<div id="objective-images">
+
+</div>
+
 
 
 <script>
@@ -197,72 +314,72 @@ window.onload=function(){update()}
         }
     });
         }
-        
-      
+
+
     }
-    
+
 </script>
 
 @* Animation script *@
 @*<script>
-    var colors = new Array(
-        [62, 35, 255],
-        [60, 255, 60],
-        [5, 25, 55],
-        [45, 175, 230],
-        [18, 84, 97],
-        [255, 128, 0]);
+        var colors = new Array(
+            [62, 35, 255],
+            [60, 255, 60],
+            [5, 25, 55],
+            [45, 175, 230],
+            [18, 84, 97],
+            [255, 128, 0]);
 
-    var step = 0;
-    //color table indices for:
-    // current color left
-    // next color left
-    // current color right
-    // next color right
-    var colorIndices = [0, 1, 2, 3];
+        var step = 0;
+        //color table indices for:
+        // current color left
+        // next color left
+        // current color right
+        // next color right
+        var colorIndices = [0, 1, 2, 3];
 
-    //transition speed
-    var gradientSpeed = 0.002;
+        //transition speed
+        var gradientSpeed = 0.002;
 
-    function updateGradient() {
+        function updateGradient() {
 
-        if ($ === undefined) return;
+            if ($ === undefined) return;
 
-        var c0_0 = colors[colorIndices[0]];
-        var c0_1 = colors[colorIndices[1]];
-        var c1_0 = colors[colorIndices[2]];
-        var c1_1 = colors[colorIndices[3]];
+            var c0_0 = colors[colorIndices[0]];
+            var c0_1 = colors[colorIndices[1]];
+            var c1_0 = colors[colorIndices[2]];
+            var c1_1 = colors[colorIndices[3]];
 
-        var istep = 1 - step;
-        var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
-        var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
-        var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
-        var color1 = "rgb(" + r1 + "," + g1 + "," + b1 + ")";
+            var istep = 1 - step;
+            var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
+            var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
+            var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
+            var color1 = "rgb(" + r1 + "," + g1 + "," + b1 + ")";
 
-        var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
-        var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);
-        var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
-        var color2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
+            var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
+            var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);
+            var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
+            var color2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
 
-        $('#gradient').css({
-            background: "-webkit-gradient(linear, left top, right top, from(" + color1 + "), to(" + color2 + "))"
-        }).css({
-            background: "-moz-linear-gradient(left, " + color1 + " 0%, " + color2 + " 100%)"
-        });
+            $('#gradient').css({
+                background: "-webkit-gradient(linear, left top, right top, from(" + color1 + "), to(" + color2 + "))"
+            }).css({
+                background: "-moz-linear-gradient(left, " + color1 + " 0%, " + color2 + " 100%)"
+            });
 
-        step += gradientSpeed;
-        if (step >= 1) {
-            step %= 1;
-            colorIndices[0] = colorIndices[1];
-            colorIndices[2] = colorIndices[3];
+            step += gradientSpeed;
+            if (step >= 1) {
+                step %= 1;
+                colorIndices[0] = colorIndices[1];
+                colorIndices[2] = colorIndices[3];
 
-            //pick two new target color indices
-            //do not pick the same as the current one
-            colorIndices[1] = (colorIndices[1] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length;
-            colorIndices[3] = (colorIndices[3] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length;
+                //pick two new target color indices
+                //do not pick the same as the current one
+                colorIndices[1] = (colorIndices[1] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length;
+                colorIndices[3] = (colorIndices[3] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length;
 
+            }
         }
-    }
 
-    setInterval(updateGradient, 10);
-</script>*@
+        setInterval(updateGradient, 10);
+    </script>*@

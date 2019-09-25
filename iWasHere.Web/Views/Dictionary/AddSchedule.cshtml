@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "AddSchedule";
 }
+@Html.ValidationSummary(true)
 <h1>Adaugare program obiectiv turistic</h1>
 @using (Html.BeginForm("NewSchedule", "Dictionary", FormMethod.Post))
 {
@@ -13,17 +14,18 @@
     <p>
         @(Html.Kendo().ComboBoxFor(model => model.SeasonId)
 
-                         .HtmlAttributes(new { style = "width:30%;" })
+                         .HtmlAttributes(new { style = "align:left; width:60%; id='seasons'" })
                          .Placeholder("Selecteaza sezonul")
                          .DataTextField("SeasonName")
                          .DataValueField("SeasonId")
-                           
+
+
                          .Filter(FilterType.Contains)
                          .DataSource(source =>
-               {
-                    source.Read(read =>
-              {
-                 read.Action("GetSeasons", "Dictionary");
+                         {
+                             source.Read(read =>
+                             {
+                                 read.Action("GetSeasons", "Dictionary");
                              });
                          })
         )
@@ -32,13 +34,14 @@
     <p>
         @(Html.Kendo().ComboBoxFor(model => model.TouristAttractionId)
 
-                        .HtmlAttributes(new { style = "width:30%;" })
+                        .HtmlAttributes(new { style = "align:left; width:60%; id='attractions'" })
                         .Placeholder("Selecteaza obiectiv turistic")
                         .DataTextField("TouristAttractionName")
                         .DataValueField("TouristAttractionId")
+
                         .Filter(FilterType.Contains)
-                        
-                       
+
+
                         .DataSource(source =>
               {
                    source.Read(read =>
@@ -51,59 +54,71 @@
     <p>
         <h6>Ora de inceput </h6>
         @(Html.Kendo().TimePickerFor(model => model.StartHour)
-        
-           .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
-             .Format("HH:mm:ss")
-           .DateInput()
-           
+          .HtmlAttributes(new { style = "width: 50%" })
+          .Format("HH:mm:ss")
+          .DateInput()
+
         )
     </p>
     <p>
         <h6>Ora de sfarsit </h6>
         @(Html.Kendo().TimePickerFor(model => model.EndHour)
-
-          .HtmlAttributes(new { style = "width: 50%", title = "timepicker" })
-          .Format("HH:mm:ss")
-         
-
-          .DateInput()
+           .HtmlAttributes(new { style = "width: 50%" })
+           .Format("HH:mm:ss")
+           .DateInput(true)
         )
     </p>
 
     @Html.HiddenFor(a => a.ScheduleId)
     <div>
-        <button class="k-button k-primary" onclick="Validate" style="margin-top: 2em" name="submitbtn" value="save">Salveaza</button>
+        <button class="k-button k-primary" onclick="validate()" style="margin-top: 2em" name="submitbtn" value="save">Salveaza</button>
         @if (Model == null)
         {
-            <button class="k-button k-primary"  onclick="mesaj2" style="margin-top: 2em" name="submitbtn" value="savenew">Salveaza si Nou</button>
+            <button class="k-button k-primary" onclick="validate()" style="margin-top: 2em" name="submitbtn" value="savenew">Salveaza si Nou</button>
         }
         <button class="k-button k-primary" style="margin-top: 2em" name="submitbtn" value="cancel">Anuleaza</button>
 
     </div>
 
     <script>
-        function mesaj() {
-            alert("s-a salvat o noua inregistrare")
-        }
-        function mesaj2() {
-            alert("s-a salvat o noua inregistrare")
-        }
 
-        function Validate() 
- {
-    var val = document.getElementById('day').value;
-    
-    if (!val.match(/^[a-zA-Z]+$/)) 
-    {
-        alert('doar litere');
-        return false;
-    }
-    
-    return true;
-}
 
+        function validate() {
+
+            if (invalid($('#day').val())) {
+                alert("Doar litere ");
+            }
+
+            //var co = $('#attractions');
+            //if (co.val() == undefined) {
+            //    alert("Selecteaza un obiectiv turistic!");
+            //    $('#co').focus();
+            //}
+
+            //var co2 = $('#seasons');
+            //if (co2.val() == undefined) {
+            //    alert("Selecteaza un sezon!");
+            //    $('#co').focus();
+            //}
+
+            var combo1 = $find('<%=seasons.SeasonId %>');
+            if (combo1.get_selectedIndex() == undefined) {
+                alert("Selecteaza un sezon!");
+            }
+
+            var combo2 = $find('<%=attractions.TouristAttractionId %>');
+            if (combo2.get_selectedIndex() == undefined) {
+                alert("Selecteaza un obiectiv!");
+            }
+        }
+        function invalid(str) {
+            return str === null || str == "" || str == " " || str.match(/^ *$/) !== null;
+        }
 
     </script>
+
+
+
 
 }
 
