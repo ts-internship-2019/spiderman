@@ -19,6 +19,11 @@ namespace iWasHere.Controllers
             return View();
         }
 
+        public IActionResult AddEmail()
+        {
+            return View();
+        }
+
         public TouristAttractionController(DictionaryService _dictionaryService, TouristAttractionService touristAttractionService)
         {
             this._dictionaryService = _dictionaryService;
