@@ -76,9 +76,9 @@ namespace iWasHere.Domain.Service
                 Name = a.DictionaryCountyName,
                 CountryName = a.DictionaryCountry.DictionaryCountryName
             }).Skip(skip).Take(pageSize).ToList();
-       
-               
-            
+
+
+
             return dictionaryCountyTypeModel;
         }
 
@@ -300,7 +300,7 @@ namespace iWasHere.Domain.Service
             return dictionaryLCountries;
         }
 
-   
+
         public DictionaryCityModel GetCity(int id)
         {
 
@@ -330,7 +330,7 @@ namespace iWasHere.Domain.Service
             try
             {
                 _dbContext.Remove(_dbContext.DictionaryCity.Single(a => a.DictionaryCityId == id));
-               
+
             }
             catch (Exception ex)
             {
@@ -548,7 +548,7 @@ namespace iWasHere.Domain.Service
                 return scheduleTouristAttractions;
 
             }
-         }
+        }
 
         public string DeleteSchedule(int id)
         {
@@ -794,40 +794,44 @@ namespace iWasHere.Domain.Service
             return null;
         }
 
-        public TouristAttractionMapsModel GetTouristAttractionMapsById(int attraction)
+        public TouristAttractionMapsModel GetTouristAttractionMapsById(int Id)
         {
 
-             TouristAttractionMapsModel scheduleTouristAttractionModel = _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == attraction)
-                .Select(a => new TouristAttractionMapsModel()
-                {
-                   
-                    TouristAttractionId = a.TouristAttractionId,
-                    Latitude=a.Latitudine,
-                    Longitude=a.Longtitudine
+            TouristAttractionMapsModel scheduleTouristAttractionModel = _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == Id)
+               .Select(a => new TouristAttractionMapsModel()
+               {
 
-                }).First();
+                   TouristAttractionId = a.TouristAttractionId,
+                   Latitude = a.Latitudine,
+                   Longitude = a.Longtitudine,
+                   Reviews = _dbContext.Review.Where(b => b.TouristAttractionId == Id).Select(x => new ReviewModel()
+                   {
+                       RatingValue = x.Rating,
+                       Comment = x.Comment,
+                       Title = x.Title,
+                       User = x.UserName,
 
-         return scheduleTouristAttractionModel;
+                       TouristAttractionId = x.TouristAttractionId
+                   }).ToList()
+
+        }).First();
+
+            return scheduleTouristAttractionModel;
         }
 
-        public string InsertReview(TouristAttractionMapsModel model)
+        public string InsertReview(ReviewModel model)
         {
-            try
+            _dbContext.Review.Add(new Review
             {
-                Review review = new Review();
-                review.UserName = model.review.User;
-                review.Rating = model.review.RatingValue;
-                review.Comment = model.review.Comment;
-                review.Title = model.review.Title;
-                review.TouristAttractionId = model.review.TouristAttractionId;
-                _dbContext.Review.Add(review);
-                _dbContext.SaveChanges();
-                return null;
-            }
-            catch (Exception e)
-            {
-                return "Introduceti valori in toate campurile";
-            }
+
+                UserName = model.User,
+                Rating = model.RatingValue,
+                Comment = model.Comment,
+                Title = model.Title,
+                TouristAttractionId = model.TouristAttractionId,
+            });
+            _dbContext.SaveChanges();
+            return null;
 
         }
 
@@ -906,7 +910,7 @@ namespace iWasHere.Domain.Service
         {
             if (!string.IsNullOrEmpty(txtFilterName))
             {
-                List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction.Include(a=>a.Category).Include(a=>a.City).Include(a=>a.Landmark).
+                List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction.Include(a => a.Category).Include(a => a.City).Include(a => a.Landmark).
                     Where(a => a.Name.Contains(txtFilterName))
                     //Where(a => a.DictionaryCurrencyName == txtFilterName)
                     .Select(a => new TouristAttractionsDTO()
@@ -1044,12 +1048,13 @@ namespace iWasHere.Domain.Service
                 Path = a.Path,
             }).ToList();
             List<String> img = new List<String>();
-            for (int i = 0; i < imagini.Count; i++) {
+            for (int i = 0; i < imagini.Count; i++)
+            {
                 img.Add(imagini[i].Path);
             }
             return img;
         }
-        
+
         public List<DictionaryLandmarkType> GetTouristAttractionsLandmark(string text)
         {
             if (!string.IsNullOrEmpty(text))
@@ -1067,13 +1072,13 @@ namespace iWasHere.Domain.Service
             {
                 List<DictionaryLandmarkType> dL = _dbContext.DictionaryLandmarkType.Where(p => p.DictionaryItemName.Contains(text))
                     .Select(a => new DictionaryLandmarkType()
-                {
-                    DictionaryItemId = a.DictionaryItemId,
-                    DictionaryItemCode = a.DictionaryItemCode,
-                    DictionaryItemName = a.DictionaryItemName,
-                    Description = a.Description,
-                    TouristAttraction = a.TouristAttraction
-                }).ToList();
+                    {
+                        DictionaryItemId = a.DictionaryItemId,
+                        DictionaryItemCode = a.DictionaryItemCode,
+                        DictionaryItemName = a.DictionaryItemName,
+                        Description = a.Description,
+                        TouristAttraction = a.TouristAttraction
+                    }).ToList();
                 return dL;
             }
         }
@@ -1104,22 +1109,9 @@ namespace iWasHere.Domain.Service
                 return null;
             }
         }
-    
 
-        public List<ReviewModel> GetReviews(int touristAttractionId)
-        {
-            List<ReviewModel> reviews = _dbContext.Review.Where(a => a.TouristAttractionId == touristAttractionId).Select(a => new ReviewModel()
-            {
-                RatingValue = a.Rating,
-                Comment = a.Comment,
-                Title = a.Title,
-                User = a.UserName,
-               
-                TouristAttractionId = a.TouristAttractionId
-            }).ToList();
 
-            return reviews;
-      }
+       
 
         public bool ValidateData(ScheduleTouristAttractionModel model, out string message)
         {
@@ -1152,7 +1144,7 @@ namespace iWasHere.Domain.Service
                 //    return false;
                 //}
             }
-            catch( Exception e)
+            catch (Exception e)
             {
 
             }
@@ -1165,7 +1157,7 @@ namespace iWasHere.Domain.Service
         {
             _dbContext.Add(image);
             _dbContext.SaveChanges();
-       }
+        }
 
         public DictionaryCategoryTypeModel getCategoryIdUpdate(int id)
         {
@@ -1195,5 +1187,10 @@ namespace iWasHere.Domain.Service
             }
         }
 
+      
+
+
+
     }
 }
+ 

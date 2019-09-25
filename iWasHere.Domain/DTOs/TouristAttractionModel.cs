@@ -18,5 +18,9 @@ namespace iWasHere.Domain.DTOs
         public string  CategoryName { get; set; }
         public string  CityName { get; set; }
         public string  LandmarkTypeName { get; set; }
+
+      
+      
+
     }
 }

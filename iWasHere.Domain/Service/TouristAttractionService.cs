@@ -30,10 +30,11 @@ namespace iWasHere.Domain.Service
             var categoryName = _dbContext.TouristAttraction
                 .Include(a => a.City)
                 .Include(a => a.Category)
-                .Include(a=> a.Landmark)
+                .Include(a => a.Landmark)
                 .Include(a => a.Image)
                 .Where(categ => categ.TouristAttractionId == id)
-                .Select(a=> new TouristAttractionModel() {
+                .Select(a => new TouristAttractionModel()
+                {
                     CategoryName = a.Category.DictionaryCategoryName,
                     CityName = a.City.DictionaryCityName,
                     LandmarkTypeName = a.Landmark.DictionaryItemName,
@@ -41,8 +42,11 @@ namespace iWasHere.Domain.Service
                     Longtitudine = a.Longtitudine,
                     Description = a.Description,
                     Image = a.Image.Select(b => b.Path),
-                    Name = a.Name
+                    Name = a.Name,
+                   
                 });
+
+         
             List<TouristAttractionModel> categoryListModel = categoryName.Take(1).ToList();
                 
             return categoryListModel;

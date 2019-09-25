@@ -12,6 +12,9 @@ namespace iWasHere.Domain.DTOs
 
      public   string Longitude { get; set; }
 
-        public ReviewModel review { get; set; }
+     public ReviewModel Review { get; set; }
+     public List<ReviewModel> Reviews { get; set; }
+
+
     }
 }
