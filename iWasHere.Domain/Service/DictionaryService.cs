@@ -804,8 +804,9 @@ namespace iWasHere.Domain.Service
 
         public TouristAttractionMapsModel GetTouristAttractionMapsById(int Id)
         {
-
-            TouristAttractionMapsModel scheduleTouristAttractionModel = _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == Id)
+            try
+            {
+                TouristAttractionMapsModel scheduleTouristAttractionModel = _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == Id)
                .Select(a => new TouristAttractionMapsModel()
                {
 
@@ -822,9 +823,17 @@ namespace iWasHere.Domain.Service
                        TouristAttractionId = x.TouristAttractionId
                    }).ToList()
 
-        }).First();
+               }).First();
 
-            return scheduleTouristAttractionModel;
+                return scheduleTouristAttractionModel;
+
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+           
+
         }
 
         public string InsertReview(ReviewModel model)
@@ -1206,6 +1215,7 @@ namespace iWasHere.Domain.Service
         }
             public List<TouristAttractionsDTO> GetTouristAttractionsByCountry(int id,int page, int pageSize)
         {
+            
 
             List<TouristAttractionsDTO> touristAttraction = _dbContext.TouristAttraction
                 .Include(a => a.City)
@@ -1214,7 +1224,8 @@ namespace iWasHere.Domain.Service
                 .Include(a => a.Category)
                 .Include(a => a.Landmark)
                 .Include(a => a.Image)
-                .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id)
+               
+                .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id )
                 .Select(a => new TouristAttractionsDTO()
                 {
                  
@@ -1226,7 +1237,8 @@ namespace iWasHere.Domain.Service
                         CityName = a.City.DictionaryCityName,
                         LandmarkName = a.Landmark.DictionaryItemName,
                         CategoryName = a.Category.DictionaryCategoryName,
-                         FirstPhotoPath= (a.Image.ToList())[0].Path,
+                    //FirstPhotoPath = (a.Image.ToList())[0].Path,
+                    FirstPhotoPath = "27620ead-7f5b-4e39-ab04-7acd0d77d694_noImage.png",
                 }).Skip((page - 1) * pageSize).Take(pageSize).ToList();
                     return touristAttraction;
                 }
@@ -1396,6 +1408,17 @@ namespace iWasHere.Domain.Service
             wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
         }
 
+        public bool CheckImageFromDB(int Id, out string abc)
+        {
+            Image img = _dbContext.Image.Where(a => a.TouristAttractionId == Id).FirstOrDefault();
+            if (img != null)
+            {
+                abc = img.Path;
+                return true;
+            }
+            abc = "";
+            return false;
+        }
     }
 
       

@@ -4,18 +4,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+    <style>
+        body{
+            background-image: url("http://www.myfreephotoshop.com/wp-content/uploads/2014/07/11.jpg");
+            background-color: #cccccc;
+            background-size: cover;
+        }
+        .k-content,#grid{
+        
+  border-style: solid;
+  border-color: darkred;
+}
+    </style>
     <div class="demo-section k-content">
         <h2 align="center">Orase</h2>
         <br /><br />
         @(Html.Kendo().Button()
                            .Name("textButton")
-                           .HtmlAttributes(new { type = "button", style = "width:200px;",align="center" })
+                           .HtmlAttributes(new { type = "button", style = "width:200px;", align = "center" })
                            .Content("<a href='/dictionary/AddCity'>Adauga un oras</a>")
         )
 
         <p></p>
-        
+
         <label for="Oras">
             Oras:
         </label>
@@ -23,30 +34,31 @@
             .Name("kTextBox").
             HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='kTextBox'" })
         )
-    <label for="Judet">Judet:</label> @(Html.Kendo().ComboBox()
-            .Name("counties")
-            .DataTextField("CountyName")
-            .DataValueField("CountyId")
-            .HtmlAttributes(new { style = "width:60%; id='counties'" })
-            .Filter("StartsWith")
-            .MinLength(1)
-            .AutoBind(false)
-            .DataSource(source =>
-            {
-            source.Read(read =>
-            {
-            read.Action("FilterGetCounties", "Dictionary");
-            })
-            .ServerFiltering(true);
-            })
+        <label for="Judet">Judet:</label> @(Html.Kendo().ComboBox()
+.Name("counties")
+.DataTextField("CountyName")
+.DataValueField("CountyId")
+.HtmlAttributes(new { style = "width:60%; id='counties'" })
+.Filter("StartsWith")
+.MinLength(1)
+.AutoBind(false)
+.DataSource(source =>
+{
+source.Read(read =>
+{
+read.Action("FilterGetCounties", "Dictionary");
+})
+.ServerFiltering(true);
+})
         )
+        <br /><br />
 
+        <p>
+            <button onclick="test()" class="btn btn-outline-danger " id="get" style="margin-top: 2em; float: left" ;>Filtreaza</button>
+            <button onclick="deleteFilters()" class="btn btn-outline-danger" id="gett" style="margin-top: 2em; float: right">Sterge filtrele</button>
+
+        </p>
     </div>
-<p>
-        <button onclick="test()" class="btn btn-outline-danger " id="get" style="margin-top: 2em; float: left";>Filtreaza</button>
-        <button onclick="deleteFilters()" class="btn btn-outline-danger" id="gett" style="margin-top: 2em; float: right">Sterge filtrele</button>
-        <p></p>
-</p>
         <br /><br />
  
 
@@ -56,45 +68,45 @@
 
 </p>
 
-
-@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
-    .Name("grid")
-    .Columns(columns =>
-    {
-
-
-        columns.Bound(p => p.CityName).Title("Oras").Width(150);
-        columns.Bound(p => p.CountyName).Title("Judet").Width(130);
-        columns.Bound(p => p.CountryName).Title("Tara").Width(150);
-        columns.Template("<a class='btn btn-outline-info' href='/Dictionary/AddCity?Id=#=CityId# '> Editeaza </a>").Width(150);
-        columns.Command(command =>
+<body>
+    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
+        .Name("grid")
+        .Columns(columns =>
         {
-            command.Destroy().Text("Delete");
+
+
+            columns.Bound(p => p.CityName).Title("Oras").Width(150);
+            columns.Bound(p => p.CountyName).Title("Judet").Width(130);
+            columns.Bound(p => p.CountryName).Title("Tara").Width(150);
+            columns.Template("<a class='btn btn-outline-info' href='/Dictionary/AddCity?Id=#=CityId# '> Editeaza </a>").Width(150);
+            columns.Command(command =>
+            {
+                command.Destroy().Text("Delete");
+            })
+                .HtmlAttributes(new { style = "class = \"btn btn-outline-danger\"" }).Width(150);
+            //   columns.Template("<a href='"+@Url.Action("AddCity", "Dictionary")+"?id=#=CityId#' class='btn btn-info'> Modifica</a> ");
+
         })
-            .HtmlAttributes(new { style = "class = \"btn btn-outline-danger\"" }).Width(150);
-        //   columns.Template("<a href='"+@Url.Action("AddCity", "Dictionary")+"?id=#=CityId#' class='btn btn-info'> Modifica</a> ");
+        .HtmlAttributes(new { style = "height: 550px; id='grid'" })
+        .Scrollable()
 
-    })
-    .HtmlAttributes(new { style = "height: 550px; id='grid'" })
-    .Scrollable()
-   
-    .Sortable()
-    .Pageable(pageable => pageable
-        .Refresh(true)
-        .PageSizes(true)
-        .ButtonCount(1))
-    .DataSource(dataSource => dataSource
-        .Ajax()
-        .Read(read => read.Action("CityData", "Dictionary").Data("onAdditionalDataTextBoxCity"))
-        .Events(events => events.Error("error_handler"))
-           .Model(model => model.Id(p => p.CityId))
-           .Destroy(update => update.Action("DeleteCityData", "Dictionary"))
+            .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(1))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("CityData", "Dictionary").Data("onAdditionalDataTextBoxCity"))
+            .Events(events => events.Error("error_handler"))
+               .Model(model => model.Id(p => p.CityId))
+               .Destroy(update => update.Action("DeleteCityData", "Dictionary"))
 
 
-        .PageSize(20)
+            .PageSize(20)
+        )
     )
-)
-
+</body>
 
 
 <script>
@@ -170,3 +182,15 @@
     }
 
 </script>
+
+<style>
+    body {
+        /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
+        /*background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);*/
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        box-sizing: border-box;
+        background-color: lightyellow;
+    }
+</style>

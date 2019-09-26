@@ -38,32 +38,7 @@ namespace iWasHere.Controllers
         }
         public IActionResult AddReview(TouristAttractionMapsModel modelMaps, string submit)
         {
-            //ReviewModel modelReview = null;
-            //if (modelMaps.TouristAttractionId != null)
-            //{
-            //    string errorMessage;
-            //    if (modelMaps==0)
-            //  {
-            //       modelReview = new ReviewModel()
-            //     {
-            //        User = modelMaps.Review.User,
-            //        RatingValue = modelMaps.Review.RatingValue,
-            //        Comment = modelMaps.Review.Comment,
-            //        Title = modelMaps.Review.Title,
-            //        TouristAttractionId = modelMaps.Review.TouristAttractionId
-            //      };
-            //}
-            //string errorMessage = _dictionaryService.InsertReview(modelReview);
-            //if (!String.IsNullOrEmpty(errorMessage))
-            //{
-            //    ModelState.AddModelError("e", errorMessage);
-            //    return View(modelMaps);
-            //}
-            //else
-            //{
-            //    return View();
-            //}
-
+           
             if (submit == "save")
             {
                 string errorMessage;
