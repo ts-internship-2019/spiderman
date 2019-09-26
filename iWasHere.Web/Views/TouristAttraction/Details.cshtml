@@ -12,8 +12,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 
 
 @*<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">*@
@@ -27,17 +27,19 @@
         background-size: cover;
         background-repeat: no-repeat;
         box-sizing: border-box;
+        background-color: lightyellow;
     }
 
     .details {
-        border: 1px solid purple;
+        border: 1px solid white;
         color: white;
         font-size: 18px;
         border-radius: 8px;
-        background-color: #051937;
+        background-color: lightblue;
         /*background-image: linear-gradient(to right top, #7638d6, #6d55e0, #676ce6, #6980ea, #7192ea, #68a2f1, #65b1f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);*/
         text-align: center;
         width: 500px;
+        color: black;
     }
 
 
@@ -62,14 +64,14 @@
         cursor: default;
     }
 
-    h1{
-         color:navajowhite;
-         font-size:50px;
+    h1 {
+        color: black;
+        font-size: 50px;
         font-family: 'Courgette', cursive;
     }
 
     .parent {
-        color: white;
+        color: black;
         font-size: 22px;
         border-radius: 12px;
     }
@@ -95,45 +97,44 @@
     #description {
         /*overflow:hidden;*/
     }
-   
 </style>
 
-<h1>Details</h1>
+<h1>Detalii Obiectiv Turistic</h1>
 
 <hr style="background:white;" />
 
 
 <div class="parent" id="gradient">
     <div class="row highligh mb-2">
-        <div class="col-lg-6"><label for="name">Name</label></div>
+        <div class="col-lg-6"><label for="name">Nume</label></div>
         <div class="col-lg-6"><input class="details" type="text" id="name" name="name" value="Name" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"> <label for="description">Description</label></div>
+        <div class="col-lg-6"> <label for="description">Descriere</label></div>
         <div class="col-lg-6"><textarea extMode="MultiLine" class="details" id="description" name="description" value="Description" readonly="readonly"></textarea></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"> <label for="longitude">Longitude</label> </div>
+        <div class="col-lg-6"> <label for="longitude">Longitudine</label> </div>
         <div class="col-lg-6"> <input class="details" type="text" id="longitude" name="longitude" value="Longitude" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"><label for="latitude">Latitude</label></div>
+        <div class="col-lg-6"><label for="latitude">Latitudine</label></div>
         <div class="col-lg-6"><input class="details" type="text" id="latitude" name="latitude" value="Latitude" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"><label for="category">Category</label></div>
+        <div class="col-lg-6"><label for="category">Categorie</label></div>
         <div class="col-lg-6"><input class="details" type="text" id="category" name="category" value="Category" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"><label for="city">City</label></div>
+        <div class="col-lg-6"><label for="city">Oras</label></div>
         <div class="col-lg-6"><input class="details" type="text" id="city" name="city" value="City" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"><label for="landmark">Landmark</label></div>
+        <div class="col-lg-6"><label for="landmark">Regiune</label></div>
         <div class="col-lg-6"><input class="details" type="text" id="landmark" name="landmark" value="Landmark" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
-        <div class="col-lg-6"><label for="county">County</label></div>
+        <div class="col-lg-6"><label for="county">Judet</label></div>
         <div class="col-lg-6"><input class="details" type="text" id="county" name="county" value="County" readonly="readonly" /></div>
     </div>
     <div class="row highligh mb-2">
@@ -141,6 +142,9 @@
         <div onclick="window.location.href='/TouristAttractions/TouristAttractionsByCountry?Id='+getCountryId()" class="col-lg-6"><input class="details" type="text" id="country" name="country" value="Country" readonly="readonly" /></div>
     </div>
 </div>
+
+<br />
+<hr  />
 
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div id="objective-images" class="carousel-inner">
@@ -154,7 +158,9 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
-
+<br />
+<hr />
+<h3> Locatia obiectivului </h3>
 @using (Html.BeginForm("GetTouristAttractionMapsValues", "TouristAttraction", FormMethod.Post))
 {
     @Html.HiddenFor(a => a.TouristAttractionId)
@@ -216,10 +222,13 @@
         <h6> Titlu Comentariu</h6>
         <input type="text" asp-for="Review.Title" id="title" />
     </div>
+
     <div>
         <h6> Comentariu </h6>
-        <input type="text" asp-for="Review.Comment" id="comment" />
+
+        <textarea asp-for="Review.Comment" id="comment" rows="5" columns="80"></textarea>
     </div>
+
 
     //<input type="text" hidden asp-for="Review.TouristAttractionId" />
     <br />
@@ -286,56 +295,57 @@
         });
     </script>
 
-<style>
+    <style>
 
 
-    .checked {
-        color: orange;
-    }
 
-
-    .rate {
-        float: left;
-        height: 46px;
-        padding: 0 10px;
-    }
-
-        .rate:not(:checked) > input {
-            position: absolute;
-            top: -9999px;
+        .checked {
+            color: orange;
         }
 
-        .rate:not(:checked) > label {
-            float: right;
-            width: 1em;
-            overflow: hidden;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 30px;
-            color: #ccc;
+
+        .rate {
+            float: left;
+            height: 46px;
+            padding: 0 10px;
         }
 
-            .rate:not(:checked) > label:before {
-                content: '★ ';
+            .rate:not(:checked) > input {
+                position: absolute;
+                top: -9999px;
             }
 
-        .rate > input:checked ~ label {
-            color: #ffc700;
-        }
+            .rate:not(:checked) > label {
+                float: right;
+                width: 1em;
+                overflow: hidden;
+                white-space: nowrap;
+                cursor: pointer;
+                font-size: 30px;
+                color: #ccc;
+            }
 
-        .rate:not(:checked) > label:hover,
-        .rate:not(:checked) > label:hover ~ label {
-            color: #deb217;
-        }
+                .rate:not(:checked) > label:before {
+                    content: '★ ';
+                }
 
-        .rate > input:checked + label:hover,
-        .rate > input:checked + label:hover ~ label,
-        .rate > input:checked ~ label:hover,
-        .rate > input:checked ~ label:hover ~ label,
-        .rate > label:hover ~ input:checked ~ label {
-            color: #c59b08;
-        }
-</style>
+            .rate > input:checked ~ label {
+                color: #ffc700;
+            }
+
+            .rate:not(:checked) > label:hover,
+            .rate:not(:checked) > label:hover ~ label {
+                color: #deb217;
+            }
+
+            .rate > input:checked + label:hover,
+            .rate > input:checked + label:hover ~ label,
+            .rate > input:checked ~ label:hover,
+            .rate > input:checked ~ label:hover ~ label,
+            .rate > label:hover ~ input:checked ~ label {
+                color: #c59b08;
+            }
+    </style>
 
 }
 
@@ -378,7 +388,7 @@ window.onload=function(){update()}
                 document.getElementById('country').value = d.result[0].CountryName;
                 countryId = d.result[0].CountryId;
                 console.log(th.length)
-                
+
                 if (th.length > 6 && th.length < 50) {
                     $('#description').css("height", th.length * 2 + "px");
                 }
@@ -388,7 +398,7 @@ window.onload=function(){update()}
                     } else {
                         $('#description').css("height", th.length / 2 + "px");
                     }
-                   
+
                 }
                 if (d.result[0].Image.length > 0) {
                     let image;

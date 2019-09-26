@@ -798,8 +798,9 @@ namespace iWasHere.Domain.Service
 
         public TouristAttractionMapsModel GetTouristAttractionMapsById(int Id)
         {
-
-            TouristAttractionMapsModel scheduleTouristAttractionModel = _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == Id)
+            try
+            {
+                TouristAttractionMapsModel scheduleTouristAttractionModel = _dbContext.TouristAttraction.Where(a => a.TouristAttractionId == Id)
                .Select(a => new TouristAttractionMapsModel()
                {
 
@@ -816,9 +817,17 @@ namespace iWasHere.Domain.Service
                        TouristAttractionId = x.TouristAttractionId
                    }).ToList()
 
-        }).First();
+               }).First();
 
-            return scheduleTouristAttractionModel;
+                return scheduleTouristAttractionModel;
+
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+           
+
         }
 
         public string InsertReview(ReviewModel model)
