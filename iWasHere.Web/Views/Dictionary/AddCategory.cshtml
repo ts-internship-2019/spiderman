@@ -161,7 +161,8 @@ footer a, footer a:after {
             background-color:black;
         }
         body {
-            background-image: linear-gradient(to right top, #18171a, #2e214c, #462982, #632bb9, #8624f2);
+             /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
+             background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);
         }
         a:hover{
             text-decoration:none;
@@ -180,6 +181,7 @@ footer a, footer a:after {
          input:focus{
            outline: none;
         }
+     
     </style>
 
     <form style="margin:20px;margin-left:-4px">
@@ -235,7 +237,7 @@ footer a, footer a:after {
         let checkInput = $('#category').val();
      
         if (checkInput.length === 0) {
-            alert("You havent' entered a category. Bye! ")
+            alert("You haven't entered a category!")
         } else {
             var dataT = {
                 Name: $('#category').val(),
@@ -251,8 +253,7 @@ footer a, footer a:after {
         cache: false,
         success: function(d) {
             if (d.result) {
-                console.log("Shit")
-                alert(d.result);
+                //OK
             }
                 
             else {

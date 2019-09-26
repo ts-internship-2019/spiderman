@@ -3,6 +3,7 @@
 @Html.HiddenFor(a => a.TouristAttractionId)
 @{
     ViewData["Title"] = "CreateEdit";
+    List<String> images = ViewData["Images"] as List<String>;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -73,8 +74,32 @@
         <input type="file" name="photos" multiple="multiple" class="form-control" id="gallery-photo-add" onchange="clear()" />
 
 
-        <br />
-        <br /><div class="gallery" id="gal"></div>
+            <br />
+            <br />
+            <label for="newimg">Imagini obiectiv</label>
+            <table>
+                @{int i = 0;
+                    if (images != null) { foreach (string image in images)
+                        {
+                            if (i == 0)
+                            {
+                            @:<tr>
+                            }
+
+                            <td><img src="~/images/@Url.Content(image)" class=" img-fluid" /></td>
+
+                            if (i == 3)
+                            {
+                                i = 0;
+                            @:</tr>
+                        }
+                                ++i;
+
+                            } }
+                    }
+            </table>
+            <label for="newimg">Noile imagini</label>
+            <div class="gallery" id="gal"></div>
 
         <button class="btn btn-danger btn-lg"
                 name="submitValue"
@@ -101,10 +126,10 @@
             Salveaza
         </button>
 
-        <br /><br /><br />
-    </form>
-
-</div>
+            <br /><br /><br />
+        </form>
+        
+    </div>
 <style>
     .title {
         vertical-align: middle;
@@ -116,7 +141,6 @@
     });
 
     document.getElementById('CheckBoxId').onclick = function () {
-        debugger;
         if (this.checked) {
             document.getElementById("inputCostTicket").style.display = "initial";
             document.getElementById("lblCostTicket").style.display = "initial";
@@ -178,18 +202,5 @@
             myNode.removeChild(node.firstChild);
         }
     }
-    //$(document).ready(function () {
-    //    $("#save").click(function () {
-    //        if ($("#txtName").val() == "") {
-    //            alert("Completeaza campul \"Nume\"");
-    //        }
-    //    });
-    //});
-    //$(document).ready(function () {
-    //    $("#saveNew").click(function () {
-    //        if ($("#txtName").val() == "") {
-    //            alert("Completeaza campul \"Nume\"");
-    //        }
-    //    });
-    //});
+
 </script>      

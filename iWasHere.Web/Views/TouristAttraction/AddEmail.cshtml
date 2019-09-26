@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "AddEmail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>AddEmail</h1>
+
+<form id="emailForm"  method="post">
+    <input type="text" name="name" placeholder="Enter your email..." />
+    <button>Send</button>
+</form>
+
+<script>
+    document.getElementById("emailForm").addEventListener("onsubmit", function(event){
+  event.preventDefault()
+});
+</script>

@@ -165,8 +165,9 @@ footer a, footer a:after {
         border: 2px solid red;
     }
     body {
-        background-image: linear-gradient(to right top, #18171a, #2e214c, #462982, #632bb9, #8624f2);
-        
+        /*background-image: linear-gradient(to right top, #18171a, #2e214c, #462982, #632bb9, #8624f2);*/
+        /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
+        background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);
     }
 
     #addCategoryInput {
@@ -179,6 +180,7 @@ footer a, footer a:after {
 
     #categoryInput{
         margin-bottom:20px;
+        font-size:20px;
         border-radius:12px;
     }
     .filterBtn{
@@ -188,8 +190,9 @@ footer a, footer a:after {
         margin-bottom:20px;
     }
     h1 {
-        margin-top: 20px;
-        color:#0DFF92;
+        margin-top: 30px;
+        /*color:#0DFF92;*/
+        color:navajowhite;
         font-family: 'Courgette', cursive;
     }
     a:hover{
@@ -268,7 +271,8 @@ footer a, footer a:after {
 <script>
     function ErrorHandler(e) {   
         if (e.errors) {
-            var message = "Errors:\n";
+            try {
+                       var message = "Errors:\n";
             $.each(e.errors, function (key, value) {
                 if ('errors' in value) {
                     $.each(value.errors, function() {
@@ -277,6 +281,10 @@ footer a, footer a:after {
                 }
             });       
             alert(message);
+            } catch{
+
+            }
+     
         }
     }
 
