@@ -3,40 +3,40 @@
     ViewData["Title"] = "Currency";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <style>
+        .body {
+            /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
+            /*background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);*/
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            box-sizing: border-box;
+            background-image: url("https://static3.depositphotos.com/1008191/262/i/950/depositphotos_2620824-stock-photo-cream-colored-natural-background.jpg");
+        }
+    </style>
+    <body>
+        <h1>Currency</h1>
 
-<h1>Currency</h1>
-
-@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyModel>()
-        .Name("Currency")
-        .Columns(columns =>
-        {
-            columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id");
-            columns.Bound(c => c.DictionaryItemCode).Width(190).Title("Code");
-            columns.Bound(c => c.DictionaryItemName).Width(190).Title("Nume");
-        })
-        .HtmlAttributes(new { style = "height: 380px;" })
-        .Scrollable()
-        .Groupable()
-        .Sortable()
-        .Pageable(pageable => pageable
-            .Refresh(true)
-            .PageSizes(true)
-            .ButtonCount(5))
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .Read(read => read.Action("DictionaryCurrency", "Home"))
-            .PageSize(20)
+        @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyModel>()
+                .Name("Currency")
+                .Columns(columns =>
+                {
+                    columns.Bound(c => c.DictionaryItemId).Width(140).Title("Id");
+                    columns.Bound(c => c.DictionaryItemCode).Width(190).Title("Code");
+                    columns.Bound(c => c.DictionaryItemName).Width(190).Title("Nume");
+                })
+                .HtmlAttributes(new { style = "height: 380px;" })
+                .Scrollable()
+                .Groupable()
+                .Sortable()
+                .Pageable(pageable => pageable
+                    .Refresh(true)
+                    .PageSizes(true)
+                    .ButtonCount(5))
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Read(read => read.Action("DictionaryCurrency", "Home"))
+                    .PageSize(20)
+                )
         )
-)
-
-<style>
-    body {
-        /*background-image: linear-gradient(to top, #2a2c2e, #34375c, #722e70, #b60054, #d50000);*/
-        /*background-image: linear-gradient(to right bottom, #0f0d0d, #403939, #786969, #b49d9d, #f4d5d5);*/
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        box-sizing: border-box;
-        background-color: lightyellow;
-    }
-</style>
+    </body>
