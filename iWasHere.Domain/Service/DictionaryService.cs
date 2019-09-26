@@ -1285,17 +1285,17 @@ namespace iWasHere.Domain.Service
                 MainDocumentPart mainPart = doc.AddMainDocumentPart();
 
                 new DocumentFormat.OpenXml.Wordprocessing.Document(new Body()).Save(mainPart);
-                if (photoWord != null)
-                {
-                    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+                //if (photoWord != null)
+                //{
+                //    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
 
-                    using (FileStream imgstream = new FileStream(_environment.WebRootPath + "\\images\\" + photoWord.Substring(1), FileMode.Open))
-                    //using (FileStream imgstream = new FileStream("images/" + photoWord.Substring(1), FileMode.Open))
-                    {
-                        imagePart.FeedData(imgstream);
-                    }
-                    AddImageToBody(doc, mainPart.GetIdOfPart(imagePart));
-                }
+                //    using (FileStream imgstream = new FileStream(_environment.WebRootPath + "\\images\\" + photoWord.Substring(1), FileMode.Open))
+                //    //using (FileStream imgstream = new FileStream("images/" + photoWord.Substring(1), FileMode.Open))
+                //    {
+                //        imagePart.FeedData(imgstream);
+                //    }
+                //    AddImageToBody(doc, mainPart.GetIdOfPart(imagePart));
+                //}
                 Body body = mainPart.Document.Body;
                 body.Append(
                       new Body(
