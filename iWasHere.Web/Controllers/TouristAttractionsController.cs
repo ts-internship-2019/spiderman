@@ -21,7 +21,7 @@ namespace iWasHere.Controllers
     public class TouristAttractionsController : Controller
     {
         private readonly IHostingEnvironment hostingEnvironment;
-     
+
         private readonly DictionaryService _dictionaryService;
         private readonly DatabaseContext _context;
 
@@ -33,14 +33,14 @@ namespace iWasHere.Controllers
         {
             return View();
         }
-        public TouristAttractionsController(DatabaseContext context,IHostingEnvironment hostingEnvironmentt,DictionaryService service)
+        public TouristAttractionsController(DatabaseContext context, IHostingEnvironment hostingEnvironmentt, DictionaryService service)
         {
             hostingEnvironment = hostingEnvironmentt;
             _context = context;
             _dictionaryService = service;
         }
 
-      
+
         public IActionResult TouristAttractionsGrid([DataSourceRequest] DataSourceRequest request, string txtFilterName)
         {
             List<TouristAttractionsDTO> myList = _dictionaryService.GetTouristAttractionsModel(request.Page, request.PageSize, txtFilterName);
@@ -139,8 +139,8 @@ namespace iWasHere.Controllers
                     touristAttraction.LandmarkId = tA.LandmarkId;
                     touristAttraction.CategoryId = tA.CategoryId;
 
-                    int touristAttractionId=_dictionaryService.AddTouristAttractions(touristAttraction);
-                    AddImg(photos,touristAttractionId);
+                    int touristAttractionId = _dictionaryService.AddTouristAttractions(touristAttraction);
+                    AddImg(photos, touristAttractionId);
                     ModelState.Clear();
                     return View("CreateEdit");
                 }
@@ -206,7 +206,7 @@ namespace iWasHere.Controllers
         //        };
 
         //        _dictionaryService.AddImage(img);
-                
+
         //    }
 
         //    return View();
@@ -217,37 +217,37 @@ namespace iWasHere.Controllers
             return View();
         }
 
-       
+
         [HttpPost]
         public IActionResult AddImages(IFormFile[] photos)
         {
-                 
-                foreach (IFormFile photo in photos)
-                {
-                    string uniqueFileName = null;
-                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                 
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    // Use CopyTo() method provided by IFormFile interface to
-                    // copy the file to wwwroot/images folder
-                   photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                    
 
-                    Image img = new Image
-                    {
-                        TouristAttractionId = 2,
-                        Path = uniqueFileName
-                    };
-                    _dictionaryService.AddImage(img);
-                }
-            
-           
+            foreach (IFormFile photo in photos)
+            {
+                string uniqueFileName = null;
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                // Use CopyTo() method provided by IFormFile interface to
+                // copy the file to wwwroot/images folder
+                photo.CopyTo(new FileStream(filePath, FileMode.Create));
+
+
+                Image img = new Image
+                {
+                    TouristAttractionId = 2,
+                    Path = uniqueFileName
+                };
+                _dictionaryService.AddImage(img);
+            }
+
+
             return View();
         }
-      
-       
-         public void AddImg(IFormFile[] photos,int id)
+
+
+        public void AddImg(IFormFile[] photos, int id)
         {
 
 
@@ -290,16 +290,24 @@ namespace iWasHere.Controllers
 
             return Json(ModelState.ToDataSourceResult());
         }
-        public IActionResult TouristAttractionsByCountry(int Id) {
+        public IActionResult TouristAttractionsByCountry(int Id)
+        {
             TouristAttractionsDTO dto = new TouristAttractionsDTO();
             dto.CountryId = Id;
-           // ViewData["CountryId"] = Id;
+            // ViewData["CountryId"] = Id;
             return View(dto);
         }
         public IActionResult TouristAttractionsByCountryData([DataSourceRequest] DataSourceRequest request, int idcountry)
         {
-            List<TouristAttractionsDTO> myList = _dictionaryService.GetTouristAttractionsByCountry(idcountry,request.Page, request.PageSize);
+            List<TouristAttractionsDTO> myList = _dictionaryService.GetTouristAttractionsByCountry(idcountry, request.Page, request.PageSize);
             DataSourceResult v2 = new DataSourceResult();
+            for (int i = 0; i < myList.Count; i++)
+            {
+                if (_dictionaryService.CheckImageFromDB(myList[i].TouristAttractionId, out string abc))
+                {
+                    myList[i].FirstPhotoPath = abc;
+                }
+            }
             v2.Data = myList;
             v2.Total = _dictionaryService.TouristAttractionsbyCountryCount(idcountry);
             return Json(v2);
