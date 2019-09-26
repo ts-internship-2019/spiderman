@@ -1240,7 +1240,6 @@ namespace iWasHere.Domain.Service
                 .Include(a => a.Image)
                 .Where(b => b.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == id).Count();
         }
-        }
         public DictionaryCounty GetCounty(int id)
         {
             DictionaryCounty dictionaryCounty = _dbContext.DictionaryCounty.Include(a => a.DictionaryCountry).Where(a => a.DictionaryCountyId == id).FirstOrDefault();
@@ -1256,9 +1255,9 @@ namespace iWasHere.Domain.Service
                 reviewModel = _dbContext.Review.Where(a => a.TouristAttractionId == tA.TouristAttractionId).Select(a => new ReviewModel()
                 {
                     ReviewId = a.ReviewId,
-                    UserName = a.UserName,
+                    Title = a.UserName,
                     Comment = a.Comment,
-                    Rating = a.Rating
+                    RatingValue = a.Rating
                 }).ToList();
             }
             if (_dbContext.Image.Where(a => a.TouristAttractionId == tA.TouristAttractionId).Count() > 0)
@@ -1311,7 +1310,7 @@ namespace iWasHere.Domain.Service
                 {
                     foreach (ReviewModel reviewM in reviewModel)
                     {
-                        sum = sum + reviewM.Rating;
+                        sum = sum + reviewM.RatingValue;
                         body.Append(new Paragraph(
                             new Run(
                               new Text("Comentarii: " + reviewM.Comment))));
@@ -1403,6 +1402,5 @@ namespace iWasHere.Domain.Service
 
 
 
-    }
 }
  

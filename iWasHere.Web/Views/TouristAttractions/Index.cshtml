@@ -59,16 +59,9 @@
                           columns.Bound(c => c.LandmarkName).Width(200).Title("Nume landmark");
                           //columns.Bound(c => c.Longtitudine).Width(200).Title("Longitutine");
                           //columns.Bound(c => c.Latitudine).Width(200).Title("Latitudine");
-                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>")
-                          .Width(150);
-                          columns.Template("<input type=\"button\" value=\"Save on Pc\" onclick='SaveDownload(#=TouristAttractionId#)' />").Width(150);
-                          //columns.Command(command =>
-                          //{
-                          //    Html.ActionLink("Save Data", "SaveDataInWord", new { example = "TestID2" });
-                          //    command.Edit().Text("Save");
-                          //}).Width(150);
-                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttraction/Details?Id=#=TouristAttractionId# '> Detalii </a>")
-                          .Width(150);
+                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttractions/CreateEdit?Id=#=TouristAttractionId# '> Editeaza </a>").Width(150);
+                          columns.Template("<input class=\"k-button\" type=\"button\" value='Save on Pc' onclick='SaveDownload(#=TouristAttractionId#)'/>").Width(140);
+                          columns.Template("<a class='k-button' style =\"color: blue\" href='/TouristAttraction/Details?Id=#=TouristAttractionId# '> Detalii </a>").Width(150);
                           columns.Command(command =>
                           {
                               command.Destroy().Text("Sterge");
